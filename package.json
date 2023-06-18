@@ -1,0 +1,60 @@
+{
+  "name": "@antl4b/anthill-framework",
+  "version": "1.0.0",
+  "description": "AntL4b framework for backend projects",
+  "author": "AntL4b <antl4b+noreply@antl4b.com>",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntL4b/anthill-framework.git"
+  },
+  "type": "module",
+  "main": "dist/anthill-framework.js",
+  "module": "dist/anthill-framework.mjs",
+  "typings": "dist/anthill-framework.d.ts",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.4",
+    "husky": "^8.0.3",
+    "import-sort-cli": "^6.0.0",
+    "import-sort-parser-typescript": "^6.0.0",
+    "import-sort-style-module": "^6.0.0",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "rollup": "^3.25.1",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "typescript": "5.1.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "!(*.d).{ts,tsx}": [
+      "prettier --write",
+      "import-sort --write"
+    ]
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "printWidth": 120,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
+  },
+  "importSort": {
+    ".tsx?": {
+      "parser": "typescript",
+      "style": "module"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/AntL4b/anthill-framework/issues"
+  },
+  "homepage": "https://github.com/AntL4b/anthill-framework#readme"
+}
