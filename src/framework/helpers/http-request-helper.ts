@@ -4,6 +4,7 @@ import { AHPager } from "../../models/http/pager";
 
 
 export class AHHttpRequestHelper {
+  
   /**
    * Add the base HTTP request part of an Aws request to a AHRequest object
    * @param request The request into whom add the base HTTP request parameters

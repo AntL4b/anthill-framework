@@ -1,4 +1,4 @@
-import { AHObjectHelper } from "../../framework/helpers/object-helpers";
+import { AHObjectHelper } from "../../framework/helpers/object-helper";
 import { AHAwsEvent } from "../../models/aws/event/aws-event";
 import { AHCacheData } from "../../models/cache/cache-data";
 import { AHHttpRequestParameters } from "../../models/cache/http-request-cache/http-request-parameters";
