@@ -1,4 +1,5 @@
 import { AHHttpRequestCache } from '../core/cache/http-request-cache';
+import { AHSizeOfHelpers } from '../framework/helpers/size-of-helper';
 import { AHHttpResponseBodyStatusEnum } from '../framework/models/enums/http-response-body-status-enum';
 import { AHRestMethodEnum } from '../framework/models/enums/rest-method-enum';
 import { AHHttpResponse } from '../framework/models/http/http-response';
@@ -31,64 +32,163 @@ describe('AHHttpRequestCache', () => {
     },
   });
 
-  // Get and Set cache
-  let httpRequestCache = AHHttpRequestCache.getInstance();
-  httpRequestCache = AHHttpRequestCache.getInstance();
+  const requestCache2 = AHHttpRequestCache.buildCacheRequestParameters({
+    ressource: '',
+    methodArn: '',
+    path: '/test2',
+    httpMethod: AHRestMethodEnum.Post,
+    headers: {},
+    pathParameters: {},
+    queryStringParameters: {},
+    requestContext: {
+      ressourceId: '',
+      resourcePath: '',
+      httpMethod: AHRestMethodEnum.Post,
+      requestTime: '',
+      path: '',
+      accountId: '',
+      protocol: '',
+      domainPrefix: '',
+      domainName: '',
+      apiId: '',
+      identity: {
+        sourceIp: '',
+        userAgent: '',
+      },
+    },
+  });
 
+  const response = new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success });
+  const httpRequestCache = AHHttpRequestCache.getInstance();
+
+  // Set default cache config
   httpRequestCache.setConfig({
     cachable: true,
     ttl: 120,
     maxCacheSize: 120000,
   });
 
-  let getCacheItem = httpRequestCache.getCacheItem(requestCache);
+  test('addDataInCache', () => {
+    httpRequestCache.flushCache(-1);
 
-  // Add data in cache
-  test('getCacheItem', () => {
-    expect(getCacheItem).toBeInstanceOf(AHHttpResponse);
+    expect(httpRequestCache.data.length).toBe(0);
+
+    httpRequestCache.addDataInCache(
+      requestCache,
+      response,
+    );
+
+    expect(httpRequestCache.data.length).toBe(1);
   });
 
-  test('addDataInCache', () => {
+  test('getCacheItem', () => {
+    httpRequestCache.flushCache(-1);
+
+    httpRequestCache.addDataInCache(
+      requestCache,
+      response,
+    );
+
+    const cacheItem = httpRequestCache.getCacheItem(requestCache);
+
+    expect(cacheItem).toBeInstanceOf(AHHttpResponse);
+  });
+
+  test('getCacheItem never received yet', () => {
+    httpRequestCache.flushCache(-1);
+
+    const cacheItem = httpRequestCache.getCacheItem(requestCache);
+
+    expect(cacheItem).toBeNull();
+  });
+
+  test('flushCache', () => {
+    httpRequestCache.flushCache(-1);
+
+    httpRequestCache.addDataInCache(
+      requestCache,
+      response,
+    );
+
+    httpRequestCache.flushCache(10);
+
+    expect(httpRequestCache.data.length).toBe(1);
+
+    httpRequestCache.flushCache(-1);
+
     expect(httpRequestCache.data.length).toBe(0);
   });
 
-  httpRequestCache.addDataInCache(
-    requestCache,
-    new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success }),
-  );
+  test('Cache override when going over maxCacheSize', () => {
+    httpRequestCache.flushCache(-1);
 
-  const nbOfDataInCache = httpRequestCache.data.length;
+    const sizeOfResponse = AHSizeOfHelpers.getSizeOf({
+      id: requestCache,
+      data: response,
+      date: new Date(),
+    }) + 1;
 
-  test('addDataInCache', () => {
-    expect(nbOfDataInCache).toBe(1);
+    // Set maxCacheSize with twice the size of the response
+    httpRequestCache.setConfig({
+      cachable: true,
+      ttl: 120,
+      maxCacheSize: sizeOfResponse * 2,
+    });
+
+    httpRequestCache.addDataInCache(
+      requestCache,
+      response,
+    );
+
+    httpRequestCache.addDataInCache(
+      requestCache2,
+      response,
+    );
+
+    expect(httpRequestCache.data.length).toBe(2);
+
+    httpRequestCache.flushCache(-1);
+
+    // Repeat the same process with maxCacheSize set with the size of the response
+    httpRequestCache.setConfig({
+      cachable: true,
+      ttl: 120,
+      maxCacheSize: sizeOfResponse,
+    });
+
+    httpRequestCache.addDataInCache(
+      requestCache,
+      response,
+    );
+
+    httpRequestCache.addDataInCache(
+      requestCache2,
+      response,
+    );
+
+    expect(httpRequestCache.data.length).toBe(1);
   });
 
-  getCacheItem = httpRequestCache.getCacheItem(requestCache);
+  test('Cache size not sufficient to store item', () => {
+    httpRequestCache.flushCache(-1);
 
-  // To have data to add in cache bigger than max cache size
-  httpRequestCache.setConfig({
-    cachable: true,
-    ttl: 120,
-    maxCacheSize: 1,
+    const sizeOfResponse = AHSizeOfHelpers.getSizeOf({
+      id: requestCache,
+      data: response,
+      date: new Date(),
+    }) - 1;
+
+    httpRequestCache.setConfig({
+      cachable: true,
+      ttl: 120,
+      maxCacheSize: sizeOfResponse,
+    });
+
+    httpRequestCache.addDataInCache(
+      requestCache,
+      response,
+    );
+
+    expect(httpRequestCache.data.length).toBe(0);
   });
-
-  httpRequestCache.addDataInCache(
-    requestCache,
-    new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success }),
-  );
-
-  // Delete data to free up space
-  httpRequestCache.setConfig({
-    cachable: true,
-    ttl: 120,
-    maxCacheSize: 200,
-  });
-
-  httpRequestCache.addDataInCache(
-    requestCache,
-    new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success }),
-  );
-
-  httpRequestCache.flushCache(10);
-  httpRequestCache.flushCache(-10);
 });

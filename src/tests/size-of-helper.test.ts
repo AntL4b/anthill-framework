@@ -1,7 +1,7 @@
 import { AHSizeOfHelpers } from "../framework/helpers/size-of-helper";
 
 describe('AHSizeOfHelpers', () => {
-  test('getSizeOf basic object', () => {
+  test('getSizeOf all managed types', () => {
     expect(AHSizeOfHelpers.getSizeOf({ a: 10 })).toBe(5);
     expect(AHSizeOfHelpers.getSizeOf({ b: "str" })).toBe(4);
     expect(AHSizeOfHelpers.getSizeOf({ c: true })).toBe(3);
