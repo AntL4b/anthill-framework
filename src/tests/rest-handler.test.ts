@@ -5,7 +5,7 @@ import { AHAwsEvent } from "../framework/models/aws/event/aws-event";
 import { AHRestMethodEnum } from "../framework/models/enums/rest-method-enum";
 import { AHHttpResponse } from "../framework/models/http/http-response";
 import { AHRestHandler } from "../framework/rest-handler";
-import { AHTestResourceHelper } from "./resources/test-resource-helper";
+import { AHTestResource } from "./resources/test-resource";
 
 // Override default warn and error log method to avoid jest to crash
 global.console.error = (message: string) => {
@@ -65,7 +65,7 @@ describe('AHRestHandler', () => {
 
   test('handleRequest without middleware', async () => {
     const handler = getDefaultHandler();
-    const response = await handler.handleRequest(AHTestResourceHelper.getBaseEvent());
+    const response = await handler.handleRequest(AHTestResource.getBaseEvent());
 
     expect(response).toBeInstanceOf(AHHttpResponse);
     expect(response.statusCode).toBe(200);
@@ -76,7 +76,7 @@ describe('AHRestHandler', () => {
     const handler = getDefaultHandler();
     handler.addMiddleware(new AHQueryStringCheckerMiddleware(['test']));
 
-    const event = AHTestResourceHelper.getBaseEvent();
+    const event = AHTestResource.getBaseEvent();
 
     let response = await handler.handleRequest(event);
     expect(response.statusCode).toBe(400);
@@ -101,7 +101,7 @@ describe('AHRestHandler', () => {
       },
     });
 
-    const event = AHTestResourceHelper.getBaseEvent();
+    const event = AHTestResource.getBaseEvent();
     event.path = '/handle-request-hit-cache';
 
     let response = await handler.handleRequest(event);
@@ -132,7 +132,7 @@ describe('AHRestHandler', () => {
       callable: (event: AHAwsEvent) => { throw new AHException(errMess)},
     });
 
-    const response = await handler.handleRequest(AHTestResourceHelper.getBaseEvent());
+    const response = await handler.handleRequest(AHTestResource.getBaseEvent());
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.body).message).toBe(errMess);
   });

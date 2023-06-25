@@ -1,7 +1,7 @@
 import { AHAwsEvent } from "../../framework/models/aws/event/aws-event";
 import { AHRestMethodEnum } from "../../framework/models/enums/rest-method-enum";
 
-export class AHTestResourceHelper {
+export class AHTestResource {
 
   static getBaseEvent(): AHAwsEvent {
     const baseEvent: AHAwsEvent = new AHAwsEvent();
