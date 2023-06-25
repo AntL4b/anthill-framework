@@ -12,7 +12,6 @@ export class AHLogger {
   private formatter: (payload: any) => string;
   private handlers: [(message: string, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void];
 
-
   private constructor() {
     this.formatter = (payload: string) => {
       return payload;
@@ -20,8 +19,8 @@ export class AHLogger {
 
     const env = AHEnvironmentHelper.getEnv();
 
-    // Set default logs to debug if in local or dev environment, error otherwise
-    this.logLevel = [AHEnvEnum.Dev].includes(env) ? AHLogLevelEnum.Debug : AHLogLevelEnum.Warn;
+    // Set default logs to debug if dev environment, info otherwise
+    this.logLevel = AHEnvEnum.Dev === env ? AHLogLevelEnum.Debug : AHLogLevelEnum.Info;
 
     this.handlers = [
       (message: string, logLevel: AHLogLevelEnum, context: AHLoggerContext) => {

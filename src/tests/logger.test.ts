@@ -1,4 +1,5 @@
 import { AHLogger } from "../framework/logger";
+import { AHEnvEnum } from "../framework/models/enums/env-enum";
 import { AHLogLevelEnum } from "../framework/models/enums/log-level-enum";
 
 // Override default warn and error log method to avoid jest to crash
@@ -11,6 +12,18 @@ global.console.warn = (message: string) => {
 
 describe('AHLogger', () => {
   test('constructor / getInstance', () => {
+    process.env.ENV = AHEnvEnum.Dev;
+
+    // Use object property notation to affect private member instance
+    AHLogger['instance'] = null;
+
+    // Instanciate in dev env
+    expect(AHLogger.getInstance()).toBeInstanceOf(AHLogger);
+
+    process.env.ENV = AHEnvEnum.Prod;
+    AHLogger['instance'] = null;
+
+    // Instanciate in prod env
     expect(AHLogger.getInstance()).toBeInstanceOf(AHLogger);
   });
 
