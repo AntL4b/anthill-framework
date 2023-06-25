@@ -18,21 +18,21 @@ export class AHRestHandler {
 
   private name: string;
   private method: AHRestMethodEnum;
+  private middlewares: Array<AHAbstractMiddleware> = [];
   private callable: (event: AHAwsEvent) => Promise<AHHttpResponse>;
   private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
-  private middlewares: Array<AHAbstractMiddleware> = [];
 
   constructor(params: AHRestHandlerParams) {
     this.name = params.name;
     this.method = params.method;
     this.callable = params.callable;
 
-    if (params.cacheConfig) {
-      this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig };
-    }
-
     if (params.middlewares) {
       this.middlewares = params.middlewares;
+    }
+
+    if (params.cacheConfig) {
+      this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig };
     }
   }
 
@@ -44,6 +44,16 @@ export class AHRestHandler {
     AHRestHandler.defaultCacheConfig = {
       ...AHRestHandler.defaultCacheConfig,
       ...cacheConfig
+    }
+  }
+
+  /**
+   * Set a new cache config for the handler
+   * @param cacheConfig The cache config to be set
+   */
+  setCacheConfig(cacheConfig: AHCacheConfig): void {
+    if (cacheConfig) {
+      this.cacheConfig = { ...this.cacheConfig, ...cacheConfig };
     }
   }
 
