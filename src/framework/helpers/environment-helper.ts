@@ -1,4 +1,4 @@
-import { AHEnvEnum } from "../../models/enums/env-enum";
+import { AHEnvEnum } from "../models/enums/env-enum";
 import { AHException } from "../anthill-exception";
 
 

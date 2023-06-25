@@ -1,6 +1,6 @@
-import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHBaseHttpRequest } from "../../models/http/base-http-request";
-import { AHPager } from "../../models/http/pager";
+import { AHAwsEvent } from "../models/aws/event/aws-event";
+import { AHBaseHttpRequest } from "../models/http/base-http-request";
+import { AHPager } from "../models/http/pager";
 
 
 export class AHHttpRequestHelper {
@@ -18,11 +18,10 @@ export class AHHttpRequestHelper {
       pageSize: awsEvent.queryStringParameters?.pageSize ? parseInt(awsEvent.queryStringParameters?.pageSize) : null,
     };
 
-    // Return the AHRequest with pager and continuationToken
+    // Return the AHRequest with pager
     return {
       ...request,
       pager: pager,
-      continuationToken: awsEvent.queryStringParameters?.continuationToken || null,
     };
   }
 

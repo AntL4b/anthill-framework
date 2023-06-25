@@ -1,9 +1,9 @@
 import { AHObjectHelper } from "../../framework/helpers/object-helper";
-import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHCacheData } from "../../models/cache/cache-data";
-import { AHHttpRequestParameters } from "../../models/cache/http-request-cache/http-request-parameters";
-import { AHHttpResponse } from "../../models/http/http-response";
+import { AHAwsEvent } from "../../framework/models/aws/event/aws-event";
+import { AHCacheData } from "../models/cache/cache-data";
+import { AHHttpResponse } from "../../framework/models/http/http-response";
 import { AHCache } from "./cache";
+import { AHHttpRequestParameters } from "../models/cache/http-request-cache/http-request-parameters";
 
 export class AHHttpRequestCache extends AHCache<AHHttpRequestParameters, AHHttpResponse> {
   private static instance: AHHttpRequestCache;

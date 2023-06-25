@@ -1,7 +1,7 @@
 import { AHSizeOfHelpers } from "../../framework/helpers/size-of-helper";
 import { AHLogger } from "../../framework/logger";
-import { AHCacheConfig } from "../../models/cache/cache-config";
-import { AHCacheData } from "../../models/cache/cache-data";
+import { AHCacheConfig } from "../models/cache/cache-config";
+import { AHCacheData } from "../models/cache/cache-data";
 
 
 export abstract class AHCache<T, U> {

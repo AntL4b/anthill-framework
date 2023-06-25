@@ -1,6 +1,6 @@
-import { AHEnvEnum } from '../models/enums/env-enum';
-import { AHLogLevelEnum } from '../models/enums/log-level-enum';
-import { AHLoggerContext } from '../models/logger-context';
+import { AHEnvEnum } from './models/enums/env-enum';
+import { AHLogLevelEnum } from './models/enums/log-level-enum';
+import { AHLoggerContext } from './models/logger-context';
 import { AHEnvironmentHelper } from './helpers/environment-helper';
 
 

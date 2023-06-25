@@ -5,7 +5,6 @@ export interface AHHttpResponseBody {
   status?: AHHttpResponseBodyStatusEnum;
   message?: string;
   partial?: boolean;
-  continuationToken?: string;
   meta?: AHHttpResponseBodyMetaData;
   payload?: any;
 }
