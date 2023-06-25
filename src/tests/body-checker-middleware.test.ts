@@ -30,15 +30,16 @@ Object.assign(BASE_EVENT, {
 });
 
 describe('AHBodyCheckerMiddleware', () => {
-  test('no body params / nothing required', async () => {
+  test('No body params / nothing required', async () => {
     const middleware = new AHBodyCheckerMiddleware([]);
 
     expect(await middleware.run(BASE_EVENT)).toBeInstanceOf(AHAwsEvent);
   });
 
-  test('body params / nothing required', async () => {
+  test('Body params / nothing required', async () => {
     const middleware = new AHBodyCheckerMiddleware([]);
-    // create a copy of BASE_EVENT to modify it after
+
+    // Create a copy of BASE_EVENT to modify it after
     let event: AHAwsEvent = Object.assign(new AHAwsEvent(), JSON.parse(JSON.stringify(BASE_EVENT)));
 
     event.body = `{ "key": "string" }`;
@@ -46,7 +47,7 @@ describe('AHBodyCheckerMiddleware', () => {
     expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
   });
 
-  test('no body params / field required', async () => {
+  test('No body params / field required', async () => {
     const middleware = new AHBodyCheckerMiddleware(['key1', 'key2', 'key2.key3']);
 
     // create a copy of BASE_EVENT to modify it after
@@ -58,7 +59,7 @@ describe('AHBodyCheckerMiddleware', () => {
     expect(result.body).toBe('{"message":"[key1, key2, key2.key3] not found in body"}');
   });
 
-  test('required fields OK', async () => {
+  test('Required fields OK', async () => {
     const middleware = new AHBodyCheckerMiddleware(['key1', 'key2', 'key2.key3']);
 
     // create a copy of BASE_EVENT to modify it after
@@ -69,7 +70,7 @@ describe('AHBodyCheckerMiddleware', () => {
     expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
   });
 
-  test('required fields NOK', async () => {
+  test('Required fields NOK', async () => {
     const middleware = new AHBodyCheckerMiddleware(['key1', 'key2', 'key2.key3']);
 
     // create a copy of BASE_EVENT to modify it after
@@ -83,7 +84,7 @@ describe('AHBodyCheckerMiddleware', () => {
     expect(result.body).toBe('{"message":"[key2, key2.key3] not found in body"}');
   });
 
-  test('required fields NOK without testing all nested nodes', async () => {
+  test('Required fields NOK without testing all nested nodes', async () => {
     const middleware = new AHBodyCheckerMiddleware(['key1', 'key2.key3']);
 
     // create a copy of BASE_EVENT to modify it after

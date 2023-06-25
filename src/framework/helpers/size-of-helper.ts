@@ -45,15 +45,7 @@ export class AHSizeOfHelpers {
       }
 
       bytes += AHSizeOfHelpers.getCalculator(seen)(key);
-      try {
-        bytes += AHSizeOfHelpers.getCalculator(seen)(object[key]);
-      } catch (ex) {
-        if (ex instanceof RangeError) {
-          // circular reference detected, final result might be incorrect
-          // let's be nice and not throw an exception
-          bytes = 0;
-        }
-      }
+      bytes += AHSizeOfHelpers.getCalculator(seen)(object[key]);
     }
 
     return bytes;

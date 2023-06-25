@@ -30,14 +30,15 @@ Object.assign(BASE_EVENT, {
 });
 
 describe('AHQueryStringCheckerMiddleware', () => {
-  test('no query params / nothing required', async () => {
+  test('No query params / nothing required', async () => {
     const middleware = new AHQueryStringCheckerMiddleware([]);
 
     expect(await middleware.run(BASE_EVENT)).toBeInstanceOf(AHAwsEvent);
   });
 
-  test('query params / nothing required', async () => {
+  test('Query params / nothing required', async () => {
     const middleware = new AHQueryStringCheckerMiddleware([]);
+
     // create a copy of BASE_EVENT to modify it after
     let event: AHAwsEvent = Object.assign(new AHAwsEvent(), JSON.parse(JSON.stringify(BASE_EVENT)));
 
@@ -46,8 +47,9 @@ describe('AHQueryStringCheckerMiddleware', () => {
     expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
   });
 
-  test('no query params / field required', async () => {
+  test('No query params / field required', async () => {
     const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2']);
+
     // create a copy of BASE_EVENT to modify it after
     let event: AHAwsEvent = Object.assign(new AHAwsEvent(), JSON.parse(JSON.stringify(BASE_EVENT)));
 
@@ -57,7 +59,7 @@ describe('AHQueryStringCheckerMiddleware', () => {
     expect(result.body).toBe('{"message":"[field1, field2] not found in query string"}');
   });
 
-  test('required fields OK', async () => {
+  test('Required fields OK', async () => {
     const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2']);
 
     // create a copy of BASE_EVENT to modify it after
@@ -68,7 +70,7 @@ describe('AHQueryStringCheckerMiddleware', () => {
     expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
   });
 
-  test('required fields NOK', async () => {
+  test('Required fields NOK', async () => {
     const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2', 'field3', 'field4']);
 
     // create a copy of BASE_EVENT to modify it after

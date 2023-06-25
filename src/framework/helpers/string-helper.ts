@@ -56,15 +56,4 @@ export class AHStringHelper {
   static isUuid(str: string): boolean {
     return uuidV4Regex.test(str);
   };
-
-  /**
-   * Returns the date of tomorrow
-   * @returns The date of tomorrow
-   */
-  static getTomorrowDate(): Date {
-    return ((d) => {
-      d.setDate(d.getDate() + 1);
-      return d;
-    })(new Date());
-  };
 }

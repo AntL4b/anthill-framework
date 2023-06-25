@@ -8,14 +8,15 @@ module.exports = {
     "tsx",
     "js"
   ],
-  roots: ['<rootDir>/src'],
-  preset: 'ts-jest',
-  testEnvironment: 'node',
+  roots: ["<rootDir>/src"],
+  preset: "ts-jest",
+  testEnvironment: "node",
   collectCoverage: true,
   collectCoverageFrom: [
-    'src/**/*.ts',
+    "src/**/*.ts",
+    "!src/index.ts"
   ],
-  coverageDirectory: 'coverage',
+  coverageDirectory: "coverage",
   testPathIgnorePatterns: [
     "/node_modules/"
   ],

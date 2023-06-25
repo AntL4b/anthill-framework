@@ -23,7 +23,7 @@ describe('AHLogger', () => {
     expect(logger.error('error test')).toBeUndefined();
   });
 
-  test('Set formatter', () => {
+  test('setformatter', () => {
     const logger = AHLogger.getInstance();
     logger.setLogLevel(AHLogLevelEnum.Debug);
 
@@ -37,7 +37,7 @@ describe('AHLogger', () => {
     expect(formatter).toHaveBeenCalledTimes(1);
   });
 
-  test('Add handler', () => {
+  test('addHandler', () => {
     const logger = AHLogger.getInstance();
 
     const handler = jest.fn(() => {});
@@ -50,7 +50,7 @@ describe('AHLogger', () => {
     expect(handler).toHaveBeenCalledTimes(1);
   });
 
-  test('Set log level', () => {
+  test('setLogLevel', () => {
     const logger = AHLogger.getInstance();
 
     logger.setLogLevel(AHLogLevelEnum.Error);
