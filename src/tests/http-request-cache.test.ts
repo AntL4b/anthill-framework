@@ -1,63 +1,13 @@
 import { AHHttpRequestCache } from '../core/cache/http-request-cache';
 import { AHSizeOfHelpers } from '../framework/helpers/size-of-helper';
 import { AHHttpResponseBodyStatusEnum } from '../framework/models/enums/http-response-body-status-enum';
-import { AHRestMethodEnum } from '../framework/models/enums/rest-method-enum';
 import { AHHttpResponse } from '../framework/models/http/http-response';
+import { AHTestResource } from './resources/test-resource';
 
 
 describe('AHHttpRequestCache', () => {
-  const requestCache = AHHttpRequestCache.buildCacheRequestParameters({
-    ressource: '',
-    methodArn: '',
-    path: '/test',
-    httpMethod: AHRestMethodEnum.Post,
-    headers: {},
-    pathParameters: {},
-    queryStringParameters: {},
-    requestContext: {
-      ressourceId: '',
-      resourcePath: '',
-      httpMethod: AHRestMethodEnum.Post,
-      requestTime: '',
-      path: '',
-      accountId: '',
-      protocol: '',
-      domainPrefix: '',
-      domainName: '',
-      apiId: '',
-      identity: {
-        sourceIp: '',
-        userAgent: '',
-      },
-    },
-  });
-
-  const requestCache2 = AHHttpRequestCache.buildCacheRequestParameters({
-    ressource: '',
-    methodArn: '',
-    path: '/test2',
-    httpMethod: AHRestMethodEnum.Post,
-    headers: {},
-    pathParameters: {},
-    queryStringParameters: {},
-    requestContext: {
-      ressourceId: '',
-      resourcePath: '',
-      httpMethod: AHRestMethodEnum.Post,
-      requestTime: '',
-      path: '',
-      accountId: '',
-      protocol: '',
-      domainPrefix: '',
-      domainName: '',
-      apiId: '',
-      identity: {
-        sourceIp: '',
-        userAgent: '',
-      },
-    },
-  });
-
+  const requestCache = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: '/test' }));
+  const requestCache2 = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: '/test2' }));
   const response = new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success });
   const httpRequestCache = AHHttpRequestCache.getInstance();
 
@@ -68,9 +18,11 @@ describe('AHHttpRequestCache', () => {
     maxCacheSize: 120000,
   });
 
-  test('addDataInCache', () => {
+  beforeEach(() => {
     httpRequestCache.flushCache(-1);
+  })
 
+  test('addDataInCache', () => {
     expect(httpRequestCache.data.length).toBe(0);
 
     httpRequestCache.addDataInCache(
@@ -82,8 +34,6 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('getCacheItem', () => {
-    httpRequestCache.flushCache(-1);
-
     httpRequestCache.addDataInCache(
       requestCache,
       response,
@@ -95,33 +45,24 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('getCacheItem never received yet', () => {
-    httpRequestCache.flushCache(-1);
-
     const cacheItem = httpRequestCache.getCacheItem(requestCache);
-
     expect(cacheItem).toBeNull();
   });
 
   test('flushCache', () => {
-    httpRequestCache.flushCache(-1);
-
     httpRequestCache.addDataInCache(
       requestCache,
       response,
     );
 
     httpRequestCache.flushCache(10);
-
     expect(httpRequestCache.data.length).toBe(1);
-
+    
     httpRequestCache.flushCache(-1);
-
     expect(httpRequestCache.data.length).toBe(0);
   });
 
   test('Cache override when going over maxCacheSize', () => {
-    httpRequestCache.flushCache(-1);
-
     const sizeOfResponse = AHSizeOfHelpers.getSizeOf({
       id: requestCache,
       data: response,
@@ -170,8 +111,6 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('Cache size not sufficient to store item', () => {
-    httpRequestCache.flushCache(-1);
-
     const sizeOfResponse = AHSizeOfHelpers.getSizeOf({
       id: requestCache,
       data: response,

@@ -7,13 +7,11 @@ import { AHTestResource } from "./resources/test-resource";
 describe('AHQueryStringCheckerMiddleware', () => {
   test('No query param / nothing required', async () => {
     const middleware = new AHQueryStringCheckerMiddleware([]);
-
     expect(await middleware.run(AHTestResource.getBaseEvent())).toBeInstanceOf(AHAwsEvent);
   });
 
   test('Query params / nothing required', async () => {
     const middleware = new AHQueryStringCheckerMiddleware([]);
-
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.queryStringParameters = { key: 'string' };
 
@@ -22,7 +20,6 @@ describe('AHQueryStringCheckerMiddleware', () => {
 
   test('No query param / field required', async () => {
     const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2']);
-
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
@@ -32,7 +29,6 @@ describe('AHQueryStringCheckerMiddleware', () => {
 
   test('Required fields OK', async () => {
     const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2']);
-
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.queryStringParameters = { field1: 'test1', field2: 'test2' };
 
@@ -41,10 +37,8 @@ describe('AHQueryStringCheckerMiddleware', () => {
 
   test('Required fields NOK', async () => {
     const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2', 'field3', 'field4']);
-
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.queryStringParameters = { field1: 'test1' };
-
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);

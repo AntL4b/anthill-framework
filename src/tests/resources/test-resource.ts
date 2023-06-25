@@ -3,7 +3,7 @@ import { AHRestMethodEnum } from "../../framework/models/enums/rest-method-enum"
 
 export class AHTestResource {
 
-  static getBaseEvent(): AHAwsEvent {
+  static getBaseEvent(eventOverride?: Partial<AHAwsEvent>): AHAwsEvent {
     const baseEvent: AHAwsEvent = new AHAwsEvent();
 
     Object.assign(baseEvent, {
@@ -27,6 +27,7 @@ export class AHTestResource {
           userAgent: '',
         },
       },
+      ...eventOverride
     });
 
     return baseEvent;
