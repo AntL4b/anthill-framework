@@ -24,7 +24,7 @@ describe('AHBodyCheckerMiddleware', () => {
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(result.body).toBe('{"message":"[key1, key2, key2.key3] not found in body"}');
+    expect(JSON.parse(result.body).message).toBe('[key1, key2, key2.key3] not found in body');
   });
 
   test('Required fields OK', async () => {
@@ -38,20 +38,20 @@ describe('AHBodyCheckerMiddleware', () => {
   test('Required fields NOK', async () => {
     const middleware = new AHBodyCheckerMiddleware(['key1', 'key2', 'key2.key3']);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
-    event.body = '{ "key1": "string1" }';
+    event.body = '{ "key1": "test1" }';
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(result.body).toBe('{"message":"[key2, key2.key3] not found in body"}');
+    expect(JSON.parse(result.body).message).toBe('[key2, key2.key3] not found in body');
   });
 
   test('Required fields NOK without testing all nested nodes', async () => {
     const middleware = new AHBodyCheckerMiddleware(['key1', 'key2.key3']);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
-    event.body = '{ "key1": "string1" }';
+    event.body = '{ "key1": "test1" }';
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(result.body).toBe('{"message":"[key2.key3] not found in body"}');
+    expect(JSON.parse(result.body).message).toBe('[key2.key3] not found in body');
   });
 });

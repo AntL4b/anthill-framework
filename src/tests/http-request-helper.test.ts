@@ -20,9 +20,7 @@ describe('AHHttpRequestHelper', () => {
     event.headers = { "test-header": "test" };
 
     expect(AHHttpRequestHelper.getHeaderValue("test-header", event)).toBe("test");
-
     event.headers = null;
-
     expect(AHHttpRequestHelper.getHeaderValue("test-header", event)).toBe(null);
   });
 });

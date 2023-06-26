@@ -34,13 +34,15 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('getCacheItem', () => {
+    expect(httpRequestCache.data.length).toBe(0);
+
     httpRequestCache.addDataInCache(
       requestCache,
       response,
     );
 
+    expect(httpRequestCache.data.length).toBe(1);
     const cacheItem = httpRequestCache.getCacheItem(requestCache);
-
     expect(cacheItem).toBeInstanceOf(AHHttpResponse);
   });
 
@@ -50,6 +52,8 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('flushCache', () => {
+    expect(httpRequestCache.data.length).toBe(0);
+    
     httpRequestCache.addDataInCache(
       requestCache,
       response,
@@ -57,7 +61,7 @@ describe('AHHttpRequestCache', () => {
 
     httpRequestCache.flushCache(10);
     expect(httpRequestCache.data.length).toBe(1);
-    
+
     httpRequestCache.flushCache(-1);
     expect(httpRequestCache.data.length).toBe(0);
   });

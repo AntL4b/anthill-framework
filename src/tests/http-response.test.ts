@@ -40,7 +40,7 @@ describe('AHHttpResponse', () => {
       { payload: '<p>html paragraphe<p>' },
       { 'Content-Type': 'text/html' },
     );
-    expect(Object.keys(response.headers).includes('Content-Type')).toBeTruthy();
+    expect(Object.keys(response.headers).includes('Content-Type')).toBe(true);
     expect(response.headers['Content-Type']).toBe('text/html');
     expect(response.body).toStrictEqual({ payload: '<p>html paragraphe<p>' });
   });

@@ -19,29 +19,29 @@ describe('AHQueryStringCheckerMiddleware', () => {
   });
 
   test('No query param / field required', async () => {
-    const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2']);
+    const middleware = new AHQueryStringCheckerMiddleware(['key1', 'key2']);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(result.body).toBe('{"message":"[field1, field2] not found in query string"}');
+    expect(JSON.parse(result.body).message).toBe('[key1, key2] not found in query string');
   });
 
   test('Required fields OK', async () => {
-    const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2']);
+    const middleware = new AHQueryStringCheckerMiddleware(['key1', 'key2']);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
-    event.queryStringParameters = { field1: 'test1', field2: 'test2' };
+    event.queryStringParameters = { key1: 'test1', key2: 'test2' };
 
     expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
   });
 
   test('Required fields NOK', async () => {
-    const middleware = new AHQueryStringCheckerMiddleware(['field1', 'field2', 'field3', 'field4']);
+    const middleware = new AHQueryStringCheckerMiddleware(['key1', 'key2', 'key3', 'key4']);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
-    event.queryStringParameters = { field1: 'test1' };
+    event.queryStringParameters = { key1: 'test1' };
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(result.body).toBe('{"message":"[field2, field3, field4] not found in query string"}');
+    expect(JSON.parse(result.body).message).toBe('[key2, key3, key4] not found in query string');
   });
 });

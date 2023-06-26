@@ -7,6 +7,9 @@ describe('AHStringHelper', () => {
 
   test('slugify', () => {
     expect(AHStringHelper.slugify('a test')).toBe('a-test');
+    expect(AHStringHelper.slugify('a-test')).toBe('atest');
+    expect(AHStringHelper.slugify('à têst')).toBe('a-test');
+    expect(AHStringHelper.slugify('l\'têst')).toBe('l-test');
   });
 
   test('isValidEmail', () => {

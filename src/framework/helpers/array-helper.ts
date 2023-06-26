@@ -18,10 +18,14 @@ export class AHArrayHelper {
    * @returns 
    */
   static groupItems(items: Array<any>, nb: number): Array<Array<any>> {
-    const itemGroups = [];
-    do {
-      itemGroups.push(items.splice(0, nb));
-    } while (items.length);
-    return itemGroups;
+    if (nb > 0) {
+      const itemGroups = [];
+      do {
+        itemGroups.push(items.splice(0, nb));
+      } while (items.length);
+      return itemGroups;
+    }
+
+    return [items];
   };
 }

@@ -28,7 +28,7 @@ describe('AHQueryStringCheckerMiddleware', () => {
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(result.body).toBe('{"message":"[key1, key2, key3] not found in header list"}');
+    expect(JSON.parse(result.body).message).toBe('[key1, key2, key3] not found in header list');
   });
 
   test('Required headers OK', async () => {
@@ -46,6 +46,6 @@ describe('AHQueryStringCheckerMiddleware', () => {
     const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(result.body).toBe('{"message":"[key2] not found in header list"}');
+    expect(JSON.parse(result.body).message).toBe('[key2] not found in header list');
   });
 });
