@@ -1,7 +1,9 @@
 import { AHEnvEnum } from '../models/enums/env-enum';
 import { AHLogLevelEnum } from '../models/enums/log-level-enum';
-import { AHLoggerContext } from '../models/logger-context';
+import { AHLoggerContext } from '../models/logger/logger-context';
 import { AHEnvironmentHelper } from '../helpers/environment-helper';
+import { AHLoggerFormatter } from '../models/logger/logger-formatter';
+import { AHLoggerHandler } from '../models/logger/logger-handler';
 
 
 export class AHLogger {
@@ -9,8 +11,8 @@ export class AHLogger {
   private static instance: AHLogger;
   
   private logLevel: AHLogLevelEnum;
-  private formatter: (payload: any) => string;
-  private handlers: [(message: string, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void];
+  private formatter: AHLoggerFormatter;
+  private handlers: [AHLoggerHandler];
 
   private constructor() {
     this.formatter = (payload: string) => {

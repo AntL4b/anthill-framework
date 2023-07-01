@@ -6,7 +6,8 @@ import { AHRestMethodEnum } from "../models/enums/rest-method-enum";
 import { AHHttpResponse } from "../models/http/http-response";
 import { AHLogger } from "./logger";
 import { AHAbstractMiddleware } from "./middlewares/abstract-middleware";
-import { AHRestHandlerParams } from "../models/rest-handler-params";
+import { AHRestHandlerParams } from "../models/rest-handler/rest-handler-params";
+import { AHCallable } from "../models/rest-handler/callable";
 
 export class AHRestHandler {
 
@@ -19,7 +20,7 @@ export class AHRestHandler {
   private name: string;
   private method: AHRestMethodEnum;
   private middlewares: Array<AHAbstractMiddleware> = [];
-  private callable: (event: AHAwsEvent) => Promise<AHHttpResponse>;
+  private callable: AHCallable;
   private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
 
   constructor(params: AHRestHandlerParams) {

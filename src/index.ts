@@ -48,7 +48,8 @@ export { AHHttpResponse } from "./framework/models/http/http-response";
 export { AHHttpResponseBody } from "./framework/models/http/http-response-body";
 export { AHHttpResponseBodyMetaData } from "./framework/models/http/http-response-body-meta-data";
 export { AHPager } from "./framework/models/http/pager";
-export { AHLoggerContext } from "./framework/models/logger-context";
-export { AHRestHandlerParams } from "./framework/models/rest-handler-params";
-
-
+export { AHLoggerContext } from "./framework/models/logger/logger-context";
+export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
+export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
+export { AHRestHandlerParams } from "./framework/models/rest-handler/rest-handler-params";
+export { AHCallable } from "./framework/models/rest-handler/callable";
