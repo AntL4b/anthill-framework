@@ -1,19 +1,20 @@
 {
   "name": "@antl4b/anthill-framework",
   "version": "1.0.0",
-  "description": "AntL4b framework for backend projects",
-  "author": "AntL4b <antl4b+noreply@antl4b.com>",
+  "description": "AntL4b framework for serverless backend projects",
+  "author": "AntL4b <ant1.antlab@gmail.com>",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AntL4b/anthill-framework.git"
   },
-  "main": "dist/anthill-framework.js",
+  "main": "dist/index.js",
   "module": "dist/anthill-framework.mjs",
-  "typings": "dist/anthill-framework.d.ts",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "rollup -c"
+    "clean": "rimraf dist/",
+    "build": "npm run clean && tsc"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
@@ -26,9 +27,6 @@
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "rimraf": "^5.0.1",
-    "rollup": "^3.25.1",
-    "rollup-plugin-dts": "^5.3.0",
-    "rollup-plugin-esbuild": "^5.0.0",
     "ts-jest": "^29.1.0",
     "typescript": "5.1.3"
   },
