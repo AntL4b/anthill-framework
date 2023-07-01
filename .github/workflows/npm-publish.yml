@@ -15,12 +15,13 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Install dependencies and build
         run:  |
-          ls -all
           cd ./framework
           npm ci
           npm run test
           npm run build
       - name: Publish package on NPM
-        run: npm publish
+        run: |
+          cd ./framework
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
