@@ -1,4 +1,4 @@
-dist/
+**/dist/
 
 *~
 *.sw[mnpcod]
@@ -16,31 +16,31 @@ log.txt
 .history/
 .sass-cache/
 .versions/
-node_modules/
-coverage/
+**/node_modules/
+**/coverage/
 
-/build/
-/scripts/build/
+**/build/
+**/scripts/build/
 
 # submodule packages
-/build-conditionals
-/cli
-/compiler
-/hydrate
-/dev-server
-/internal
-/mock-doc
-/polyfills
-/runtime
-/server
-/sys
-/testing
+**/build-conditionals
+**/cli
+**/compiler
+**/hydrate
+**/dev-server
+**/internal
+**/mock-doc
+**/polyfills
+**/runtime
+**/server
+**/sys
+**/testing
 
-/screenshot/index.js
-/screenshot/package.json
-/screenshot/pixel-match.js
-/screenshot/*.d.ts
+**/screenshot/index.js
+**/screenshot/package.json
+**/screenshot/pixel-match.js
+**/screenshot/*.d.ts
 
-test/**/www/*
-test/**/hydrate/*
-/dependencies.json
+**/test/**/www/*
+**/test/**/hydrate/*
+**/dependencies.json
