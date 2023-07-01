@@ -7,6 +7,10 @@ export { AHException } from "./framework/features/anthill-exception";
  * LOGGER
  */
 export { AHLogger } from "./framework/features/logger";
+export { logDebug } from "./framework/features/logger";
+export { logInfo } from "./framework/features/logger";
+export { logWarn } from "./framework/features/logger";
+export { logError } from "./framework/features/logger";
 
 /**
  * REST HANDLER

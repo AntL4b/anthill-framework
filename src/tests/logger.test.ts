@@ -1,4 +1,4 @@
-import { AHLogger } from "..";
+import { AHLogger, logDebug, logError, logInfo, logWarn } from "..";
 import { AHEnvEnum } from "..";
 import { AHLogLevelEnum } from "..";
 
@@ -36,6 +36,13 @@ describe('AHLogger', () => {
     expect(logger.info('info test')).toBeUndefined();
     expect(logger.warn('warn test')).toBeUndefined();
     expect(logger.error('error test')).toBeUndefined();
+  });
+
+  test('Log all level alias method', () => {
+    expect(logDebug('debug test')).toBeUndefined();
+    expect(logInfo('info test')).toBeUndefined();
+    expect(logWarn('warn test')).toBeUndefined();
+    expect(logError('error test')).toBeUndefined();
   });
 
   test('setformatter', () => {

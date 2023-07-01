@@ -120,3 +120,19 @@ export class AHLogger {
     };
   }
 }
+
+export function logDebug(payload: any): void {
+  return AHLogger.getInstance().debug(payload);
+};
+
+export function logInfo(payload: any): void {
+  return AHLogger.getInstance().info(payload);
+};
+
+export function logWarn(payload: any): void {
+  return AHLogger.getInstance().info(payload);
+};
+
+export function logError(payload: any): void {
+  return AHLogger.getInstance().error(payload);
+};
