@@ -1,5 +1,5 @@
 import { AHSizeOfHelpers } from "../../framework/helpers/size-of-helper";
-import { AHLogger } from "../../framework/logger";
+import { AHLogger } from "../../framework/features/logger";
 import { AHCacheConfig } from "../models/cache/cache-config";
 import { AHCacheData } from "../models/cache/cache-data";
 

@@ -1,6 +1,7 @@
-import { AHBodyCheckerMiddleware } from "../framework/middleware/body-checker-middleware";
-import { AHAwsEvent } from "../framework/models/aws/event/aws-event";
-import { AHHttpResponse } from "../framework/models/http/http-response";
+
+import { AHBodyCheckerMiddleware } from "..";
+import { AHAwsEvent } from "..";
+import { AHHttpResponse } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 

@@ -1,5 +1,5 @@
-import { AHHttpResponseBodyStatusEnum } from "../framework/models/enums/http-response-body-status-enum";
-import { AHHttpResponse } from "../framework/models/http/http-response";
+import { AHHttpResponseBodyStatusEnum } from "..";
+import { AHHttpResponse } from "..";
 
 
 describe('AHHttpResponse', () => {

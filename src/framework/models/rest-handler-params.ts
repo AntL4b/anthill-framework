@@ -1,6 +1,6 @@
 
 import { AHCacheConfig } from '../../core/models/cache/cache-config';
-import { AHAbstractMiddleware } from '../middleware/abstract-middleware';
+import { AHAbstractMiddleware } from '../features/middlewares/abstract-middleware';
 import { AHAwsEvent } from './aws/event/aws-event';
 import { AHRestMethodEnum } from './enums/rest-method-enum';
 import { AHHttpResponse } from './http/http-response';

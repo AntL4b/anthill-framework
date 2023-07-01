@@ -1,4 +1,5 @@
-import { AHSizeOfHelpers } from "../framework/helpers/size-of-helper";
+import { AHSizeOfHelpers } from "..";
+
 
 describe('AHSizeOfHelpers', () => {
   test('getSizeOf all managed types', () => {

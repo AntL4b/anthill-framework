@@ -1,4 +1,5 @@
-import { AHStringHelper } from "../framework/helpers/string-helper";
+import { AHStringHelper } from "..";
+
 
 describe('AHStringHelper', () => {
   test('convertToXDigitStr', () => {

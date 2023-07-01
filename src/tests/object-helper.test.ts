@@ -1,4 +1,5 @@
-import { AHObjectHelper } from "../framework/helpers/object-helper";
+import { AHObjectHelper } from "..";
+
 
 describe('AHObjectHelper', () => {
   test('clean', () => {

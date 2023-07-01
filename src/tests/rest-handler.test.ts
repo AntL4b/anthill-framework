@@ -1,10 +1,10 @@
-import { AHException } from "../framework/anthill-exception";
-import { AHPromiseHelper } from "../framework/helpers/promise-helper";
-import { AHQueryStringCheckerMiddleware } from "../framework/middleware/query-string-checker-middleware";
-import { AHAwsEvent } from "../framework/models/aws/event/aws-event";
-import { AHRestMethodEnum } from "../framework/models/enums/rest-method-enum";
-import { AHHttpResponse } from "../framework/models/http/http-response";
-import { AHRestHandler } from "../framework/rest-handler";
+import { AHException } from "..";
+import { AHPromiseHelper } from "..";
+import { AHQueryStringCheckerMiddleware } from "..";
+import { AHAwsEvent } from "..";
+import { AHRestMethodEnum } from "..";
+import { AHHttpResponse } from "..";
+import { AHRestHandler } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 // Override default warn and error log method to avoid jest to crash

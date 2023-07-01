@@ -1,6 +1,6 @@
-import { AHQueryStringCheckerMiddleware } from "../framework/middleware/query-string-checker-middleware";
-import { AHAwsEvent } from "../framework/models/aws/event/aws-event";
-import { AHHttpResponse } from "../framework/models/http/http-response";
+import { AHQueryStringCheckerMiddleware } from "..";
+import { AHAwsEvent } from "..";
+import { AHHttpResponse } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 

@@ -1,7 +1,7 @@
-import { AHAwsEvent } from "../models/aws/event/aws-event";
-import { AHHttpResponse } from "../models/http/http-response";
-import { AHHttpRequestHelper } from "../helpers/http-request-helper";
-import { AHPromiseHelper } from "../helpers/promise-helper";
+import { AHAwsEvent } from "../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../../models/http/http-response";
+import { AHHttpRequestHelper } from "../../helpers/http-request-helper";
+import { AHPromiseHelper } from "../../helpers/promise-helper";
 import { AHAbstractMiddleware } from "./abstract-middleware";
 
 export class AHHeaderCheckerMiddleware extends AHAbstractMiddleware {

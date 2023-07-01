@@ -1,5 +1,5 @@
-import { AHAwsEvent } from "../models/aws/event/aws-event";
-import { AHHttpResponse } from "../models/http/http-response";
+import { AHAwsEvent } from "../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../../models/http/http-response";
 
 
 export abstract class AHAbstractMiddleware {

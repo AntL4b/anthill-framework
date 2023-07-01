@@ -1,6 +1,6 @@
-import { AHException } from "../framework/anthill-exception";
-import { AHEnvironmentHelper } from "../framework/helpers/environment-helper";
-import { AHEnvEnum } from "../framework/models/enums/env-enum";
+import { AHException } from "..";
+import { AHEnvironmentHelper } from "..";
+import { AHEnvEnum } from "..";
 
 
 describe('AHEnvironmentHelper', () => {

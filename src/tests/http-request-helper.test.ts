@@ -1,5 +1,5 @@
-import { AHHttpRequestHelper } from "../framework/helpers/http-request-helper";
-import { AHAwsEvent } from "../framework/models/aws/event/aws-event";
+import { AHHttpRequestHelper } from "..";
+import { AHAwsEvent } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 

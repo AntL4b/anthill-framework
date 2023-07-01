@@ -1,7 +1,7 @@
 import { AHHttpRequestCache } from '../core/cache/http-request-cache';
-import { AHSizeOfHelpers } from '../framework/helpers/size-of-helper';
-import { AHHttpResponseBodyStatusEnum } from '../framework/models/enums/http-response-body-status-enum';
-import { AHHttpResponse } from '../framework/models/http/http-response';
+import { AHSizeOfHelpers } from '..';
+import { AHHttpResponseBodyStatusEnum } from '..';
+import { AHHttpResponse } from '..';
 import { AHTestResource } from './resources/test-resource';
 
 

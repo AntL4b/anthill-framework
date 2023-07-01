@@ -1,5 +1,6 @@
-import { AHException } from "../framework/anthill-exception";
-import { AHPromiseHelper } from "../framework/helpers/promise-helper";
+import { AHException } from "..";
+import { AHPromiseHelper } from "..";
+
 
 describe('AHPromiseHelper', () => {
   test('promisify', () => {

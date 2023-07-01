@@ -1,6 +1,7 @@
-import { AHLogger } from "../framework/logger";
-import { AHEnvEnum } from "../framework/models/enums/env-enum";
-import { AHLogLevelEnum } from "../framework/models/enums/log-level-enum";
+import { AHLogger } from "..";
+import { AHEnvEnum } from "..";
+import { AHLogLevelEnum } from "..";
+
 
 // Override default warn and error log method to avoid jest to crash
 global.console.error = (message: string) => {

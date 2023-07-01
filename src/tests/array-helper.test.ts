@@ -1,4 +1,4 @@
-import { AHArrayHelper } from "../framework/helpers/array-helper";
+import { AHArrayHelper } from "..";
 
 describe('AHArrayHelper', () => {
   test('distinct', () => {
