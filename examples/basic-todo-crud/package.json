@@ -21,7 +21,7 @@
     "test": "echo \"No test specified\""
   },
   "dependencies": {
-    "@antl4b/anthill-framework": "^0.0.1-alpha.1"
+    "@antl4b/anthill-framework": "^0.0.1-alpha.2"
   },
   "devDependencies": {
     "husky": "^8.0.3",
