@@ -4,17 +4,28 @@
   "description": "AntL4b framework for serverless backend projects",
   "author": "AntL4b <ant1.antlab@gmail.com>",
   "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "Anthill",
+    "Framework",
+    "AWS",
+    "Lambda",
+    "Api Gateway",
+    "Serverless",
+    "Microservices"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AntL4b/anthill-framework.git"
   },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
-  "module": "dist/anthill-framework.mjs",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "jest",
+    "build": "npm run clean && tsc",
     "clean": "rimraf dist/",
-    "build": "npm run clean && tsc"
+    "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
