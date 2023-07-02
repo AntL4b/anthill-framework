@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "noImplicitReturns": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": ".build",
+    "moduleResolution": "node",
+    "rootDir": "./"
+  }
+}
