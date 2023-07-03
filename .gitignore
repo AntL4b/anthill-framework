@@ -1,6 +1,7 @@
 dist/
 .build/
 .serverless/
+.npmrc
 
 *~
 *.sw[mnpcod]

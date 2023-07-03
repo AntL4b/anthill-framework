@@ -1,30 +1,35 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "lib": ["es2020"],
-    "module": "commonjs",
+    "target": "es2021",
+    "lib": ["es2021"],
+    "module": "node16",
+    "moduleResolution": "node16",
+		"moduleDetection": "force",
+    "resolveJsonModule": false,
     "declaration": true,
-    "sourceMap": true,
-    "outDir": "./dist",
+    "pretty": true,
+    "newLine": "lf",
+    "stripInternal": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noPropertyAccessFromIndexSignature": false,
+		"noEmitOnError": true,
+		"useDefineForClassFields": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+    "outDir": "dist",
     "removeComments": false,
     "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedParameters": false,
-    "noUnusedLocals": false,
-    "noImplicitReturns": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
     "noImplicitAny": false,
-    "strict": true,
     "strictNullChecks": false,
   },
   "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
+    "src"
   ]
 }
