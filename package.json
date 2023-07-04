@@ -1,9 +1,9 @@
 {
   "name": "@antl4b/anthill-framework",
   "version": "0.0.1-alpha.4",
-  "description": "AntL4b framework for serverless backend projects",
+  "description": "A fast, reliable dependence less framework for building serverless backend applications",
   "author": "AntL4b <ant1.antlab@gmail.com>",
-  "license": "GNU GPL V3",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AntL4b/anthill-framework.git"
