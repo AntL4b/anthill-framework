@@ -24,12 +24,12 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "engines": {
-		"node": ">=16"
-	},
+    "node": ">=16"
+  },
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf dist/",
-    "release": "npm run build && np",
+    "release": "npm run build && release-it",
     "test": "jest"
   },
   "devDependencies": {
@@ -40,8 +40,8 @@
     "import-sort-style-module": "^6.0.0",
     "jest": "^29.5.0",
     "lint-staged": "^13.2.2",
-    "np": "^8.0.4",
     "prettier": "^2.8.8",
+    "release-it": "^15.11.0",
     "rimraf": "^5.0.1",
     "ts-jest": "^29.1.0",
     "typescript": "5.1.3"
