@@ -71,6 +71,11 @@
       "style": "module"
     }
   },
+  "release-it": {
+    "github": {
+      "release": true
+    }
+  },
   "bugs": {
     "url": "https://github.com/AntL4b/anthill-framework/issues"
   },
