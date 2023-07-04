@@ -2,7 +2,7 @@
 
 A fast, reliable dependence less framework for building serverless backend applications
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AntL4b/anthill-framework/blob/main/LICENSE)
 [![NPM Version][npm-version-image]][npm-url]
 [![NPM Install Size][npm-install-size-image]][npm-install-size-url]
 
