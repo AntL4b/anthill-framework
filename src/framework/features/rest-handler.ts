@@ -8,7 +8,7 @@ import { AHLogger } from "./logger";
 import { AHAbstractMiddleware } from "./middlewares/abstract-middleware";
 import { AHRestHandlerParams } from "../models/rest-handler/rest-handler-params";
 import { AHCallable } from "../models/rest-handler/callable";
-
+import { AHException } from "./anthill-exception";
 export class AHRestHandler {
 
   private static defaultCacheConfig: AHCacheConfig = {
@@ -24,6 +24,10 @@ export class AHRestHandler {
   private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
 
   constructor(params: AHRestHandlerParams) {
+    if (!/^[a-zA-z_]+[a-zA-z0-9]*$/.test(params.name)) {
+      throw new AHException(`Invalide handler name: ${params.name}. Handler name must respect typescript var naming convention`);
+    }
+
     this.name = params.name;
     this.method = params.method;
     this.callable = params.callable;
@@ -46,6 +50,14 @@ export class AHRestHandler {
       ...AHRestHandler.defaultCacheConfig,
       ...cacheConfig
     }
+  }
+
+  /**
+   * Get rest handler name
+   * @returns The rest handler name
+   */
+  getName(): string {
+    return this.name;
   }
 
   /**

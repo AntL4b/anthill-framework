@@ -1,3 +1,4 @@
+import { AHHttpResponse, AHPromiseHelper, AHRestHandler } from "../..";
 import { AHAwsEvent } from "../../framework/models/aws/event/aws-event";
 import { AHRestMethodEnum } from "../../framework/models/enums/rest-method-enum";
 
@@ -31,5 +32,17 @@ export class AHTestResource {
     });
 
     return baseEvent;
+  }
+
+  static getDefaultHandler(): AHRestHandler {
+    return new AHRestHandler({
+      name: "handler",
+      method: AHRestMethodEnum.Get,
+      middlewares: [],
+      callable: (event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
+      cacheConfig: {
+        cachable: false
+      },
+    });
   }
 }

@@ -12,22 +12,18 @@ global.console.error = (message: string) => {
   console.log(`error: ${message}`);
 };
 
-const getDefaultHandler = () => {
-  return new AHRestHandler({
-    name: "handler",
-    method: AHRestMethodEnum.Get,
-    middlewares: [],
-    callable: (event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
-    cacheConfig: {
-      cachable: false
-    },
-  });
-}
-
 describe('AHRestHandler', () => {
   test('constructor', () => {
-    const handler = getDefaultHandler();
+    let handler = AHTestResource.getDefaultHandler();
     expect(handler).toBeInstanceOf(AHRestHandler);
+
+    expect(() => {
+      handler = new AHRestHandler({
+        name: "invalid-name",
+        method: AHRestMethodEnum.Get,
+        callable: (event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
+      });
+    }).toThrow(AHException);
   });
 
   test('setDefaultCacheConfig', () => {
@@ -49,14 +45,19 @@ describe('AHRestHandler', () => {
       maxCacheSize: 654321,
     };
   
-    const handler = getDefaultHandler();
+    const handler = AHTestResource.getDefaultHandler();
     handler.setCacheConfig(newCacheConfig);
 
     expect(JSON.stringify(handler["cacheConfig"])).toBe(JSON.stringify(newCacheConfig));
   });
 
+  test('getName', () => {
+    const handler = AHTestResource.getDefaultHandler();
+    expect(handler.getName()).toBe("handler");
+  });
+
   test('addMiddleware', () => {
-    const handler = getDefaultHandler();
+    const handler = AHTestResource.getDefaultHandler();
 
     expect(handler["middlewares"].length).toBe(0);
     handler.addMiddleware(new AHQueryStringCheckerMiddleware(['test']));
@@ -64,7 +65,7 @@ describe('AHRestHandler', () => {
   });
 
   test('handleRequest without middleware', async () => {
-    const handler = getDefaultHandler();
+    const handler = AHTestResource.getDefaultHandler();
     const response = await handler.handleRequest(AHTestResource.getBaseEvent());
 
     expect(response).toBeInstanceOf(AHHttpResponse);
@@ -73,7 +74,7 @@ describe('AHRestHandler', () => {
   });
 
   test('handleRequest with middleware', async () => {
-    const handler = getDefaultHandler();
+    const handler = AHTestResource.getDefaultHandler();
     handler.addMiddleware(new AHQueryStringCheckerMiddleware(['test']));
 
     const event = AHTestResource.getBaseEvent();

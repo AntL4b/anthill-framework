@@ -12,7 +12,7 @@ export class AHLogger {
   
   private logLevel: AHLogLevelEnum;
   private formatter: AHLoggerFormatter;
-  private handlers: [AHLoggerHandler];
+  private handlers: Array<AHLoggerHandler>;
 
   private constructor() {
     this.formatter = (payload: string) => {

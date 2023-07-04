@@ -4,6 +4,11 @@
 export { AHException } from "./framework/features/anthill-exception";
 
 /**
+ * ANTHILL
+ */
+export { Anthill, anthill } from "./framework/features/anthill";
+
+/**
  * LOGGER
  */
 export { AHLogger } from "./framework/features/logger";
