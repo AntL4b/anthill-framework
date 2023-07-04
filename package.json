@@ -29,11 +29,12 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf dist/",
-    "release": "npm run build && release-it",
+    "release": "npm run build && dotenv release-it --",
     "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
+    "dotenv-cli": "^7.2.1",
     "husky": "^8.0.3",
     "import-sort-cli": "^6.0.0",
     "import-sort-parser-typescript": "^6.0.0",
