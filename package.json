@@ -3,7 +3,7 @@
   "version": "0.0.1-alpha.4",
   "description": "AntL4b framework for serverless backend projects",
   "author": "AntL4b <ant1.antlab@gmail.com>",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "GNU GPL V3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AntL4b/anthill-framework.git"
