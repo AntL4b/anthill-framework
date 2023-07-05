@@ -34,13 +34,10 @@ export { AHQueryStringCheckerMiddleware } from "./framework/features/middlewares
 /**
  * HELPERS
  */
-export { AHArrayHelper } from "./framework/helpers/array-helper";
 export { AHEnvironmentHelper } from "./framework/helpers/environment-helper";
 export { AHHttpRequestHelper } from "./framework/helpers/http-request-helper";
 export { AHObjectHelper } from "./framework/helpers/object-helper";
 export { AHPromiseHelper } from "./framework/helpers/promise-helper";
-export { AHSizeOfHelpers } from "./framework/helpers/size-of-helper";
-export { AHStringHelper } from "./framework/helpers/string-helper";
 
 /**
  * MODELS

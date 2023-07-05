@@ -1,6 +1,5 @@
 import { AHHttpRequestCache } from '../core/cache/http-request-cache';
-import { AHSizeOfHelpers } from '..';
-import { AHHttpResponseBodyStatusEnum } from '..';
+import { AHHttpResponseBodyStatusEnum, AHObjectHelper } from '..';
 import { AHHttpResponse } from '..';
 import { AHTestResource } from './resources/test-resource';
 
@@ -67,7 +66,7 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('Cache override when going over maxCacheSize', () => {
-    const sizeOfResponse = AHSizeOfHelpers.getSizeOf({
+    const sizeOfResponse = AHObjectHelper.getSizeOf({
       id: requestCache,
       data: response,
       date: new Date(),
@@ -115,7 +114,7 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('Cache size not sufficient to store item', () => {
-    const sizeOfResponse = AHSizeOfHelpers.getSizeOf({
+    const sizeOfResponse = AHObjectHelper.getSizeOf({
       id: requestCache,
       data: response,
       date: new Date(),

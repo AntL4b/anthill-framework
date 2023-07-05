@@ -10,14 +10,4 @@ export class AHPromiseHelper {
       resolve(result);
     });
   }
-
-  /**
-   * Silently execute an async function. If it fails, it will not emit an exception
-   * @param f The function to execute
-   */
-    static async silentAsync(f: () => Promise<any>): Promise<void> {
-      try {
-        await f();
-      } catch (error) {}
-    }
 }

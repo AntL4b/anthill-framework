@@ -1,4 +1,4 @@
-import { AHSizeOfHelpers } from "../../framework/helpers/size-of-helper";
+import { AHObjectHelper } from "../..";
 import { AHLogger } from "../../framework/features/logger";
 import { AHCacheConfig } from "../models/cache/cache-config";
 import { AHCacheData } from "../models/cache/cache-data";
@@ -31,7 +31,7 @@ export abstract class AHCache<T, U> {
       date: new Date(),
     };
 
-    const dataToAddSize = AHSizeOfHelpers.getSizeOf(dataToAdd);
+    const dataToAddSize = AHObjectHelper.getSizeOf(dataToAdd);
 
     // Pass condition if this.cacheConfig.maxCacheSize is undefined
     if (dataToAddSize > this.cacheConfig.maxCacheSize) {
@@ -46,7 +46,7 @@ export abstract class AHCache<T, U> {
       AHLogger.getInstance().debug(
         'Current cache size will exceed max cache size: older data in cache deleted to free up space',
       );
-      this.currentCacheSize = this.currentCacheSize - AHSizeOfHelpers.getSizeOf(this.data[0]);
+      this.currentCacheSize = this.currentCacheSize - AHObjectHelper.getSizeOf(this.data[0]);
       this.data.splice(0, 1);
     }
 
@@ -59,7 +59,7 @@ export abstract class AHCache<T, U> {
       if (d.date.getTime() / 1000 > Date.now() / 1000 - ttl) {
         return true;
       } else {
-        this.currentCacheSize = this.currentCacheSize - AHSizeOfHelpers.getSizeOf(d);
+        this.currentCacheSize = this.currentCacheSize - AHObjectHelper.getSizeOf(d);
         return false;
       }
     });
