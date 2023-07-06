@@ -4,6 +4,7 @@ import { AHHttpRequestHelper } from "../../helpers/http-request-helper";
 import { AHPromiseHelper } from "../../helpers/promise-helper";
 import { AHAbstractMiddleware } from "./abstract-middleware";
 
+
 export class AHHeaderFieldMiddleware extends AHAbstractMiddleware<Array<string>> {
   constructor(payload: Array<string>) {
     super(payload);

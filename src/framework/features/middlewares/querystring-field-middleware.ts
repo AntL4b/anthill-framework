@@ -3,6 +3,7 @@ import { AHHttpResponse } from '../../models/http/http-response';
 import { AHPromiseHelper } from '../../helpers/promise-helper';
 import { AHAbstractMiddleware } from './abstract-middleware';
 
+
 export class AHQuerystringFieldMiddleware extends AHAbstractMiddleware<Array<string>> {
   constructor(payload: Array<string>) {
     super(payload);

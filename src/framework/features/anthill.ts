@@ -1,6 +1,7 @@
 import { AHException } from './anthill-exception';
 import { AHRestHandler } from './rest-handler';
 
+
 export class Anthill {
   private static instance: Anthill;
   private static restHandlers: Array<AHRestHandler>;
