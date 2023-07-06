@@ -3,7 +3,7 @@ import { AHHttpResponse } from '../../models/http/http-response';
 import { AHPromiseHelper } from '../../helpers/promise-helper';
 import { AHAbstractMiddleware } from './abstract-middleware';
 
-export class AHQueryStringCheckerMiddleware extends AHAbstractMiddleware {
+export class AHQuerystringFieldMiddleware extends AHAbstractMiddleware<Array<string>> {
   constructor(payload: Array<string>) {
     super(payload);
   }
@@ -24,7 +24,7 @@ export class AHQueryStringCheckerMiddleware extends AHAbstractMiddleware {
 
       if (notIncludedKeys.length > 0) {
         return AHPromiseHelper.promisify(
-          AHHttpResponse.error({ message: '[' + notIncludedKeys.join(', ') + '] not found in query string' }),
+          AHHttpResponse.error({ message: '[' + notIncludedKeys.join(', ') + '] not found in querystring' }),
         );
       } else {
         return AHPromiseHelper.promisify(event);
@@ -33,7 +33,7 @@ export class AHQueryStringCheckerMiddleware extends AHAbstractMiddleware {
       // No query string parameters and required parameter(s)
 
       return AHPromiseHelper.promisify(
-        AHHttpResponse.error({ message: '[' + this.payload.join(', ') + '] not found in query string' }),
+        AHHttpResponse.error({ message: '[' + this.payload.join(', ') + '] not found in querystring' }),
       );
     } else {
       // No query string parameters and no required parameter

@@ -26,10 +26,10 @@ export { AHRestHandler } from "./framework/features/rest-handler";
  * MIDDLEWARES
  */
 export { AHAbstractMiddleware } from "./framework/features/middlewares/abstract-middleware";
-export { AHBodyCheckerMiddleware } from "./framework/features/middlewares/body-checker-middleware";
-export { AHHeaderCheckerMiddleware } from "./framework/features/middlewares/header-checker-middleware";
+export { AHJsonBodyParserMiddleware } from "./framework/features/middlewares/json-body-parser-middleware";
+export { AHHeaderFieldMiddleware } from "./framework/features/middlewares/header-field-middleware";
 export { AHPagerFormatCheckerMiddleware } from "./framework/features/middlewares/pager-format-checker-middleware";
-export { AHQueryStringCheckerMiddleware } from "./framework/features/middlewares/query-string-checker-middleware";
+export { AHQuerystringFieldMiddleware } from "./framework/features/middlewares/querystring-field-middleware";
 
 /**
  * HELPERS
@@ -57,5 +57,6 @@ export { AHPager } from "./framework/models/http/pager";
 export { AHLoggerContext } from "./framework/models/logger/logger-context";
 export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
 export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
+export { AHJsonBodyParserMiddlewareOptions } from "./framework/models/middlewares/json-body-parser-middleware-options";
 export { AHRestHandlerParams } from "./framework/models/rest-handler/rest-handler-params";
 export { AHCallable } from "./framework/models/rest-handler/callable";

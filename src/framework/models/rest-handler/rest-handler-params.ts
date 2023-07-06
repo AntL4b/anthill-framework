@@ -8,6 +8,6 @@ export interface AHRestHandlerParams {
   name: string;
   method: AHRestMethodEnum;
   callable: AHCallable;
-  middlewares?: Array<AHAbstractMiddleware>;
+  middlewares?: Array<AHAbstractMiddleware<any>>;
   cacheConfig?: AHCacheConfig;
 }

@@ -1,6 +1,6 @@
 import { AHException } from "..";
 import { AHPromiseHelper } from "..";
-import { AHQueryStringCheckerMiddleware } from "..";
+import { AHQuerystringFieldMiddleware } from "..";
 import { AHAwsEvent } from "..";
 import { AHRestMethodEnum } from "..";
 import { AHHttpResponse } from "..";
@@ -60,7 +60,7 @@ describe('AHRestHandler', () => {
     const handler = AHTestResource.getDefaultHandler();
 
     expect(handler["middlewares"].length).toBe(0);
-    handler.addMiddleware(new AHQueryStringCheckerMiddleware(['test']));
+    handler.addMiddleware(new AHQuerystringFieldMiddleware(['test']));
     expect(handler["middlewares"].length).toBe(1);
   });
 
@@ -75,7 +75,7 @@ describe('AHRestHandler', () => {
 
   test('handleRequest with middleware', async () => {
     const handler = AHTestResource.getDefaultHandler();
-    handler.addMiddleware(new AHQueryStringCheckerMiddleware(['test']));
+    handler.addMiddleware(new AHQuerystringFieldMiddleware(['test']));
 
     const event = AHTestResource.getBaseEvent();
 

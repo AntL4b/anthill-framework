@@ -12,5 +12,6 @@ export class AHAwsEvent {
   stageVariables?: { [key: string]: string };
   requestContext: AHAwsEventRequestContext;
   body?: string;
+  isBase64Encoded: boolean;
   middlewareData?: any;
 }

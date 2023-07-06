@@ -3,7 +3,8 @@ import { AHHttpResponse } from '../../models/http/http-response';
 import { AHPromiseHelper } from '../../helpers/promise-helper';
 import { AHAbstractMiddleware } from './abstract-middleware';
 
-export class AHPagerFormatCheckerMiddleware extends AHAbstractMiddleware {
+
+export class AHPagerFormatCheckerMiddleware extends AHAbstractMiddleware<void> {
   constructor() {
     super();
   }

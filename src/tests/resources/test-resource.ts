@@ -11,7 +11,7 @@ export class AHTestResource {
       ressource: '',
       path: '/',
       httpMethod: AHRestMethodEnum.Post,
-      headers: {},
+      headers: { "Content-Type": "application/json"},
       requestContext: {
         ressourceId: '',
         resourcePath: '',
@@ -28,6 +28,7 @@ export class AHTestResource {
           userAgent: '',
         },
       },
+      isBase64Encoded: false,
       ...eventOverride
     });
 

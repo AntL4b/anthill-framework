@@ -9,6 +9,8 @@ import { AHAbstractMiddleware } from "./middlewares/abstract-middleware";
 import { AHRestHandlerParams } from "../models/rest-handler/rest-handler-params";
 import { AHCallable } from "../models/rest-handler/callable";
 import { AHException } from "./anthill-exception";
+
+
 export class AHRestHandler {
 
   private static defaultCacheConfig: AHCacheConfig = {
@@ -19,7 +21,7 @@ export class AHRestHandler {
 
   private name: string;
   private method: AHRestMethodEnum;
-  private middlewares: Array<AHAbstractMiddleware> = [];
+  private middlewares: Array<AHAbstractMiddleware<any>> = [];
   private callable: AHCallable;
   private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
 
@@ -74,7 +76,7 @@ export class AHRestHandler {
    * Add a middleware to the middleware pipeline execution
    * @param middleware 
    */
-  addMiddleware(middleware: AHAbstractMiddleware): void {
+  addMiddleware(middleware: AHAbstractMiddleware<any>): void {
     this.middlewares.push(middleware);
   }
 
@@ -105,7 +107,7 @@ export class AHRestHandler {
       // Run all the middlewares one by one
       for (let i = 0; i < this.middlewares.length; i++) {
         AHLogger.getInstance().debug(`Running middleware ${i + 1} of ${this.middlewares.length}`);
-        const middleware: AHAbstractMiddleware = this.middlewares[i];
+        const middleware: AHAbstractMiddleware<any> = this.middlewares[i];
 
         const middlewareResult = await middleware.run(ev);
 

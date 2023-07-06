@@ -2,10 +2,10 @@ import { AHAwsEvent } from "../../models/aws/event/aws-event";
 import { AHHttpResponse } from "../../models/http/http-response";
 
 
-export abstract class AHAbstractMiddleware {
-  payload: any;
+export abstract class AHAbstractMiddleware<T> {
+  payload: T;
 
-  constructor(payload?: any) {
+  constructor(payload?: T) {
     this.payload = payload;
   }
 
