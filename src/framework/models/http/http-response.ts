@@ -1,5 +1,6 @@
 import { AHHttpResponseBody } from './http-response-body';
 
+
 export class AHHttpResponse {
   statusCode: number;
   headers: { [key: string]: any };

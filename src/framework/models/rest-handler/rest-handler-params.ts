@@ -4,6 +4,7 @@ import { AHAbstractMiddleware } from '../../features/middlewares/abstract-middle
 import { AHCallable } from './callable';
 import { AHRestMethodEnum } from '../enums/rest-method-enum';
 
+
 export interface AHRestHandlerParams {
   name: string;
   method: AHRestMethodEnum;

@@ -7,6 +7,7 @@ import { AHHttpResponse } from "..";
 import { AHRestHandler } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
+
 // Override default warn and error log method to avoid jest to crash
 global.console.error = (message: string) => {
   console.log(`error: ${message}`);
