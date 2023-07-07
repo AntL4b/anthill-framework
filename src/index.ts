@@ -23,6 +23,11 @@ export { logError } from "./framework/features/logger";
 export { AHRestHandler } from "./framework/features/rest-handler";
 
 /**
+ * TIME TRACKER
+ */
+export { AHTimeTracker } from "./framework/features/time-tracker";
+
+/**
  * MIDDLEWARES
  */
 export { AHAbstractMiddleware } from "./framework/features/middlewares/abstract-middleware";
