@@ -1,6 +1,6 @@
 
 import { AHException } from "./anthill-exception";
-import { logError, logInfo, logWarn } from "./logger";
+import { logInfo, logWarn } from "./logger";
 import { AHTimeTrackerStateEnum } from "../../core/models/enums/time-tracker-state-enum";
 import { AHTimeSegment } from "../../core/models/time-segment";
 
@@ -10,7 +10,7 @@ const LOG_SESSION_LINE_LENGTH = 50;
 export class AHTimeTracker {
 
   private static state: AHTimeTrackerStateEnum = AHTimeTrackerStateEnum.Stopped;
-  private static timeSegments: Array<AHTimeSegment>;
+  private static timeSegments: Array<AHTimeSegment> = [];
   private static trackingSessionSegmentName: string;
 
   /**
@@ -18,10 +18,14 @@ export class AHTimeTracker {
    * @param trackingSessionSegmentName The tracking session segment name
    * @returns 
    */
-  static startTracking(trackingSessionSegmentName: string = "global-session"): void {
+  static startTrackingSession(trackingSessionSegmentName: string = "time-tracking-session"): void {
     if (AHTimeTracker.state === AHTimeTrackerStateEnum.Started) {
-      logWarn("startTrackingTime has no effect when time tracker is started");
+      logWarn("startTrackingSession has no effect when a time tracking session is running");
       return;
+    }
+
+    if (AHTimeTracker.timeSegments.length > 0) {
+      logInfo("startTrackingSession will remove all previous segments");
     }
 
     AHTimeTracker.timeSegments = [];
@@ -37,8 +41,7 @@ export class AHTimeTracker {
    */
   static startSegment(segmentName: string): void {
     if (AHTimeTracker.timeSegments.find(s => s.name === segmentName)) {
-      logError(`Time segment ${segmentName} already exists`);
-      return;
+      throw new AHException(`Time segment ${segmentName} already exists`);
     }
 
     AHTimeTracker.timeSegments.push({
@@ -68,9 +71,9 @@ export class AHTimeTracker {
    * Stop the tracking session
    * @returns The tracking session overall duration
    */
-  static stopTracking(): number {
+  static stopTrackingSession(): number {
     if (AHTimeTracker.state === AHTimeTrackerStateEnum.Stopped) {
-      logWarn("stopTrackingTime has no effect when time tracker is stopped");
+      logWarn("stopTrackingSession has no effect when no time tracking session is running");
       return 0;
     }
 

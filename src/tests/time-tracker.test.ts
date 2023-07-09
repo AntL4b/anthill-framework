@@ -11,62 +11,65 @@ global.console.warn = (message: string) => {
 };
 
 describe('AHTimeTracker', () => {
-  test('startTracking', () => {
+  test('startTrackingSession', () => {
     expect(AHTimeTracker["state"]).toBe(AHTimeTrackerStateEnum.Stopped);
-    AHTimeTracker.startTracking();
+    AHTimeTracker.startTrackingSession();
     expect(AHTimeTracker["state"]).toBe(AHTimeTrackerStateEnum.Started);
     expect(AHTimeTracker["timeSegments"].length).toBe(1);
-    AHTimeTracker.stopTracking();
+    AHTimeTracker.stopTrackingSession();
   });
 
-  test('re startTracking', () => {
-    AHTimeTracker.startTracking();
+  test('re startTrackingSession', () => {
+    AHTimeTracker.startTrackingSession();
     expect(AHTimeTracker["state"]).toBe(AHTimeTrackerStateEnum.Started);
     expect(AHTimeTracker["timeSegments"].length).toBe(1);
     AHTimeTracker.startSegment("test-segment");
     expect(AHTimeTracker["timeSegments"].length).toBe(2);
-    AHTimeTracker.startTracking(); // should do nothing
+    AHTimeTracker.startTrackingSession(); // should do nothing
     expect(AHTimeTracker["timeSegments"].length).toBe(2);
-    AHTimeTracker.stopTracking();
+    AHTimeTracker.stopTrackingSession();
   });
 
   test('startSegment', () => {
-    AHTimeTracker.startTracking();
+    // Reset any eventual session
+    AHTimeTracker.startTrackingSession();
+    AHTimeTracker.stopTrackingSession();
+
     const timeSegmentNumber = AHTimeTracker["timeSegments"].length;
     AHTimeTracker.startSegment("test-segment");
     const segment = AHTimeTracker["timeSegments"].find(s => s.name === "test-segment");
 
-    const timeSegmentNumber2 = AHTimeTracker["timeSegments"].length
-    expect(timeSegmentNumber2).toBeGreaterThan(timeSegmentNumber);
+    expect(AHTimeTracker["timeSegments"].length).toBeGreaterThan(timeSegmentNumber);
     expect(segment).toBeTruthy();
     expect(segment.start).toBeTruthy();
 
-    AHTimeTracker.startSegment("test-segment");
-    expect(AHTimeTracker["timeSegments"].length).toBe(timeSegmentNumber2);
-    AHTimeTracker.stopTracking();
+    expect(() => AHTimeTracker.startSegment("test-segment")).toThrow(AHException);
   });
 
   test('stopSegment', () => {
-    AHTimeTracker.startTracking();
+    // Reset any eventual session
+    AHTimeTracker.startTrackingSession();
+    AHTimeTracker.stopTrackingSession();
+
     AHTimeTracker.startSegment("test-segment");
     const segment = AHTimeTracker["timeSegments"].find(s => s.name === "test-segment");
 
     expect(segment).toBeTruthy();
     expect(segment.end).toBeFalsy();
 
-    AHTimeTracker.stopSegment("test-segment");
+    const segmentDuration = AHTimeTracker.stopSegment("test-segment");
     expect(segment.end).toBeTruthy();
+    expect(segmentDuration).toBeTruthy();
 
-    expect(() => AHTimeTracker.stopSegment("inexistant-segment")).toThrow(AHException)
-    AHTimeTracker.stopTracking();
+    expect(() => AHTimeTracker.stopSegment("inexistant-segment")).toThrow(AHException);
   });
 
-  test('stopTracking', () => {
-    AHTimeTracker.startTracking();
+  test('stopTrackingSession', () => {
+    AHTimeTracker.startTrackingSession();
     expect(AHTimeTracker["state"]).toBe(AHTimeTrackerStateEnum.Started);
-    AHTimeTracker.stopTracking();
+    AHTimeTracker.stopTrackingSession();
     expect(AHTimeTracker["state"]).toBe(AHTimeTrackerStateEnum.Stopped);
-    AHTimeTracker.stopTracking();
+    AHTimeTracker.stopTrackingSession();
     expect(AHTimeTracker["state"]).toBe(AHTimeTrackerStateEnum.Stopped);
   });
 
@@ -75,14 +78,14 @@ describe('AHTimeTracker', () => {
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
 
-    AHTimeTracker.startTracking();
+    AHTimeTracker.startTrackingSession();
     AHTimeTracker.startSegment("test-segment");
     AHTimeTracker.startSegment("test-segment-2"); // not stopped
     AHTimeTracker.startSegment("test-segment-3");
     AHTimeTracker.stopSegment("test-segment-3");
     AHTimeTracker.stopSegment("test-segment");
     AHTimeTracker.logTrackingSession(); // before stop
-    AHTimeTracker.stopTracking();
+    AHTimeTracker.stopTrackingSession();
     AHTimeTracker.logTrackingSession(); // after stop
 
     expect(handler).toHaveBeenCalled();
