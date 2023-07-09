@@ -28,6 +28,11 @@ export { AHRestHandler } from "./framework/features/rest-handler";
 export { AHTimeTracker } from "./framework/features/time-tracker";
 
 /**
+ * TIME SEGMENT
+ */
+export { AHTimeSegment } from "./framework/features/time-segment";
+
+/**
  * MIDDLEWARES
  */
 export { AHAbstractMiddleware } from "./framework/features/middlewares/abstract-middleware";

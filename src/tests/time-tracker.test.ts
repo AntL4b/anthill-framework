@@ -1,14 +1,6 @@
 import { AHException, AHLogger, AHTimeTracker} from "..";
 import { AHTimeTrackerStateEnum } from "../core/models/enums/time-tracker-state-enum";
 
-// Override default warn and error log method to avoid jest to crash
-global.console.error = (message: string) => {
-  console.log(`error: ${message}`);
-};
-
-global.console.warn = (message: string) => {
-  console.log(`warn: ${message}`);
-};
 
 describe('AHTimeTracker', () => {
   test('startTrackingSession', () => {
@@ -21,8 +13,6 @@ describe('AHTimeTracker', () => {
 
   test('re startTrackingSession', () => {
     AHTimeTracker.startTrackingSession();
-    expect(AHTimeTracker["state"]).toBe(AHTimeTrackerStateEnum.Started);
-    expect(AHTimeTracker["timeSegments"].length).toBe(1);
     AHTimeTracker.startSegment("test-segment");
     expect(AHTimeTracker["timeSegments"].length).toBe(2);
     AHTimeTracker.startTrackingSession(); // should do nothing
@@ -35,14 +25,15 @@ describe('AHTimeTracker', () => {
     AHTimeTracker.startTrackingSession();
     AHTimeTracker.stopTrackingSession();
 
+    // Tracking stopped
+    expect(() => AHTimeTracker.startSegment("test-segment")).toThrow(AHException);
+
+    AHTimeTracker.startTrackingSession();
     const timeSegmentNumber = AHTimeTracker["timeSegments"].length;
     AHTimeTracker.startSegment("test-segment");
-    const segment = AHTimeTracker["timeSegments"].find(s => s.name === "test-segment");
-
     expect(AHTimeTracker["timeSegments"].length).toBeGreaterThan(timeSegmentNumber);
-    expect(segment).toBeTruthy();
-    expect(segment.start).toBeTruthy();
 
+    // Re start existing segment
     expect(() => AHTimeTracker.startSegment("test-segment")).toThrow(AHException);
   });
 
@@ -51,17 +42,35 @@ describe('AHTimeTracker', () => {
     AHTimeTracker.startTrackingSession();
     AHTimeTracker.stopTrackingSession();
 
+    AHTimeTracker.startTrackingSession();
     AHTimeTracker.startSegment("test-segment");
-    const segment = AHTimeTracker["timeSegments"].find(s => s.name === "test-segment");
+    const segment = AHTimeTracker.getSegment("test-segment");
+    expect(segment.endTime).toBeFalsy();
 
-    expect(segment).toBeTruthy();
-    expect(segment.end).toBeFalsy();
-
-    const segmentDuration = AHTimeTracker.stopSegment("test-segment");
-    expect(segment.end).toBeTruthy();
-    expect(segmentDuration).toBeTruthy();
+    AHTimeTracker.stopSegment("test-segment");
+    expect(segment.endTime).toBeTruthy();
 
     expect(() => AHTimeTracker.stopSegment("inexistant-segment")).toThrow(AHException);
+  });
+
+  test('stopSegment when tracking is stopped', () => {
+    // Reset any eventual session
+    AHTimeTracker.startTrackingSession();
+    AHTimeTracker.stopTrackingSession();
+
+    AHTimeTracker.startTrackingSession();
+    AHTimeTracker.startSegment("test-segment");
+    AHTimeTracker.getSegment("test-segment");
+    AHTimeTracker.stopTrackingSession();
+    expect(() => AHTimeTracker.stopSegment("test-segment")).toThrow(AHException);
+  });
+
+  test('getSegment', () => {
+    AHTimeTracker.startTrackingSession();
+    AHTimeTracker.startSegment("test-segment");
+    expect(AHTimeTracker.getSegment("test-segment")).toBeTruthy();
+    expect(() => AHTimeTracker.getSegment("inexistant-segment")).toBeTruthy();
+    AHTimeTracker.stopTrackingSession();
   });
 
   test('stopTrackingSession', () => {

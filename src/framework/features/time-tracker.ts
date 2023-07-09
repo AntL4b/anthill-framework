@@ -1,8 +1,8 @@
 
 import { AHException } from "./anthill-exception";
-import { logInfo, logWarn } from "./logger";
+import { logInfo } from "./logger";
 import { AHTimeTrackerStateEnum } from "../../core/models/enums/time-tracker-state-enum";
-import { AHTimeSegment } from "../../core/models/time-segment";
+import { AHTimeSegment } from "./time-segment";
 
 
 const LOG_SESSION_LINE_LENGTH = 50;
@@ -20,7 +20,7 @@ export class AHTimeTracker {
    */
   static startTrackingSession(trackingSessionSegmentName: string = "time-tracking-session"): void {
     if (AHTimeTracker.state === AHTimeTrackerStateEnum.Started) {
-      logWarn("startTrackingSession has no effect when a time tracking session is running");
+      logInfo("startTrackingSession has no effect when a time tracking session is running");
       return;
     }
 
@@ -30,8 +30,9 @@ export class AHTimeTracker {
 
     AHTimeTracker.timeSegments = [];
     AHTimeTracker.trackingSessionSegmentName = trackingSessionSegmentName;
-    AHTimeTracker.startSegment(trackingSessionSegmentName);
     AHTimeTracker.state = AHTimeTrackerStateEnum.Started;
+
+    AHTimeTracker.startSegment(trackingSessionSegmentName);
   }
 
   /**
@@ -40,31 +41,49 @@ export class AHTimeTracker {
    * @returns 
    */
   static startSegment(segmentName: string): void {
+    if (AHTimeTracker.state === AHTimeTrackerStateEnum.Stopped) {
+      throw new AHException("Start segment failed: Time tracker session is stopped")
+    }
+
     if (AHTimeTracker.timeSegments.find(s => s.name === segmentName)) {
       throw new AHException(`Time segment ${segmentName} already exists`);
     }
 
-    AHTimeTracker.timeSegments.push({
-      name: segmentName,
-      start: performance.now(),
-    });
+    const segment = new AHTimeSegment(segmentName);
+    segment.start();
+
+    AHTimeTracker.timeSegments.push(segment);
   }
 
   /**
    * Stop an existing time segment
    * @param segmentName The name of the segment
-   * @returns Ther segment duration (ms)
+   * @returns The segment duration (ms)
    */
   static stopSegment(segmentName: string): number {
+    if (AHTimeTracker.state === AHTimeTrackerStateEnum.Stopped) {
+      throw new AHException("Stop segment failed: Time tracker session is stopped")
+    }
+
+    const segment = AHTimeTracker.getSegment(segmentName);
+    segment.stop();
+
+    return segment.getDuration();
+  }
+
+  /**
+   * Get a segment from the time tracking session
+   * @param segmentName The segment name
+   * @returns The segment named by segmentName
+   */
+  static getSegment(segmentName: string): AHTimeSegment {
     const segmentIndex = AHTimeTracker.timeSegments.findIndex(s => s.name === segmentName);
 
     if (segmentIndex === -1) {
       throw new AHException(`Time segment ${segmentName} doesn't exist`);
     }
 
-    AHTimeTracker.timeSegments[segmentIndex].end = performance.now();
-
-    return AHTimeTracker.timeSegments[segmentIndex].end - AHTimeTracker.timeSegments[segmentIndex].start;
+    return AHTimeTracker.timeSegments[segmentIndex];
   }
 
   /**
@@ -73,11 +92,19 @@ export class AHTimeTracker {
    */
   static stopTrackingSession(): number {
     if (AHTimeTracker.state === AHTimeTrackerStateEnum.Stopped) {
-      logWarn("stopTrackingSession has no effect when no time tracking session is running");
+      logInfo("stopTrackingSession has no effect when no time tracking session is running");
       return 0;
     }
 
     const sessionDuration = AHTimeTracker.stopSegment(AHTimeTracker.trackingSessionSegmentName);
+
+    // Stop all unstopped segment
+    for (const segment of AHTimeTracker.timeSegments) {
+      if (!segment.endTime) {
+        segment.stop();
+      }
+    }
+    
     AHTimeTracker.state = AHTimeTrackerStateEnum.Stopped;
 
     return sessionDuration;
@@ -113,13 +140,15 @@ export class AHTimeTracker {
     }
 
     const now = performance.now();
-    const sessionSegment = AHTimeTracker.timeSegments.find(s => s.name === AHTimeTracker.trackingSessionSegmentName);
-    const sessionDuration = (sessionSegment.end || now) - sessionSegment.start;
+    const sessionSegment = AHTimeTracker.getSegment(AHTimeTracker.trackingSessionSegmentName);
 
-    for (let segment of AHTimeTracker.timeSegments) {
-      const segmentDuration = (segment.end || now) - segment.start;
+    // Don't use getDuration to refer to the same end time (now) for all segments 
+    const sessionDuration = (sessionSegment.endTime || now) - sessionSegment.startTime;
+
+    for (const segment of AHTimeTracker.timeSegments) {
+      const segmentDuration = (segment.endTime || now) - segment.startTime;
       const segmentBlocLength = Math.round(segmentDuration / sessionDuration * LOG_SESSION_LINE_LENGTH);
-      const segmentBlocStartIndex = Math.round((segment.start - sessionSegment.start) / sessionDuration * LOG_SESSION_LINE_LENGTH);
+      const segmentBlocStartIndex = Math.round((segment.startTime - sessionSegment.startTime) / sessionDuration * LOG_SESSION_LINE_LENGTH);
 
       logInfo(
         fillStrWithTrailingSpaces(segment.name, maxSegmentNameLength) + ': '
