@@ -27,7 +27,7 @@ export class AHRestHandler {
 
   constructor(params: AHRestHandlerParams) {
     if (!/^[a-zA-z_]+[a-zA-z0-9]*$/.test(params.name)) {
-      throw new AHException(`Invalide handler name: ${params.name}. Handler name must respect typescript var naming convention`);
+      throw new AHException(`Invalid handler name: ${params.name}. Handler name must respect typescript var naming convention`);
     }
 
     this.name = params.name;
@@ -81,7 +81,7 @@ export class AHRestHandler {
   }
 
   /**
-   * Handle the request.
+   * Handle the request
    * Run all the middlewares one by one before running the handler callable function
    * @param event The event to be passed through middlewares and callable function
    * @returns An http response
