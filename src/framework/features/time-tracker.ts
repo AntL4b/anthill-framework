@@ -16,7 +16,6 @@ export class AHTimeTracker {
   /**
    * Start a tracking session
    * @param trackingSessionSegmentName The tracking session segment name
-   * @returns 
    */
   static startTrackingSession(trackingSessionSegmentName: string = "time-tracking-session"): void {
     if (AHTimeTracker.state === AHTimeTrackerStateEnum.Started) {
@@ -38,7 +37,6 @@ export class AHTimeTracker {
   /**
    * Start a new time segment
    * @param segmentName The name of the segment
-   * @returns 
    */
   static startSegment(segmentName: string): void {
     if (AHTimeTracker.state === AHTimeTrackerStateEnum.Stopped) {
@@ -112,7 +110,6 @@ export class AHTimeTracker {
 
   /**
    * Log the tracking session
-   * @returns
    */
   static logTrackingSession(): void {
     const maxSegmentNameLength = Math.max(...AHTimeTracker.timeSegments.map(s => s.name.length));
