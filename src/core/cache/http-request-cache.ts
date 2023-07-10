@@ -3,7 +3,8 @@ import { AHAwsEvent } from "../../framework/models/aws/event/aws-event";
 import { AHCacheData } from "../models/cache/cache-data";
 import { AHHttpResponse } from "../../framework/models/http/http-response";
 import { AHCache } from "./cache";
-import { AHHttpRequestParameters } from "../models/cache/http-request-cache/http-request-parameters";
+import { AHHttpRequestParameters } from "../models/cache/http-request-parameters";
+
 
 export class AHHttpRequestCache extends AHCache<AHHttpRequestParameters, AHHttpResponse> {
   private static instance: AHHttpRequestCache;
