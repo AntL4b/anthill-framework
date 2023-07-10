@@ -22,14 +22,14 @@ export class AHHeaderFieldMiddleware extends AHAbstractMiddleware<Array<string>>
 
       if (notIncludedHeaders.length > 0) {
         return AHPromiseHelper.promisify(
-          AHHttpResponse.error({ message: '[' + notIncludedHeaders.join(', ') + '] not found in header list' }),
+          AHHttpResponse.error({ message: `[${notIncludedHeaders.join(', ')}] not found in header list` }),
         );
       } else {
         return AHPromiseHelper.promisify(event);
       }
     } else if (this.payload.length) {
       return AHPromiseHelper.promisify(
-        AHHttpResponse.error({ message: '[' + this.payload.join(', ') + '] not found in header list' }),
+        AHHttpResponse.error({ message: `[${this.payload.join(', ')}] not found in header list` }),
       );
     } else {
       return AHPromiseHelper.promisify(event);

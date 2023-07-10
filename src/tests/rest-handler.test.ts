@@ -1,10 +1,11 @@
-import { AHException } from "..";
+import { AHException, AHLogger, AHRestHandlerOptions } from "..";
 import { AHPromiseHelper } from "..";
 import { AHQuerystringFieldMiddleware } from "..";
 import { AHAwsEvent } from "..";
 import { AHRestMethodEnum } from "..";
 import { AHHttpResponse } from "..";
 import { AHRestHandler } from "..";
+import { AHCacheConfig } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 
@@ -14,6 +15,18 @@ global.console.error = (message: string) => {
 };
 
 describe('AHRestHandler', () => {
+  beforeEach(() => {
+    AHRestHandler.setDefaultCacheConfig({
+      cachable: false,
+      ttl: 120,
+      maxCacheSize: 1000000,
+    });
+
+    AHRestHandler.setDefaultOptions({
+      displayPerformanceMetrics: false
+    });
+  });
+
   test('constructor', () => {
     let handler = AHTestResource.getDefaultHandler();
     expect(handler).toBeInstanceOf(AHRestHandler);
@@ -28,28 +41,49 @@ describe('AHRestHandler', () => {
   });
 
   test('setDefaultCacheConfig', () => {
-    const newDefaultCacheConfig = {
+    const newDefaultCacheConfig: AHCacheConfig = {
       cachable: true,
       ttl: 999,
       maxCacheSize: 123456,
     };
-  
+
     AHRestHandler.setDefaultCacheConfig(newDefaultCacheConfig);
 
     expect(JSON.stringify(AHRestHandler["defaultCacheConfig"])).toBe(JSON.stringify(newDefaultCacheConfig));
   });
 
+  test('setDefaultOptions', () => {
+    const newDefaultOptions: AHRestHandlerOptions = {
+      displayPerformanceMetrics: true,
+    };
+
+    AHRestHandler.setDefaultOptions(newDefaultOptions);
+
+    expect(JSON.stringify(AHRestHandler["defaultOptions"])).toBe(JSON.stringify(newDefaultOptions));
+  });
+
   test('setCacheConfig', () => {
-    const newCacheConfig = {
+    const newCacheConfig: AHCacheConfig = {
       cachable: true,
       ttl: 111,
       maxCacheSize: 654321,
     };
-  
+
     const handler = AHTestResource.getDefaultHandler();
     handler.setCacheConfig(newCacheConfig);
 
     expect(JSON.stringify(handler["cacheConfig"])).toBe(JSON.stringify(newCacheConfig));
+  });
+
+  test('setOptions', () => {
+    const newOptions: AHRestHandlerOptions = {
+      displayPerformanceMetrics: true,
+    };
+
+    const handler = AHTestResource.getDefaultHandler();
+    handler.setOptions(newOptions);
+
+    expect(JSON.stringify(handler["options"])).toBe(JSON.stringify(newOptions));
   });
 
   test('getName', () => {
@@ -137,5 +171,18 @@ describe('AHRestHandler', () => {
     const response = await handler.handleRequest(AHTestResource.getBaseEvent());
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.body).message).toBe(errMess);
+  });
+
+  test('displayPerformanceMetrics', async () => {
+    const logger = AHLogger.getInstance();
+    const logHandler = jest.fn(() => {});
+    logger.addHandler(logHandler);
+
+    const handler = AHTestResource.getDefaultHandler();
+    handler.setOptions({
+      displayPerformanceMetrics: true,
+    })
+    await handler.handleRequest(AHTestResource.getBaseEvent());
+    expect(logHandler).toHaveBeenCalled();
   });
 });

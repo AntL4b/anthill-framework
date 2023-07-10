@@ -14,7 +14,7 @@ export class AHPagerFormatCheckerMiddleware extends AHAbstractMiddleware<void> {
     const pageSize = event.queryStringParameters?.pageSize ? parseInt(event.queryStringParameters?.pageSize) : null;
 
     if (pageSize && !page) {
-      event.queryStringParameters.page = '1';
+      event.queryStringParameters.page = "1";
       page = 1;
     }
 

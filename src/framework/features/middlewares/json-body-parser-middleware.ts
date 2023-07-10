@@ -16,13 +16,13 @@ export class AHJsonBodyParserMiddleware extends AHAbstractMiddleware<AHJsonBodyP
 
   run(event: AHAwsEvent): Promise<AHAwsEvent | AHHttpResponse> {
     if (event.body) {
-      const contentType = AHHttpRequestHelper.getHeaderValue('Content-Type', event);
+      const contentType = AHHttpRequestHelper.getHeaderValue("Content-Type", event);
 
       if (!JSON_MIME_PATTERN.test(contentType)) {
         return AHPromiseHelper.promisify(AHHttpResponse.error({ message: `Unsupported media type: ${contentType}` }));
       }
 
-      const data = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString() : event.body;
+      const data = event.isBase64Encoded ? Buffer.from(event.body, "base64").toString() : event.body;
       event.body = JSON.parse(data, this.payload.reviver);
     }
 

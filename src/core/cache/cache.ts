@@ -1,6 +1,6 @@
 import { AHObjectHelper } from "../..";
 import { AHLogger } from "../../framework/features/logger";
-import { AHCacheConfig } from "../models/cache/cache-config";
+import { AHCacheConfig } from "../../framework/models/cache-config";
 import { AHCacheData } from "../models/cache/cache-data";
 
 

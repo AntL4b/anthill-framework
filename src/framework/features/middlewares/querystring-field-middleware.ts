@@ -25,7 +25,7 @@ export class AHQuerystringFieldMiddleware extends AHAbstractMiddleware<Array<str
 
       if (notIncludedKeys.length > 0) {
         return AHPromiseHelper.promisify(
-          AHHttpResponse.error({ message: '[' + notIncludedKeys.join(', ') + '] not found in querystring' }),
+          AHHttpResponse.error({ message: `[${notIncludedKeys.join(', ')}] not found in querystring` }),
         );
       } else {
         return AHPromiseHelper.promisify(event);
@@ -34,7 +34,7 @@ export class AHQuerystringFieldMiddleware extends AHAbstractMiddleware<Array<str
       // No query string parameters and required parameter(s)
 
       return AHPromiseHelper.promisify(
-        AHHttpResponse.error({ message: '[' + this.payload.join(', ') + '] not found in querystring' }),
+        AHHttpResponse.error({ message: `[${this.payload.join(', ')}] not found in querystring` }),
       );
     } else {
       // No query string parameters and no required parameter
