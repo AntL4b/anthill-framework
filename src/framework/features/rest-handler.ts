@@ -6,14 +6,13 @@ import { AHRestMethodEnum } from "../models/enums/rest-method-enum";
 import { AHHttpResponse } from "../models/http/http-response";
 import { AHLogger } from "./logger";
 import { AHAbstractMiddleware } from "./middlewares/abstract-middleware";
-import { AHRestHandlerParams } from "../models/rest-handler/rest-handler-params";
-import { AHCallable } from "../models/rest-handler/callable";
-import { AHException } from "./anthill-exception";
-import { AHRestHandlerOptions } from "../models/rest-handler/rest-handler-options";
+import { AHRestHandlerParams } from "../models/handler/rest-handler-params";
+import { AHRestHandlerOptions } from "../models/handler/rest-handler-options";
 import { AHTimeTracker } from "./time-tracker";
+import { AHAbstractHandler } from "../../core/abstract-handler";
 
 
-export class AHRestHandler {
+export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
 
   private static defaultCacheConfig: AHCacheConfig = {
     cachable: false,
@@ -25,22 +24,16 @@ export class AHRestHandler {
     displayPerformanceMetrics: false,
   };
 
-  private name: string;
   private method: AHRestMethodEnum;
   private middlewares: Array<AHAbstractMiddleware<any>> = [];
-  private callable: AHCallable;
   private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
   private options: AHRestHandlerOptions = AHRestHandler.defaultOptions;
   private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
 
   constructor(params: AHRestHandlerParams) {
-    if (!/^[a-zA-z_]+[a-zA-z0-9]*$/.test(params.name)) {
-      throw new AHException(`Invalid handler name: ${params.name}. Handler name must respect typescript var naming convention`);
-    }
+    super(params);
 
-    this.name = params.name;
     this.method = params.method;
-    this.callable = params.callable;
 
     if (params.middlewares) {
       this.middlewares = params.middlewares;
@@ -70,19 +63,11 @@ export class AHRestHandler {
    * Set the default optionsc
    * @param options The options (override) to set by default
    */
-    static setDefaultOptions(options: AHRestHandlerOptions): void {
-      AHRestHandler.defaultOptions = {
-        ...AHRestHandler.defaultOptions,
-        ...options
-      }
+  static setDefaultOptions(options: AHRestHandlerOptions): void {
+    AHRestHandler.defaultOptions = {
+      ...AHRestHandler.defaultOptions,
+      ...options
     }
-
-  /**
-   * Get rest handler name
-   * @returns The rest handler name
-   */
-  getName(): string {
-    return this.name;
   }
 
   /**

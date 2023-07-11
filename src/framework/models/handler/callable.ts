@@ -1,0 +1,1 @@
+export type AHCallable<T, U> = (event: T) => Promise<U>;
