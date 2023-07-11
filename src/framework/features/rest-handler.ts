@@ -35,17 +35,9 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
     this.method = params.method;
 
-    if (params.middlewares) {
-      this.middlewares = params.middlewares;
-    }
-
-    if (params.cacheConfig) {
-      this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig };
-    }
-
-    if (params.cacheConfig) {
-      this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig };
-    }
+    if (params.middlewares) { this.middlewares = params.middlewares; }
+    if (params.cacheConfig) { this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig }; }
+    if (params.cacheConfig) { this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig }; }
   }
 
   /**

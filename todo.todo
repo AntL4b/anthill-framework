@@ -1,5 +1,5 @@
 - Add some middlewares (a good source of candidate can be found here: https://github.com/middyjs/middy/tree/main/packages)
-- Think about putting http cache system inside a middleware (maybe not that good)
 - Implement a DTO (request / response) for callables
 - System for registering handlers with more ease
+  - register controller (https://spring.io/guides/tutorials/rest/)
 - AHLambdaHandler ? for lambdas that are not trigged by api gateway
