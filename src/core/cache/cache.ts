@@ -9,8 +9,6 @@ export abstract class AHCache<T, U> {
   currentCacheSize: number = 0;
   cacheConfig: AHCacheConfig;
 
-  constructor() {}
-
   /**
    * Set the cache config
    * @param cacheConfig The cache config to set
@@ -44,7 +42,7 @@ export abstract class AHCache<T, U> {
     // Delete data to free up space
     while (this.currentCacheSize + dataToAddSize > this.cacheConfig.maxCacheSize) {
       AHLogger.getInstance().debug(
-        'Current cache size will exceed max cache size: older data in cache deleted to free up space',
+        "Current cache size will exceed max cache size: older data in cache deleted to free up space",
       );
       this.currentCacheSize = this.currentCacheSize - AHObjectHelper.getSizeOf(this.data[0]);
       this.data.splice(0, 1);

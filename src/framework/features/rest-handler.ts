@@ -31,6 +31,7 @@ export class AHRestHandler {
   private callable: AHCallable;
   private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
   private options: AHRestHandlerOptions = AHRestHandler.defaultOptions;
+  private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
 
   constructor(params: AHRestHandlerParams) {
     if (!/^[a-zA-z_]+[a-zA-z0-9]*$/.test(params.name)) {
@@ -130,8 +131,8 @@ export class AHRestHandler {
 
       if (this.cacheConfig.cachable) {
         tracker.startSegment("cache-configuration");
-        AHHttpRequestCache.getInstance().setConfig(this.cacheConfig);
-        AHHttpRequestCache.getInstance().flushCache(this.cacheConfig.ttl);
+        this.httpCache.setConfig(this.cacheConfig);
+        this.httpCache.flushCache(this.cacheConfig.ttl);
         tracker.stopSegment("cache-configuration");
       }
 
@@ -168,7 +169,7 @@ export class AHRestHandler {
         tracker.startSegment("cache-retrieving");
 
         AHLogger.getInstance().debug("Try to get last http response from cache");
-        const cacheResponse = AHHttpRequestCache.getInstance().getCacheItem(
+        const cacheResponse = this.httpCache.getCacheItem(
           AHHttpRequestCache.buildCacheRequestParameters(ev),
         );
 
@@ -193,7 +194,7 @@ export class AHRestHandler {
       tracker.stopSegment("callable-run");
 
       if (this.cacheConfig.cachable) {
-        AHHttpRequestCache.getInstance().addDataInCache(
+        this.httpCache.addDataInCache(
           AHHttpRequestCache.buildCacheRequestParameters(ev),
           callableReponse,
         );

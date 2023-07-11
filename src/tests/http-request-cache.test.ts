@@ -8,7 +8,7 @@ describe('AHHttpRequestCache', () => {
   const requestCache = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: '/test' }));
   const requestCache2 = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: '/test2' }));
   const response = new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success });
-  const httpRequestCache = AHHttpRequestCache.getInstance();
+  const httpRequestCache = new AHHttpRequestCache();
 
   // Set default cache config
   httpRequestCache.setConfig({

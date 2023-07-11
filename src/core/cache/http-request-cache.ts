@@ -7,23 +7,6 @@ import { AHHttpRequestParameters } from "../models/cache/http-request-parameters
 
 
 export class AHHttpRequestCache extends AHCache<AHHttpRequestParameters, AHHttpResponse> {
-  private static instance: AHHttpRequestCache;
-
-  constructor() {
-    super();
-  }
-
-  /**
-   * Singleton getInstance method
-   * @returns The singleton instance
-   */
-  static getInstance(): AHHttpRequestCache {
-    if (!AHHttpRequestCache.instance) {
-      AHHttpRequestCache.instance = new AHHttpRequestCache();
-    }
-
-    return AHHttpRequestCache.instance;
-  }
 
   /**
    * Get a cache item with its id
