@@ -1,6 +1,6 @@
-import { AHHttpResponse, AHPromiseHelper, AHRestHandler } from "../..";
-import { AHAwsEvent } from "../../framework/models/aws/event/aws-event";
-import { AHRestMethodEnum } from "../../framework/models/enums/rest-method-enum";
+import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerParams } from "../..";
+import { AHAwsEvent } from "../..";
+import { AHRestMethodEnum } from "../..";
 
 export class AHTestResource {
 
@@ -35,15 +35,18 @@ export class AHTestResource {
     return baseEvent;
   }
 
-  static getDefaultHandler(): AHRestHandler {
+  static getDefaultHandler(paramOverride?: Partial<AHRestHandlerParams>): AHRestHandler {
     return new AHRestHandler({
-      name: "handler",
-      method: AHRestMethodEnum.Get,
-      middlewares: [],
-      callable: (event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
-      cacheConfig: {
-        cachable: false
+      ...{
+        name: "handler",
+        method: AHRestMethodEnum.Get,
+        middlewares: [],
+        callable: (event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
+        cacheConfig: {
+          cachable: false
+        },
       },
+      ...paramOverride
     });
   }
 }
