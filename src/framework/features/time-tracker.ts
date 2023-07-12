@@ -148,7 +148,7 @@ export class AHTimeTracker {
         + getXPointsStr(segmentBlocStartIndex)
         + "[" + getXXStr(segmentBlocLength) + ']'
         + getXPointsStr(LOG_SESSION_LINE_LENGTH - segmentBlocStartIndex - segmentBlocLength)
-        + `(${segmentDuration}ms)`
+        + `(${Math.round(segmentDuration * 1000) / 1000} ms)` // 3 digits round
       );
     }
   }

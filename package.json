@@ -29,7 +29,7 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf dist/",
-    "release": "npm run build && dotenv release-it --",
+    "release": "npm run test && npm run build && dotenv release-it --",
     "test": "jest"
   },
   "devDependencies": {
