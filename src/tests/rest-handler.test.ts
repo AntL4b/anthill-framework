@@ -181,7 +181,7 @@ describe('AHRestHandler', () => {
     const handler = AHTestResource.getDefaultHandler();
     handler.setOptions({
       displayPerformanceMetrics: true,
-    })
+    });
     await handler.handleRequest(AHTestResource.getBaseEvent());
     expect(logHandler).toHaveBeenCalled();
   });
