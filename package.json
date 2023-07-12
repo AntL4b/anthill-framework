@@ -1,6 +1,6 @@
 {
   "name": "@antl4b/anthill-framework",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A fast, reliable dependence less framework for building serverless backend applications",
   "author": "AntL4b <ant1.antlab@gmail.com>",
   "license": "MIT",
