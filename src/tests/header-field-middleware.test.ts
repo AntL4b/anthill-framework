@@ -10,7 +10,7 @@ describe('AHHeaderFieldMiddleware', () => {
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = null;
 
-    expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
+    expect(await middleware.run(event, AHTestResource.getBaseContext())).toBeInstanceOf(AHAwsEvent);
   });
 
   test('Headers / nothing required', async () => {
@@ -18,14 +18,14 @@ describe('AHHeaderFieldMiddleware', () => {
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = { key1: "string" };
 
-    expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
+    expect(await middleware.run(event, AHTestResource.getBaseContext())).toBeInstanceOf(AHAwsEvent);
   });
 
   test('No header / field required', async () => {
     const middleware = new AHHeaderFieldMiddleware(['key1', 'key2', 'key3']);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = null;
-    const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
+    const result: AHAwsEvent | AHHttpResponse = await middleware.run(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHHttpResponse);
     expect(JSON.parse(result.body).message).toBe('[key1, key2, key3] not found in header list');
@@ -36,14 +36,14 @@ describe('AHHeaderFieldMiddleware', () => {
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = { key1: "test1", key2: "test2" };
 
-    expect(await middleware.run(event)).toBeInstanceOf(AHAwsEvent);
+    expect(await middleware.run(event, AHTestResource.getBaseContext())).toBeInstanceOf(AHAwsEvent);
   });
 
   test('Required headers NOK', async () => {
     const middleware = new AHHeaderFieldMiddleware(['key1', 'key2']);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = { key1: "test1" };
-    const result: AHAwsEvent | AHHttpResponse = await middleware.run(event);
+    const result: AHAwsEvent | AHHttpResponse = await middleware.run(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHHttpResponse);
     expect(JSON.parse(result.body).message).toBe('[key2] not found in header list');

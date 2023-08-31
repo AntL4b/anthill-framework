@@ -4,6 +4,7 @@ import { AHPromiseHelper } from '../../helpers/promise-helper';
 import { AHAbstractMiddleware } from './abstract-middleware';
 import { AHHttpRequestHelper } from '../../helpers/http-request-helper';
 import { AHJsonBodyParserMiddlewareOptions } from '../../models/middlewares/json-body-parser-middleware-options';
+import { AHAwsContext } from '../../models/aws/aws-context';
 
 
 const JSON_MIME_PATTERN = /^application\/(.+\+)?json($|;.+)/;
@@ -14,7 +15,7 @@ export class AHJsonBodyParserMiddleware extends AHAbstractMiddleware<AHJsonBodyP
     super({ ...DEFAULT_OPTIONS, ...options});
   }
 
-  run(event: AHAwsEvent): Promise<AHAwsEvent | AHHttpResponse> {
+  run(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
     if (event.body) {
       const contentType = AHHttpRequestHelper.getHeaderValue("Content-Type", event);
 

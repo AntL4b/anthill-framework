@@ -10,6 +10,7 @@ import { AHRestHandlerParams } from "../models/handler/rest-handler-params";
 import { AHRestHandlerOptions } from "../models/handler/rest-handler-options";
 import { AHTimeTracker } from "./time-tracker";
 import { AHAbstractHandler } from "../../core/abstract-handler";
+import { AHAwsContext } from "../models/aws/aws-context";
 
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
@@ -90,9 +91,10 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * Handle the request
    * Run all the middlewares one by one before running the handler callable function
    * @param event The event to be passed through middlewares and callable function
+   * @param context This object provides methods and properties that provide information about the invocation, function, and execution environment
    * @returns An http response
    */
-  async handleRequest(event: AHAwsEvent): Promise<AHHttpResponse> {
+  async handleRequest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
     const tracker: AHTimeTracker = new AHTimeTracker();
 
     try {
@@ -122,7 +124,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
         AHLogger.getInstance().debug(`Running middleware ${i + 1} of ${this.middlewares.length}`);
         const middleware: AHAbstractMiddleware<any> = this.middlewares[i];
 
-        const middlewareResult = await middleware.run(ev);
+        const middlewareResult = await middleware.run(ev, context);
 
         // The middleware returned an AHAwsEvent
         if (middlewareResult instanceof AHAwsEvent) {
@@ -167,7 +169,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       AHLogger.getInstance().debug("Running handler callable");
 
       tracker.startSegment("callable-run");
-      const callableReponse = await this.callable(ev);
+      const callableReponse = await this.callable(ev, context);
       tracker.stopSegment("callable-run");
 
       if (this.cacheConfig.cachable) {

@@ -52,6 +52,7 @@ export { AHPromiseHelper } from "./framework/helpers/promise-helper";
 /**
  * MODELS
  */
+export  { AHAwsContext } from "./framework/models/aws/aws-context";
 export { AHAwsEvent } from "./framework/models/aws/event/aws-event";
 export { AHAwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
 export { AHAwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";

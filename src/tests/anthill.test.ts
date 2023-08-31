@@ -1,4 +1,4 @@
-import { AHException, AHRestHandler, Anthill, anthill } from "..";
+import { AHException, Anthill, anthill } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 
@@ -20,12 +20,12 @@ describe('Anthill', () => {
     expect(() => app.registerRestHandler(AHTestResource.getDefaultHandler())).toThrow(AHException);
   });
 
-  test('registerRestHandler', () => {
+  test('exposeHandlers', () => {
     const app = anthill();
     app.registerRestHandler(AHTestResource.getDefaultHandler({
       name: "restHandler",
     }));
     exports = app.exposeHandlers();
-    expect(exports.restHandler).toBeInstanceOf(AHRestHandler);
+    expect(exports.restHandler(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext())).resolves.toBeTruthy();
   });
 });

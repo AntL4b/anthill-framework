@@ -1,6 +1,7 @@
 import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerParams } from "../..";
 import { AHAwsEvent } from "../..";
 import { AHRestMethodEnum } from "../..";
+import { AHAwsContext } from "../..";
 
 export class AHTestResource {
 
@@ -33,6 +34,27 @@ export class AHTestResource {
     });
 
     return baseEvent;
+  }
+
+  static getBaseContext(contextOverride?: Partial<AHAwsContext>): AHAwsContext {
+    const baseContext: AHAwsContext = new AHAwsContext();
+
+    Object.assign(baseContext, {
+      awsRequestId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+      callbackWaitsForEmptyEventLoop: true,
+      clientContext: null,
+      functionName: 'test',
+      functionVersion: '$LATEST',
+      identity: undefined,
+      invokedFunctionArn: 'test-invokedFunctionArn',
+      logGroupName: 'test-logGroupName',
+      logStreamName: 'test-logStreamName',
+      memoryLimitInMB: '1024',
+      getRemainingTimeInMillis: () => 1000000,
+      ...contextOverride
+    });
+
+    return baseContext;
   }
 
   static getDefaultHandler(paramOverride?: Partial<AHRestHandlerParams>): AHRestHandler {

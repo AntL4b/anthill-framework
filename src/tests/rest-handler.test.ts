@@ -100,7 +100,7 @@ describe('AHRestHandler', () => {
 
   test('handleRequest without middleware', async () => {
     const handler = AHTestResource.getDefaultHandler();
-    const response = await handler.handleRequest(AHTestResource.getBaseEvent());
+    const response = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
 
     expect(response).toBeInstanceOf(AHHttpResponse);
     expect(response.statusCode).toBe(200);
@@ -113,12 +113,12 @@ describe('AHRestHandler', () => {
 
     const event = AHTestResource.getBaseEvent();
 
-    let response = await handler.handleRequest(event);
+    let response = await handler.handleRequest(event, AHTestResource.getBaseContext());
     expect(response.statusCode).toBe(400);
 
     event.queryStringParameters = { test: 'test' };
 
-    response = await handler.handleRequest(event);
+    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
     expect(response.statusCode).toBe(200);
   });
 
@@ -139,11 +139,11 @@ describe('AHRestHandler', () => {
     const event = AHTestResource.getBaseEvent();
     event.path = '/handle-request-hit-cache';
 
-    let response = await handler.handleRequest(event);
+    let response = await handler.handleRequest(event, AHTestResource.getBaseContext());
     expect(response.statusCode).toBe(200);
     expect(_callable).toHaveBeenCalledTimes(1);
 
-    response = await handler.handleRequest(event);
+    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
     expect(response.statusCode).toBe(200);
     expect(_callable).toHaveBeenCalledTimes(1);
 
@@ -153,7 +153,7 @@ describe('AHRestHandler', () => {
     });
 
     // Check that the callable is called
-    response = await handler.handleRequest(event);
+    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
     expect(response.statusCode).toBe(200);
     expect(_callable).toHaveBeenCalledTimes(2);
   });
@@ -169,7 +169,7 @@ describe('AHRestHandler', () => {
       },
     });
 
-    const response = await handler.handleRequest(AHTestResource.getBaseEvent());
+    const response = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.body).message).toBe(errMess);
   });
@@ -184,7 +184,7 @@ describe('AHRestHandler', () => {
         displayPerformanceMetrics: true,
       },
     });
-    await handler.handleRequest(AHTestResource.getBaseEvent());
+    await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
     expect(logHandler).toHaveBeenCalled();
   });
 });

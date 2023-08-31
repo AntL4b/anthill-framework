@@ -1,14 +1,18 @@
+import { AHAwsEvent } from '../..';
 import { AHAbstractHandler } from '../../core/abstract-handler';
+import { AHAwsContext } from '../models/aws/aws-context';
 import { AHException } from './anthill-exception';
 import { AHRestHandler } from './rest-handler';
 
 
 export class Anthill {
   private static instance: Anthill;
+  private static handlerNames: Array<string>;
   private static restHandlers: Array<AHRestHandler>;
 
   private constructor() {
     Anthill.restHandlers = [];
+    Anthill.handlerNames = [];
   }
 
   /**
@@ -28,12 +32,13 @@ export class Anthill {
    * @param handler The handler to register
    */
   registerRestHandler(restHandler: AHRestHandler): void {
-    if (Anthill.restHandlers.find((_restHandler) => _restHandler.getName() === restHandler.getName())) {
+    if (Anthill.handlerNames.includes(restHandler.getName())) {
       throw new AHException(
         `Duplicate handler with name ${restHandler.getName()}. Handler names must be unique within the application`,
       );
     }
 
+    Anthill.handlerNames.push(restHandler.getName());
     Anthill.restHandlers.push(restHandler);
   }
 
@@ -46,7 +51,9 @@ export class Anthill {
 
     // Expose rest handlers
     for (const handler of Anthill.restHandlers) {
-      exportObject[handler.getName()] = handler;
+
+      // Export a method that call the handler
+      exportObject[handler.getName()] = async (event: AHAwsEvent, context: AHAwsContext) => await handler.handleRequest(event, context);
     }
 
     return exportObject;

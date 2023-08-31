@@ -2,6 +2,7 @@ import { AHAwsEvent } from '../../models/aws/event/aws-event';
 import { AHHttpResponse } from '../../models/http/http-response';
 import { AHPromiseHelper } from '../../helpers/promise-helper';
 import { AHAbstractMiddleware } from './abstract-middleware';
+import { AHAwsContext } from '../../models/aws/aws-context';
 
 
 export class AHPagerFormatCheckerMiddleware extends AHAbstractMiddleware<void> {
@@ -9,7 +10,7 @@ export class AHPagerFormatCheckerMiddleware extends AHAbstractMiddleware<void> {
     super();
   }
 
-  async run(event: AHAwsEvent): Promise<AHAwsEvent | AHHttpResponse> {
+  async run(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
     let page = event.queryStringParameters?.page ? parseInt(event.queryStringParameters?.page) : null;
     const pageSize = event.queryStringParameters?.pageSize ? parseInt(event.queryStringParameters?.pageSize) : null;
 

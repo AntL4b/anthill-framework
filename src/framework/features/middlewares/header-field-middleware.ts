@@ -3,6 +3,7 @@ import { AHHttpResponse } from "../../models/http/http-response";
 import { AHHttpRequestHelper } from "../../helpers/http-request-helper";
 import { AHPromiseHelper } from "../../helpers/promise-helper";
 import { AHAbstractMiddleware } from "./abstract-middleware";
+import { AHAwsContext } from "../../models/aws/aws-context";
 
 
 export class AHHeaderFieldMiddleware extends AHAbstractMiddleware<Array<string>> {
@@ -10,7 +11,7 @@ export class AHHeaderFieldMiddleware extends AHAbstractMiddleware<Array<string>>
     super(payload);
   }
 
-  run(event: AHAwsEvent): Promise<AHAwsEvent | AHHttpResponse> {
+  run(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
     if (event.headers) {
       const notIncludedHeaders: Array<string> = [];
 

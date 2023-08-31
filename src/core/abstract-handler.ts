@@ -1,6 +1,7 @@
 import { AHCallable } from "../framework/models/handler/callable";
 import { AHException } from "../framework/features/anthill-exception";
 import { AHAbstractHandlerParams } from "./models/abstract-handler-params";
+import { AHAwsContext } from "../framework/models/aws/aws-context";
 
 
 export abstract class AHAbstractHandler<T, U> {
@@ -28,7 +29,8 @@ export abstract class AHAbstractHandler<T, U> {
   /**
    * Handle the request
    * @param event The request event
+   * @param context This object provides methods and properties that provide information about the invocation, function, and execution environment
    * @returns The request response
    */
-  abstract handleRequest(event: T): Promise<U>;
+  abstract handleRequest(event: T, context?: AHAwsContext): Promise<U>;
 }
