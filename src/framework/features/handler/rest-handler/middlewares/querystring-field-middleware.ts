@@ -1,8 +1,8 @@
-import { AHAwsEvent } from '../../models/aws/event/aws-event';
-import { AHHttpResponse } from '../../models/http/http-response';
-import { AHPromiseHelper } from '../../helpers/promise-helper';
+import { AHAwsEvent } from '../../../../models/aws/event/aws-event';
+import { AHHttpResponse } from '../../../../models/http/http-response';
+import { AHPromiseHelper } from '../../../../helpers/promise-helper';
 import { AHAbstractMiddleware } from './abstract-middleware';
-import { AHAwsContext } from '../../models/aws/aws-context';
+import { AHAwsContext } from '../../../../models/aws/aws-context';
 
 
 export class AHQuerystringFieldMiddleware extends AHAbstractMiddleware<Array<string>> {

@@ -1,4 +1,4 @@
-import { AHException, AHLogger, AHRestHandlerOptions } from '..';
+import { AHException } from '..';
 import { AHPromiseHelper } from '..';
 import { AHQuerystringFieldMiddleware } from '..';
 import { AHAwsEvent } from '..';
@@ -27,16 +27,8 @@ describe('AHRestHandler', () => {
   });
 
   test('constructor', () => {
-    let handler = AHTestResource.getDefaultHandler();
+    let handler = AHTestResource.getDefaultRestHandler();
     expect(handler).toBeInstanceOf(AHRestHandler);
-
-    expect(() => {
-      handler = new AHRestHandler({
-        name: 'invalid-name',
-        method: AHRestMethodEnum.Get,
-        callable: (event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
-      });
-    }).toThrow(AHException);
   });
 
   test('setDefaultCacheConfig', () => {
@@ -51,16 +43,6 @@ describe('AHRestHandler', () => {
     expect(JSON.stringify(AHRestHandler['defaultCacheConfig'])).toBe(JSON.stringify(newDefaultCacheConfig));
   });
 
-  test('setDefaultOptions', () => {
-    const newDefaultOptions: AHRestHandlerOptions = {
-      displayPerformanceMetrics: true,
-    };
-
-    AHRestHandler.setDefaultOptions(newDefaultOptions);
-
-    expect(JSON.stringify(AHRestHandler['defaultOptions'])).toBe(JSON.stringify(newDefaultOptions));
-  });
-
   test('setCacheConfig', () => {
     const newCacheConfig: AHCacheConfig = {
       cachable: true,
@@ -68,30 +50,14 @@ describe('AHRestHandler', () => {
       maxCacheSize: 654321,
     };
 
-    const handler = AHTestResource.getDefaultHandler();
+    const handler = AHTestResource.getDefaultRestHandler();
     handler.setCacheConfig(newCacheConfig);
 
     expect(JSON.stringify(handler['cacheConfig'])).toBe(JSON.stringify(newCacheConfig));
   });
 
-  test('setOptions', () => {
-    const newOptions: AHRestHandlerOptions = {
-      displayPerformanceMetrics: true,
-    };
-
-    const handler = AHTestResource.getDefaultHandler();
-    handler.setOptions(newOptions);
-
-    expect(JSON.stringify(handler['options'])).toBe(JSON.stringify(newOptions));
-  });
-
-  test('getName', () => {
-    const handler = AHTestResource.getDefaultHandler();
-    expect(handler.getName()).toBe('handler');
-  });
-
   test('addMiddleware', () => {
-    const handler = AHTestResource.getDefaultHandler();
+    const handler = AHTestResource.getDefaultRestHandler();
 
     expect(handler['middlewares'].length).toBe(0);
     handler.addMiddleware(new AHQuerystringFieldMiddleware(['test']));
@@ -99,7 +65,7 @@ describe('AHRestHandler', () => {
   });
 
   test('handleRequest without middleware', async () => {
-    const handler = AHTestResource.getDefaultHandler();
+    const handler = AHTestResource.getDefaultRestHandler();
     const response = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
 
     expect(response).toBeInstanceOf(AHHttpResponse);
@@ -108,7 +74,7 @@ describe('AHRestHandler', () => {
   });
 
   test('handleRequest with middleware', async () => {
-    const handler = AHTestResource.getDefaultHandler();
+    const handler = AHTestResource.getDefaultRestHandler();
     handler.addMiddleware(new AHQuerystringFieldMiddleware(['test']));
 
     const event = AHTestResource.getBaseEvent();
@@ -124,7 +90,7 @@ describe('AHRestHandler', () => {
 
   test('handleRequest hit cache', async () => {
     const _callable = jest.fn((event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)));
-    const handler: AHRestHandler = new AHRestHandler({
+    const handler = AHTestResource.getDefaultRestHandler({
       name: 'handler',
       method: AHRestMethodEnum.Get,
       middlewares: [],
@@ -160,7 +126,7 @@ describe('AHRestHandler', () => {
 
   test('handleRequest callable throws exception', async () => {
     const errMess = 'Error message';
-    const handler: AHRestHandler = new AHRestHandler({
+    const handler = AHTestResource.getDefaultRestHandler({
       name: 'handler',
       method: AHRestMethodEnum.Get,
       middlewares: [],
@@ -172,19 +138,5 @@ describe('AHRestHandler', () => {
     const response = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.body).message).toBe(errMess);
-  });
-
-  test('displayPerformanceMetrics', async () => {
-    const logger = AHLogger.getInstance();
-    const logHandler = jest.fn(() => {});
-    logger.addHandler(logHandler);
-
-    const handler = AHTestResource.getDefaultHandler({
-      options: {
-        displayPerformanceMetrics: true,
-      },
-    });
-    await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
-    expect(logHandler).toHaveBeenCalled();
   });
 });

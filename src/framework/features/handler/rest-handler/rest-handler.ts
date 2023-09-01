@@ -1,16 +1,15 @@
-import { AHHttpRequestCache } from "../../core/cache/http-request-cache";
-import { AHAwsEvent } from "../models/aws/event/aws-event";
-import { AHCacheConfig } from "../models/cache-config";
-import { AHHttpResponseBodyStatusEnum } from "../models/enums/http-response-body-status-enum";
-import { AHRestMethodEnum } from "../models/enums/rest-method-enum";
-import { AHHttpResponse } from "../models/http/http-response";
-import { AHLogger } from "./logger";
+import { AHHttpRequestCache } from "../../../../core/cache/http-request-cache";
+import { AHAwsEvent } from "../../../models/aws/event/aws-event";
+import { AHCacheConfig } from "../../../models/cache-config";
+import { AHHttpResponseBodyStatusEnum } from "../../../models/enums/http-response-body-status-enum";
+import { AHRestMethodEnum } from "../../../models/enums/rest-method-enum";
+import { AHHttpResponse } from "../../../models/http/http-response";
+import { AHLogger } from "../../logger";
 import { AHAbstractMiddleware } from "./middlewares/abstract-middleware";
-import { AHRestHandlerParams } from "../models/handler/rest-handler-params";
-import { AHRestHandlerOptions } from "../models/handler/rest-handler-options";
-import { AHTimeTracker } from "./time-tracker";
-import { AHAbstractHandler } from "../../core/abstract-handler";
-import { AHAwsContext } from "../models/aws/aws-context";
+import { AHRestHandlerParams } from "../../../models/handler/rest-handler-params";
+import { AHTimeTracker } from "../../time-tracker";
+import { AHAbstractHandler } from "../../../../core/abstract-handler";
+import { AHAwsContext } from "../../../models/aws/aws-context";
 
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
@@ -21,14 +20,9 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
     maxCacheSize: 1000000,
   };
 
-  private static defaultOptions: AHRestHandlerOptions = {
-    displayPerformanceMetrics: false,
-  };
-
   private method: AHRestMethodEnum;
   private middlewares: Array<AHAbstractMiddleware<any>> = [];
   private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
-  private options: AHRestHandlerOptions = AHRestHandler.defaultOptions;
   private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
 
   constructor(params: AHRestHandlerParams) {
@@ -38,7 +32,6 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
     if (params.middlewares) { this.middlewares = params.middlewares; }
     if (params.cacheConfig) { this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig }; }
-    if (params.options) { this.options = { ...this.options, ...params.options }; }
   }
 
   /**
@@ -53,30 +46,11 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
   }
 
   /**
-   * Set the default optionsc
-   * @param options The options (override) to set by default
-   */
-  static setDefaultOptions(options: AHRestHandlerOptions): void {
-    AHRestHandler.defaultOptions = {
-      ...AHRestHandler.defaultOptions,
-      ...options
-    }
-  }
-
-  /**
    * Set a new cache config for the handler
    * @param cacheConfig The cache config to be set
    */
   setCacheConfig(cacheConfig: AHCacheConfig): void {
     this.cacheConfig = { ...this.cacheConfig, ...cacheConfig };
-  }
-
-  /**
-   * Set new options for the handler
-   * @param options The options to be set
-   */
-  setOptions(options: AHRestHandlerOptions): void {
-    this.options = { ...this.options, ...options };
   }
 
   /**
@@ -192,16 +166,6 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
         status: AHHttpResponseBodyStatusEnum.Error,
         message: (e as { message: string }).message,
       });
-    }
-  }
-
-  /**
-   * Display performance metrics for given tracker
-   * @param tracker Tracker to print metrics for
-   */
-  displayPerformanceMetrics(tracker: AHTimeTracker) {
-    if (this.options.displayPerformanceMetrics) {
-      tracker.logTrackingSession();
     }
   }
 }

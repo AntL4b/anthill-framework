@@ -20,7 +20,7 @@ export { logError } from "./framework/features/logger";
 /**
  * REST HANDLER
  */
-export { AHRestHandler } from "./framework/features/rest-handler";
+export { AHRestHandler } from "./framework/features/handler/rest-handler/rest-handler";
 
 /**
  * TIME TRACKER
@@ -35,11 +35,11 @@ export { AHTimeSegment } from "./framework/features/time-segment";
 /**
  * MIDDLEWARES
  */
-export { AHAbstractMiddleware } from "./framework/features/middlewares/abstract-middleware";
-export { AHJsonBodyParserMiddleware } from "./framework/features/middlewares/json-body-parser-middleware";
-export { AHHeaderFieldMiddleware } from "./framework/features/middlewares/header-field-middleware";
-export { AHPagerFormatCheckerMiddleware } from "./framework/features/middlewares/pager-format-checker-middleware";
-export { AHQuerystringFieldMiddleware } from "./framework/features/middlewares/querystring-field-middleware";
+export { AHAbstractMiddleware } from "./framework/features/handler/rest-handler/middlewares/abstract-middleware";
+export { AHJsonBodyParserMiddleware } from "./framework/features/handler/rest-handler/middlewares/json-body-parser-middleware";
+export { AHHeaderFieldMiddleware } from "./framework/features/handler/rest-handler/middlewares/header-field-middleware";
+export { AHPagerFormatCheckerMiddleware } from "./framework/features/handler/rest-handler/middlewares/pager-format-checker-middleware";
+export { AHQuerystringFieldMiddleware } from "./framework/features/handler/rest-handler/middlewares/querystring-field-middleware";
 
 /**
  * HELPERS
@@ -71,5 +71,5 @@ export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
 export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
 export { AHJsonBodyParserMiddlewareOptions } from "./framework/models/middlewares/json-body-parser-middleware-options";
 export { AHRestHandlerParams } from "./framework/models/handler/rest-handler-params";
-export { AHRestHandlerOptions } from "./framework/models/handler/rest-handler-options";
+export { AHHandlerOptions } from "./framework/models/handler/handler-options";
 export { AHCallable } from "./framework/models/handler/callable";

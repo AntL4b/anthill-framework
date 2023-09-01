@@ -2,6 +2,8 @@ import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerParams } f
 import { AHAwsEvent } from "../..";
 import { AHRestMethodEnum } from "../..";
 import { AHAwsContext } from "../..";
+import { AHLambdaHandler } from "../../framework/features/handler/lambda-handler";
+import { AHLambdaHandlerParams } from "../../framework/models/handler/lambda-handler-params";
 
 export class AHTestResource {
 
@@ -57,16 +59,26 @@ export class AHTestResource {
     return baseContext;
   }
 
-  static getDefaultHandler(paramOverride?: Partial<AHRestHandlerParams>): AHRestHandler {
+  static getDefaultRestHandler(paramOverride?: Partial<AHRestHandlerParams>): AHRestHandler {
     return new AHRestHandler({
       ...{
         name: "handler",
         method: AHRestMethodEnum.Get,
         middlewares: [],
-        callable: (event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
+        callable: (event: AHAwsEvent, context: AHAwsContext) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
         cacheConfig: {
           cachable: false
         },
+      },
+      ...paramOverride
+    });
+  }
+
+  static getDefaultLambdaHandler(paramOverride?: Partial<AHLambdaHandlerParams<any, any>>): AHLambdaHandler<any, any> {
+    return new AHLambdaHandler<any, any>({
+      ...{
+        name: "handler",
+        callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
       },
       ...paramOverride
     });

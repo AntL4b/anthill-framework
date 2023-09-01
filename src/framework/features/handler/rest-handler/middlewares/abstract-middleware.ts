@@ -1,6 +1,6 @@
-import { AHAwsContext } from "../../models/aws/aws-context";
-import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHHttpResponse } from "../../models/http/http-response";
+import { AHAwsContext } from "../../../../models/aws/aws-context";
+import { AHAwsEvent } from "../../../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../../../../models/http/http-response";
 
 
 export abstract class AHAbstractMiddleware<T> {

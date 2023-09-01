@@ -1,10 +1,10 @@
-import { AHAwsEvent } from '../../models/aws/event/aws-event';
-import { AHHttpResponse } from '../../models/http/http-response';
-import { AHPromiseHelper } from '../../helpers/promise-helper';
+import { AHAwsEvent } from '../../../../models/aws/event/aws-event';
+import { AHHttpResponse } from '../../../../models/http/http-response';
+import { AHPromiseHelper } from '../../../../helpers/promise-helper';
 import { AHAbstractMiddleware } from './abstract-middleware';
-import { AHHttpRequestHelper } from '../../helpers/http-request-helper';
-import { AHJsonBodyParserMiddlewareOptions } from '../../models/middlewares/json-body-parser-middleware-options';
-import { AHAwsContext } from '../../models/aws/aws-context';
+import { AHHttpRequestHelper } from '../../../../helpers/http-request-helper';
+import { AHJsonBodyParserMiddlewareOptions } from '../../../../models/middlewares/json-body-parser-middleware-options';
+import { AHAwsContext } from '../../../../models/aws/aws-context';
 
 
 const JSON_MIME_PATTERN = /^application\/(.+\+)?json($|;.+)/;
