@@ -1,7 +1,7 @@
 import { AHObjectHelper } from "../../framework/helpers/object-helper";
 import { AHAwsEvent } from "../../framework/models/aws/event/aws-event";
 import { AHCacheData } from "../models/cache/cache-data";
-import { AHHttpResponse } from "../../framework/models/http/http-response";
+import { AHHttpResponse } from "../../framework/features/http-response";
 import { AHCache } from "./cache";
 import { AHHttpRequestParameters } from "../models/cache/http-request-parameters";
 

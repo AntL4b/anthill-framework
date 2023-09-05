@@ -1,4 +1,4 @@
-import { AHHttpResponseBody } from './http-response-body';
+import { AHHttpResponseBody } from '../models/http-response-body';
 
 
 export class AHHttpResponse {

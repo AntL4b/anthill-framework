@@ -84,7 +84,7 @@ describe('AHRestHandler', () => {
 
     event.queryStringParameters = { test: 'test' };
 
-    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    response = await handler.handleRequest(event, AHTestResource.getBaseContext());    
     expect(response.statusCode).toBe(200);
   });
 

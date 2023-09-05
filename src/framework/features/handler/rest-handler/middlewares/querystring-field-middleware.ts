@@ -1,16 +1,16 @@
 import { AHAwsEvent } from '../../../../models/aws/event/aws-event';
-import { AHHttpResponse } from '../../../../models/http/http-response';
+import { AHHttpResponse } from '../../../http-response';
 import { AHPromiseHelper } from '../../../../helpers/promise-helper';
-import { AHAbstractMiddleware } from './abstract-middleware';
+import { AHMiddleware } from './middleware';
 import { AHAwsContext } from '../../../../models/aws/aws-context';
 
 
-export class AHQuerystringFieldMiddleware extends AHAbstractMiddleware<Array<string>> {
+export class AHQuerystringFieldMiddleware extends AHMiddleware<Array<string>> {
   constructor(payload: Array<string>) {
     super(payload);
   }
 
-  run(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
+  override runBefore(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
     if (event.queryStringParameters) {
       const queryStringParametersKeys = Object.keys(event.queryStringParameters);
 

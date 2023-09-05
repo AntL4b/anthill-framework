@@ -1,7 +1,7 @@
 import { AHAwsEvent } from '../../../../models/aws/event/aws-event';
-import { AHHttpResponse } from '../../../../models/http/http-response';
+import { AHHttpResponse } from '../../../http-response';
 import { AHPromiseHelper } from '../../../../helpers/promise-helper';
-import { AHAbstractMiddleware } from './abstract-middleware';
+import { AHMiddleware } from './middleware';
 import { AHHttpRequestHelper } from '../../../../helpers/http-request-helper';
 import { AHJsonBodyParserMiddlewareOptions } from '../../../../models/middlewares/json-body-parser-middleware-options';
 import { AHAwsContext } from '../../../../models/aws/aws-context';
@@ -10,12 +10,13 @@ import { AHAwsContext } from '../../../../models/aws/aws-context';
 const JSON_MIME_PATTERN = /^application\/(.+\+)?json($|;.+)/;
 const DEFAULT_OPTIONS: AHJsonBodyParserMiddlewareOptions = { reviver: null }
 
-export class AHJsonBodyParserMiddleware extends AHAbstractMiddleware<AHJsonBodyParserMiddlewareOptions> {
+/** Parse JSON body to js / ts object */
+export class AHJsonBodyParserMiddleware extends AHMiddleware<AHJsonBodyParserMiddlewareOptions> {
   constructor(options?: AHJsonBodyParserMiddlewareOptions) {
     super({ ...DEFAULT_OPTIONS, ...options});
   }
 
-  run(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
+  override runBefore(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
     if (event.body) {
       const contentType = AHHttpRequestHelper.getHeaderValue("Content-Type", event);
 

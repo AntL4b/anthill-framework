@@ -1,12 +1,17 @@
 /**
+ * ANTHILL
+ */
+export { Anthill, anthill } from "./framework/features/anthill";
+
+/**
  * EXCEPTION
  */
 export { AHException } from "./framework/features/anthill-exception";
 
 /**
- * ANTHILL
+ * HTTP RESPONSE
  */
-export { Anthill, anthill } from "./framework/features/anthill";
+export { AHHttpResponse } from "./framework/features/http-response";
 
 /**
  * LOGGER
@@ -35,10 +40,9 @@ export { AHTimeSegment } from "./framework/features/time-segment";
 /**
  * MIDDLEWARES
  */
-export { AHAbstractMiddleware } from "./framework/features/handler/rest-handler/middlewares/abstract-middleware";
+export { AHMiddleware } from "./framework/features/handler/rest-handler/middlewares/middleware";
 export { AHJsonBodyParserMiddleware } from "./framework/features/handler/rest-handler/middlewares/json-body-parser-middleware";
 export { AHHeaderFieldMiddleware } from "./framework/features/handler/rest-handler/middlewares/header-field-middleware";
-export { AHPagerFormatCheckerMiddleware } from "./framework/features/handler/rest-handler/middlewares/pager-format-checker-middleware";
 export { AHQuerystringFieldMiddleware } from "./framework/features/handler/rest-handler/middlewares/querystring-field-middleware";
 
 /**
@@ -61,11 +65,7 @@ export { AHEnvEnum } from "./framework/models/enums/env-enum";
 export { AHHttpResponseBodyStatusEnum } from "./framework/models/enums/http-response-body-status-enum";
 export { AHLogLevelEnum } from "./framework/models/enums/log-level-enum";
 export { AHRestMethodEnum } from "./framework/models/enums/rest-method-enum";
-export { AHBaseHttpRequest } from "./framework/models/http/base-http-request";
-export { AHHttpResponse } from "./framework/models/http/http-response";
-export { AHHttpResponseBody } from "./framework/models/http/http-response-body";
-export { AHHttpResponseBodyMetaData } from "./framework/models/http/http-response-body-meta-data";
-export { AHPager } from "./framework/models/http/pager";
+export { AHHttpResponseBody } from "./framework/models/http-response-body";
 export { AHLoggerContext } from "./framework/models/logger/logger-context";
 export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
 export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
