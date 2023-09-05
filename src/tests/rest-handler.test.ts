@@ -1,4 +1,4 @@
-import { AHException } from '..';
+import { AHAwsContext, AHException, AHMiddleware } from '..';
 import { AHPromiseHelper } from '..';
 import { AHQuerystringFieldMiddleware } from '..';
 import { AHAwsEvent } from '..';
@@ -86,6 +86,23 @@ describe('AHRestHandler', () => {
 
     response = await handler.handleRequest(event, AHTestResource.getBaseContext());    
     expect(response.statusCode).toBe(200);
+  });
+
+  test('handleRequest with middleware throwing an error', async () => {
+    const handler = AHTestResource.getDefaultRestHandler();
+
+    class MyDummyMiddleware extends AHMiddleware<void> {
+      override runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
+        throw new AHException('error happened');
+      }
+    }
+
+    handler.addMiddleware(new MyDummyMiddleware());
+
+    const event = AHTestResource.getBaseEvent();
+
+    let response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    expect(response.statusCode).toBe(400);
   });
 
   test('handleRequest hit cache', async () => {
