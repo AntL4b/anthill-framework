@@ -11,24 +11,24 @@ export class AHTestResource {
     const baseEvent: AHAwsEvent = new AHAwsEvent();
 
     Object.assign(baseEvent, {
-      ressource: '',
-      path: '/',
+      ressource: "",
+      path: "/",
       httpMethod: AHRestMethodEnum.Post,
       headers: { "Content-Type": "application/json"},
       requestContext: {
-        ressourceId: '',
-        resourcePath: '',
+        ressourceId: "",
+        resourcePath: "",
         httpMethod: AHRestMethodEnum.Post,
-        requestTime: '',
-        path: '',
-        accountId: '',
-        protocol: '',
-        domainPrefix: '',
-        domainName: '',
-        apiId: '',
+        requestTime: "",
+        path: "",
+        accountId: "",
+        protocol: "",
+        domainPrefix: "",
+        domainName: "",
+        apiId: "",
         identity: {
-          sourceIp: '',
-          userAgent: '',
+          sourceIp: "",
+          userAgent: "",
         },
       },
       isBase64Encoded: false,
@@ -42,16 +42,16 @@ export class AHTestResource {
     const baseContext: AHAwsContext = new AHAwsContext();
 
     Object.assign(baseContext, {
-      awsRequestId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+      awsRequestId: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
       callbackWaitsForEmptyEventLoop: true,
       clientContext: null,
-      functionName: 'test',
-      functionVersion: '$LATEST',
+      functionName: "test",
+      functionVersion: "$LATEST",
       identity: undefined,
-      invokedFunctionArn: 'test-invokedFunctionArn',
-      logGroupName: 'test-logGroupName',
-      logStreamName: 'test-logStreamName',
-      memoryLimitInMB: '1024',
+      invokedFunctionArn: "test-invokedFunctionArn",
+      logGroupName: "test-logGroupName",
+      logStreamName: "test-logStreamName",
+      memoryLimitInMB: "1024",
       getRemainingTimeInMillis: () => 1000000,
       ...contextOverride
     });

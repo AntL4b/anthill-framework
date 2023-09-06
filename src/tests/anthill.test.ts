@@ -16,7 +16,7 @@ describe('Anthill', () => {
     const restHandlerNumber = Anthill["restHandlers"].length;
     const app = anthill();
     app.registerRestHandler(AHTestResource.getDefaultRestHandler());
-    expect(Anthill["restHandlers"].length).toBe(restHandlerNumber + 1);
+    expect(Anthill["restHandlers"].length).toEqual(restHandlerNumber + 1);
     expect(() => app.registerRestHandler(AHTestResource.getDefaultRestHandler())).toThrow(AHException);
   });
 
@@ -24,7 +24,7 @@ describe('Anthill', () => {
     const restHandlerNumber = Anthill["lambdaHandlers"].length;
     const app = anthill();
     app.registerLambdaHandler(AHTestResource.getDefaultLambdaHandler());
-    expect(Anthill["lambdaHandlers"].length).toBe(restHandlerNumber + 1);
+    expect(Anthill["lambdaHandlers"].length).toEqual(restHandlerNumber + 1);
     expect(() => app.registerLambdaHandler(AHTestResource.getDefaultLambdaHandler())).toThrow(AHException);
   });
 

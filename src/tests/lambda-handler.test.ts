@@ -1,6 +1,6 @@
-import { AHAwsContext, AHException } from '..';
-import { AHLambdaHandler } from '../framework/features/handler/lambda-handler';
-import { AHTestResource } from './resources/test-resource';
+import { AHAwsContext, AHException } from "..";
+import { AHLambdaHandler } from "../framework/features/handler/lambda-handler";
+import { AHTestResource } from "./resources/test-resource";
 
 // Override default warn and error log method to avoid jest to crash
 global.console.error = (message: string) => {
@@ -23,16 +23,16 @@ describe('AHLambdaHandler', () => {
     const handler = AHTestResource.getDefaultLambdaHandler();
     const response = await handler.handleRequest(null, AHTestResource.getBaseContext());
 
-    expect(response).toBe(null);
+    expect(response).toBeNull();
   });
 
   test('handleRequest with exception', async () => {
     const handler = AHTestResource.getDefaultLambdaHandler({
-      callable: (event: any, context: AHAwsContext) => { throw new AHException('error')}
+      callable: (event: any, context: AHAwsContext) => { throw new AHException("error")}
     });
     
     const response = await handler.handleRequest(null, AHTestResource.getBaseContext());
 
-    expect(response).toBe(null);
+    expect(response).toBeNull();
   });
 });

@@ -1,15 +1,15 @@
-import { AHHttpRequestCache } from "../../../../core/cache/http-request-cache";
-import { AHAwsEvent } from "../../../models/aws/event/aws-event";
-import { AHCacheConfig } from "../../../models/cache-config";
-import { AHHttpResponseBodyStatusEnum } from "../../../models/enums/http-response-body-status-enum";
-import { AHRestMethodEnum } from "../../../models/enums/rest-method-enum";
-import { AHHttpResponse } from "../../http-response";
-import { AHLogger } from "../../logger";
-import { AHMiddleware } from "./middlewares/middleware";
-import { AHRestHandlerParams } from "../../../models/handler/rest-handler-params";
-import { AHTimeTracker } from "../../time-tracker";
-import { AHAbstractHandler } from "../../../../core/abstract-handler";
-import { AHAwsContext } from "../../../models/aws/aws-context";
+import { AHHttpRequestCache } from "../../../core/cache/http-request-cache";
+import { AHAwsEvent } from "../../models/aws/event/aws-event";
+import { AHCacheConfig } from "../../models/cache-config";
+import { AHHttpResponseBodyStatusEnum } from "../../models/enums/http-response-body-status-enum";
+import { AHRestMethodEnum } from "../../models/enums/rest-method-enum";
+import { AHHttpResponse } from "../http-response";
+import { AHLogger } from "../logger";
+import { AHMiddleware } from "../middleware/middleware";
+import { AHRestHandlerParams } from "../../models/handler/rest-handler-params";
+import { AHTimeTracker } from "../time-tracker";
+import { AHAbstractHandler } from "../../../core/abstract-handler";
+import { AHAwsContext } from "../../models/aws/aws-context";
 
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {

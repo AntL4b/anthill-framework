@@ -20,7 +20,7 @@ export class AHEnvironmentHelper {
    */
   static getEnvValue(envKey: string): string {
     if (!Object.keys(process.env).includes(envKey)) {
-      throw new AHException('Error trying to access undefined environment key: ' + envKey);
+      throw new AHException("Error trying to access undefined environment key: " + envKey);
     }
 
     return process.env[envKey] as string;

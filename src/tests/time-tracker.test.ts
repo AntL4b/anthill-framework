@@ -5,19 +5,19 @@ import { AHTimeTrackerStateEnum } from "../core/models/enums/time-tracker-state-
 describe('AHTimeTracker', () => {
   test('startTrackingSession', () => {
     const tracker = new AHTimeTracker();
-    expect(tracker["state"]).toBe(AHTimeTrackerStateEnum.Stopped);
+    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
     tracker.startTrackingSession();
-    expect(tracker["state"]).toBe(AHTimeTrackerStateEnum.Started);
-    expect(tracker["timeSegments"].length).toBe(1);
+    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Started);
+    expect(tracker["timeSegments"].length).toEqual(1);
   });
 
   test('re startTrackingSession', () => {
     const tracker = new AHTimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
-    expect(tracker["timeSegments"].length).toBe(2);
+    expect(tracker["timeSegments"].length).toEqual(2);
     tracker.startTrackingSession(); // should do nothing
-    expect(tracker["timeSegments"].length).toBe(2);
+    expect(tracker["timeSegments"].length).toEqual(2);
   });
 
   test('startSegment', () => {
@@ -69,11 +69,11 @@ describe('AHTimeTracker', () => {
   test('stopTrackingSession', () => {
     const tracker = new AHTimeTracker();
     tracker.startTrackingSession();
-    expect(tracker["state"]).toBe(AHTimeTrackerStateEnum.Started);
+    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Started);
     tracker.stopTrackingSession();
-    expect(tracker["state"]).toBe(AHTimeTrackerStateEnum.Stopped);
+    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
     tracker.stopTrackingSession();
-    expect(tracker["state"]).toBe(AHTimeTrackerStateEnum.Stopped);
+    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
   });
 
   test('logTrackingSession', () => {

@@ -5,7 +5,7 @@ describe('AHTimeSegment', () => {
   test('constructor', () => {
     const timeSegment = new AHTimeSegment("test-segment");
     expect(timeSegment).toBeTruthy();
-    expect(timeSegment.name).toBe("test-segment");
+    expect(timeSegment.name).toEqual("test-segment");
   });
 
   test('start', () => {
@@ -44,7 +44,7 @@ describe('AHTimeSegment', () => {
     expect(d2).toBeTruthy();
     expect(d1).toBeLessThan(d2);
     const d3 = timeSegment.getDuration();
-    expect(d2).toBe(d3);
+    expect(d2).toEqual(d3);
   });
 
 });

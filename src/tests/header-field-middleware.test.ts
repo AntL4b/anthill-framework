@@ -22,17 +22,17 @@ describe('AHHeaderFieldMiddleware', () => {
   });
 
   test('No header / field required', async () => {
-    const middleware = new AHHeaderFieldMiddleware(['key1', 'key2', 'key3']);
+    const middleware = new AHHeaderFieldMiddleware(["key1", "key2", "key3"]);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = null;
     const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(JSON.parse(result.body).message).toBe('[key1, key2, key3] not found in header list');
+    expect(JSON.parse(result.body).message).toEqual("[key1, key2, key3] not found in header list");
   });
 
   test('Required headers OK', async () => {
-    const middleware = new AHHeaderFieldMiddleware(['key1', 'key2']);
+    const middleware = new AHHeaderFieldMiddleware(["key1", "key2"]);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = { key1: "test1", key2: "test2" };
 
@@ -40,12 +40,12 @@ describe('AHHeaderFieldMiddleware', () => {
   });
 
   test('Required headers NOK', async () => {
-    const middleware = new AHHeaderFieldMiddleware(['key1', 'key2']);
+    const middleware = new AHHeaderFieldMiddleware(["key1", "key2"]);
     const event: AHAwsEvent = AHTestResource.getBaseEvent();
     event.headers = { key1: "test1" };
     const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHHttpResponse);
-    expect(JSON.parse(result.body).message).toBe('[key2] not found in header list');
+    expect(JSON.parse(result.body).message).toEqual("[key2] not found in header list");
   });
 });

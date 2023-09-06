@@ -1,5 +1,5 @@
 export enum AHHttpResponseBodyStatusEnum {
-  Success = 'success',
-  Error = 'error',
-  Forbidden = 'forbidden',
+  Success = "success",
+  Error = "error",
+  Forbidden = "forbidden",
 }

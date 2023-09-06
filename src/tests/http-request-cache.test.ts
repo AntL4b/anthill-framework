@@ -1,12 +1,12 @@
-import { AHHttpRequestCache } from '../core/cache/http-request-cache';
-import { AHHttpResponseBodyStatusEnum, AHObjectHelper } from '..';
-import { AHHttpResponse } from '..';
-import { AHTestResource } from './resources/test-resource';
+import { AHHttpRequestCache } from "../core/cache/http-request-cache";
+import { AHHttpResponseBodyStatusEnum, AHObjectHelper } from "..";
+import { AHHttpResponse } from "..";
+import { AHTestResource } from "./resources/test-resource";
 
 
 describe('AHHttpRequestCache', () => {
-  const requestCache = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: '/test' }));
-  const requestCache2 = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: '/test2' }));
+  const requestCache = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: "/test" }));
+  const requestCache2 = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: "/test2" }));
   const response = new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success });
   const httpRequestCache = new AHHttpRequestCache();
 
@@ -22,25 +22,25 @@ describe('AHHttpRequestCache', () => {
   })
 
   test('addDataInCache', () => {
-    expect(httpRequestCache.data.length).toBe(0);
+    expect(httpRequestCache.data.length).toEqual(0);
 
     httpRequestCache.addDataInCache(
       requestCache,
       response,
     );
 
-    expect(httpRequestCache.data.length).toBe(1);
+    expect(httpRequestCache.data.length).toEqual(1);
   });
 
   test('getCacheItem', () => {
-    expect(httpRequestCache.data.length).toBe(0);
+    expect(httpRequestCache.data.length).toEqual(0);
 
     httpRequestCache.addDataInCache(
       requestCache,
       response,
     );
 
-    expect(httpRequestCache.data.length).toBe(1);
+    expect(httpRequestCache.data.length).toEqual(1);
     const cacheItem = httpRequestCache.getCacheItem(requestCache);
     expect(cacheItem).toBeInstanceOf(AHHttpResponse);
   });
@@ -51,7 +51,7 @@ describe('AHHttpRequestCache', () => {
   });
 
   test('flushCache', () => {
-    expect(httpRequestCache.data.length).toBe(0);
+    expect(httpRequestCache.data.length).toEqual(0);
     
     httpRequestCache.addDataInCache(
       requestCache,
@@ -59,10 +59,10 @@ describe('AHHttpRequestCache', () => {
     );
 
     httpRequestCache.flushCache(10);
-    expect(httpRequestCache.data.length).toBe(1);
+    expect(httpRequestCache.data.length).toEqual(1);
 
     httpRequestCache.flushCache(-1);
-    expect(httpRequestCache.data.length).toBe(0);
+    expect(httpRequestCache.data.length).toEqual(0);
   });
 
   test('Cache override when going over maxCacheSize', () => {
@@ -89,7 +89,7 @@ describe('AHHttpRequestCache', () => {
       response,
     );
 
-    expect(httpRequestCache.data.length).toBe(2);
+    expect(httpRequestCache.data.length).toEqual(2);
 
     httpRequestCache.flushCache(-1);
 
@@ -110,7 +110,7 @@ describe('AHHttpRequestCache', () => {
       response,
     );
 
-    expect(httpRequestCache.data.length).toBe(1);
+    expect(httpRequestCache.data.length).toEqual(1);
   });
 
   test('Cache size not sufficient to store item', () => {
@@ -131,6 +131,6 @@ describe('AHHttpRequestCache', () => {
       response,
     );
 
-    expect(httpRequestCache.data.length).toBe(0);
+    expect(httpRequestCache.data.length).toEqual(0);
   });
 });

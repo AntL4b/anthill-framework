@@ -1,10 +1,10 @@
-import { AHAwsEvent } from '../../../../models/aws/event/aws-event';
-import { AHHttpResponse } from '../../../http-response';
-import { AHPromiseHelper } from '../../../../helpers/promise-helper';
-import { AHMiddleware } from './middleware';
-import { AHHttpRequestHelper } from '../../../../helpers/http-request-helper';
-import { AHJsonBodyParserMiddlewareOptions } from '../../../../models/middlewares/json-body-parser-middleware-options';
-import { AHAwsContext } from '../../../../models/aws/aws-context';
+import { AHAwsEvent } from "../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../http-response";
+import { AHPromiseHelper } from "../../helpers/promise-helper";
+import { AHMiddleware } from "./middleware";
+import { AHHttpRequestHelper } from "../../helpers/http-request-helper";
+import { AHJsonBodyParserMiddlewareOptions } from "../../models/middleware/json-body-parser-middleware-options";
+import { AHAwsContext } from "../../models/aws/aws-context";
 
 
 const JSON_MIME_PATTERN = /^application\/(.+\+)?json($|;.+)/;
@@ -18,7 +18,7 @@ export class AHJsonBodyParserMiddleware extends AHMiddleware<AHJsonBodyParserMid
 
   override runBefore(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
     if (event.body) {
-      const contentType = AHHttpRequestHelper.getHeaderValue("Content-Type", event);
+      const contentType = AHHttpRequestHelper.getHeaderValue("Content-Type", event.headers);
 
       if (!JSON_MIME_PATTERN.test(contentType)) {
         return AHPromiseHelper.promisify(AHHttpResponse.error({ message: `Unsupported media type: ${contentType}` }));

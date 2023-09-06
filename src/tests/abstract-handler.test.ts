@@ -1,7 +1,7 @@
-import { AHAwsContext, AHException, AHLogger, AHHandlerOptions } from '..';
-import { AHPromiseHelper } from '..';
-import { AHLambdaHandler } from '../framework/features/handler/lambda-handler';
-import { AHTestResource } from './resources/test-resource';
+import { AHAwsContext, AHException, AHLogger, AHHandlerOptions } from "..";
+import { AHPromiseHelper } from "..";
+import { AHLambdaHandler } from "../framework/features/handler/lambda-handler";
+import { AHTestResource } from "./resources/test-resource";
 
 // Override default warn and error log method to avoid jest to crash
 global.console.error = (message: string) => {
@@ -18,7 +18,7 @@ describe('AHAbstractHandler', () => {
   test('constructor', () => {
     expect(() => {
       new AHLambdaHandler<any, any>({
-        name: 'invalid-name',
+        name: "invalid-name",
         callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
       });
     }).toThrow(AHException);
@@ -31,7 +31,7 @@ describe('AHAbstractHandler', () => {
 
     AHLambdaHandler.setDefaultOptions(newDefaultOptions);
 
-    expect(JSON.stringify(AHLambdaHandler['defaultOptions'])).toBe(JSON.stringify(newDefaultOptions));
+    expect(JSON.stringify(AHLambdaHandler["defaultOptions"])).toEqual(JSON.stringify(newDefaultOptions));
   });
 
   test('setOptions', () => {
@@ -42,12 +42,12 @@ describe('AHAbstractHandler', () => {
     const handler = AHTestResource.getDefaultLambdaHandler();
     handler.setOptions(newOptions);
 
-    expect(JSON.stringify(handler['options'])).toBe(JSON.stringify(newOptions));
+    expect(JSON.stringify(handler["options"])).toEqual(JSON.stringify(newOptions));
   });
 
   test('getName', () => {
     const handler = AHTestResource.getDefaultRestHandler();
-    expect(handler.getName()).toBe('handler');
+    expect(handler.getName()).toEqual("handler");
   });
 
   test('displayPerformanceMetrics', async () => {

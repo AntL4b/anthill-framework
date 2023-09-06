@@ -1,5 +1,5 @@
-import { AHCallable } from '../../framework/models/handler/callable';
-import { AHHandlerOptions } from '../../framework/models/handler/handler-options';
+import { AHCallable } from "../../framework/models/handler/callable";
+import { AHHandlerOptions } from "../../framework/models/handler/handler-options";
 
 
 export interface AHAbstractHandlerParams<T, U>  {

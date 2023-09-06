@@ -1,9 +1,9 @@
-import { AHAwsEvent } from '../..';
-import { AHAbstractHandler } from '../../core/abstract-handler';
-import { AHAwsContext } from '../models/aws/aws-context';
-import { AHException } from './anthill-exception';
-import { AHLambdaHandler } from './handler/lambda-handler';
-import { AHRestHandler } from './handler/rest-handler/rest-handler';
+import { AHAwsEvent } from "../..";
+import { AHAbstractHandler } from "../../core/abstract-handler";
+import { AHAwsContext } from "../models/aws/aws-context";
+import { AHException } from "./anthill-exception";
+import { AHLambdaHandler } from "./handler/lambda-handler";
+import { AHRestHandler } from "./handler/rest-handler";
 
 export class Anthill {
   private static instance: Anthill;

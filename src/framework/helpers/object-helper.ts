@@ -66,7 +66,7 @@ export class AHObjectHelper {
     for (let i = 0; i < properties.length; i++) {
       const key = properties[i];
       // Do not recalculate circular references
-      if (typeof object[key] === 'object' && object[key] !== null) {
+      if (typeof object[key] === "object" && object[key] !== null) {
         if (seen.has(object[key])) {
           continue;
         }
@@ -88,18 +88,18 @@ export class AHObjectHelper {
 
       const objectType = typeof object;
       switch (objectType) {
-        case 'string':
+        case "string":
           return object.length * ECMA_SIZES.STRING;
-        case 'boolean':
+        case "boolean":
           return ECMA_SIZES.BOOLEAN;
-        case 'number':
+        case "number":
           return ECMA_SIZES.NUMBER;
-        case 'symbol':
+        case "symbol":
           const isGlobalSymbol = Symbol.keyFor && Symbol.keyFor(object);
           return isGlobalSymbol
             ? Symbol.keyFor(object).length * ECMA_SIZES.STRING
             : (object.toString().length - 8) * ECMA_SIZES.STRING;
-        case 'object':
+        case "object":
           if (Array.isArray(object)) {
             return object.map(AHObjectHelper.getCalculator(seen)).reduce(function (acc, curr) {
               return acc + curr;

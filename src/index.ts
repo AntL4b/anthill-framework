@@ -25,7 +25,7 @@ export { logError } from "./framework/features/logger";
 /**
  * REST HANDLER
  */
-export { AHRestHandler } from "./framework/features/handler/rest-handler/rest-handler";
+export { AHRestHandler } from "./framework/features/handler/rest-handler";
 
 /**
  * TIME TRACKER
@@ -40,10 +40,11 @@ export { AHTimeSegment } from "./framework/features/time-segment";
 /**
  * MIDDLEWARES
  */
-export { AHMiddleware } from "./framework/features/handler/rest-handler/middlewares/middleware";
-export { AHJsonBodyParserMiddleware } from "./framework/features/handler/rest-handler/middlewares/json-body-parser-middleware";
-export { AHHeaderFieldMiddleware } from "./framework/features/handler/rest-handler/middlewares/header-field-middleware";
-export { AHQuerystringFieldMiddleware } from "./framework/features/handler/rest-handler/middlewares/querystring-field-middleware";
+export { AHMiddleware } from "./framework/features/middleware/middleware";
+export { AHCorsMiddleware } from "./framework/features/middleware/cors-middleware";
+export { AHJsonBodyParserMiddleware } from "./framework/features/middleware/json-body-parser-middleware";
+export { AHHeaderFieldMiddleware } from "./framework/features/middleware/header-field-middleware";
+export { AHQuerystringFieldMiddleware } from "./framework/features/middleware/querystring-field-middleware";
 
 /**
  * HELPERS
@@ -56,7 +57,7 @@ export { AHPromiseHelper } from "./framework/helpers/promise-helper";
 /**
  * MODELS
  */
-export  { AHAwsContext } from "./framework/models/aws/aws-context";
+export { AHAwsContext } from "./framework/models/aws/aws-context";
 export { AHAwsEvent } from "./framework/models/aws/event/aws-event";
 export { AHAwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
 export { AHAwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";
@@ -69,7 +70,8 @@ export { AHHttpResponseBody } from "./framework/models/http-response-body";
 export { AHLoggerContext } from "./framework/models/logger/logger-context";
 export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
 export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
-export { AHJsonBodyParserMiddlewareOptions } from "./framework/models/middlewares/json-body-parser-middleware-options";
+export { AHCorsMiddlewareOptions } from "./framework/models/middleware/cors-middleware-options";
+export { AHJsonBodyParserMiddlewareOptions } from "./framework/models/middleware/json-body-parser-middleware-options";
 export { AHRestHandlerParams } from "./framework/models/handler/rest-handler-params";
 export { AHHandlerOptions } from "./framework/models/handler/handler-options";
 export { AHCallable } from "./framework/models/handler/callable";

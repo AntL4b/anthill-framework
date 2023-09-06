@@ -112,19 +112,19 @@ export class AHTimeTracker {
 
     const getXPointsStr = (x: number) => {
       let res = "";
-      while (res.length < x) { res = res + '.'; }
+      while (res.length < x) { res = res + "."; }
       return res;
     }
 
     const getXSpacesStr = (x: number) => {
       let res = "";
-      while (res.length < x) { res = res + ' '; }
+      while (res.length < x) { res = res + " "; }
       return res;
     }
 
     const getXXStr = (x: number) => {
       let res = "";
-      while (res.length < x) { res = res + 'x'; }
+      while (res.length < x) { res = res + "x"; }
       return res;
     }
 
@@ -144,9 +144,9 @@ export class AHTimeTracker {
       const segmentBlocStartIndex = Math.round((segment.startTime - sessionSegment.startTime) / sessionDuration * LOG_SESSION_LINE_LENGTH);
 
       logInfo(
-        fillStrWithTrailingSpaces(segment.name, maxSegmentNameLength) + ': '
+        fillStrWithTrailingSpaces(segment.name, maxSegmentNameLength) + ": "
         + getXPointsStr(segmentBlocStartIndex)
-        + "[" + getXXStr(segmentBlocLength) + ']'
+        + "[" + getXXStr(segmentBlocLength) + "]"
         + getXPointsStr(LOG_SESSION_LINE_LENGTH - segmentBlocStartIndex - segmentBlocLength)
         + `(${Math.round(segmentDuration * 1000) / 1000} ms)` // 3 digits round
       );

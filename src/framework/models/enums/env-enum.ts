@@ -1,4 +1,4 @@
 export enum AHEnvEnum {
-  Dev = 'dev',
-  Prod = 'prod',
+  Dev = "dev",
+  Prod = "prod",
 }

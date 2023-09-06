@@ -1,7 +1,7 @@
-import { AHPromiseHelper } from "../../../../helpers/promise-helper";
-import { AHAwsContext } from "../../../../models/aws/aws-context";
-import { AHAwsEvent } from "../../../../models/aws/event/aws-event";
-import { AHHttpResponse } from "../../../http-response";
+import { AHPromiseHelper } from "../../helpers/promise-helper";
+import { AHAwsContext } from "../../models/aws/aws-context";
+import { AHAwsEvent } from "../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../http-response";
 
 
 export class AHMiddleware<T> {

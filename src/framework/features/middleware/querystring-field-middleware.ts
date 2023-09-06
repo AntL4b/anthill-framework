@@ -1,8 +1,8 @@
-import { AHAwsEvent } from '../../../../models/aws/event/aws-event';
-import { AHHttpResponse } from '../../../http-response';
-import { AHPromiseHelper } from '../../../../helpers/promise-helper';
-import { AHMiddleware } from './middleware';
-import { AHAwsContext } from '../../../../models/aws/aws-context';
+import { AHAwsEvent } from "../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../http-response";
+import { AHPromiseHelper } from "../../helpers/promise-helper";
+import { AHMiddleware } from "./middleware";
+import { AHAwsContext } from "../../models/aws/aws-context";
 
 
 export class AHQuerystringFieldMiddleware extends AHMiddleware<Array<string>> {
@@ -26,7 +26,7 @@ export class AHQuerystringFieldMiddleware extends AHMiddleware<Array<string>> {
 
       if (notIncludedKeys.length > 0) {
         return AHPromiseHelper.promisify(
-          AHHttpResponse.error({ message: `[${notIncludedKeys.join(', ')}] not found in querystring` }),
+          AHHttpResponse.error({ message: `[${notIncludedKeys.join(", ")}] not found in querystring` }),
         );
       } else {
         return AHPromiseHelper.promisify(event);
@@ -35,7 +35,7 @@ export class AHQuerystringFieldMiddleware extends AHMiddleware<Array<string>> {
       // No query string parameters and required parameter(s)
 
       return AHPromiseHelper.promisify(
-        AHHttpResponse.error({ message: `[${this.payload.join(', ')}] not found in querystring` }),
+        AHHttpResponse.error({ message: `[${this.payload.join(", ")}] not found in querystring` }),
       );
     } else {
       // No query string parameters and no required parameter

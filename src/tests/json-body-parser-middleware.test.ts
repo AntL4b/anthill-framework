@@ -1,11 +1,11 @@
 
-import { AHJsonBodyParserMiddleware, AHObjectHelper } from "..";
+import { AHJsonBodyParserMiddleware } from "..";
 import { AHAwsEvent } from "..";
 import { AHHttpResponse } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 
-describe('AHBodyCheckerMiddleware', () => {
+describe('AHJsonBodyParserMiddleware', () => {
   test('No body specified', async () => {
     const middleware = new AHJsonBodyParserMiddleware();
     expect(await middleware.runBefore(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext())).toBeInstanceOf(AHAwsEvent);
@@ -17,7 +17,7 @@ describe('AHBodyCheckerMiddleware', () => {
     const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHAwsEvent);
-    expect(AHObjectHelper.isEquivalentObj(result.body, { key: "test1" })).toBe(true);
+    expect(JSON.stringify(result.body)).toEqual(JSON.stringify({ key: "test1" }));
   });
 
   test('Body specified Base64', async () => {
@@ -26,7 +26,7 @@ describe('AHBodyCheckerMiddleware', () => {
     const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHAwsEvent);
-    expect(AHObjectHelper.isEquivalentObj(result.body, { key: "test1" })).toBe(true);
+    expect(JSON.stringify(result.body)).toEqual(JSON.stringify({ key: "test1" }));
   });
 
   test('Unsupported media type', async () => {

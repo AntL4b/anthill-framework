@@ -1,9 +1,9 @@
-import { AHEnvEnum } from '../models/enums/env-enum';
-import { AHLogLevelEnum } from '../models/enums/log-level-enum';
-import { AHLoggerContext } from '../models/logger/logger-context';
-import { AHEnvironmentHelper } from '../helpers/environment-helper';
-import { AHLoggerFormatter } from '../models/logger/logger-formatter';
-import { AHLoggerHandler } from '../models/logger/logger-handler';
+import { AHEnvEnum } from "../models/enums/env-enum";
+import { AHLogLevelEnum } from "../models/enums/log-level-enum";
+import { AHLoggerContext } from "../models/logger/logger-context";
+import { AHEnvironmentHelper } from "../helpers/environment-helper";
+import { AHLoggerFormatter } from "../models/logger/logger-formatter";
+import { AHLoggerHandler } from "../models/logger/logger-handler";
 
 
 export class AHLogger {

@@ -1,4 +1,4 @@
-import { AHHttpResponseBody } from '../models/http-response-body';
+import { AHHttpResponseBody } from "../models/http-response-body";
 
 
 export class AHHttpResponse {
@@ -7,24 +7,17 @@ export class AHHttpResponse {
   body: AHHttpResponseBody | any;
 
   constructor(statusCode: number, body?: AHHttpResponseBody | any, headers?: { [key: string]: any }) {
-    this.headers = {
-      ...{
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Credentials': true,
-      },
-      ...headers,
-    };
+    this.headers = headers || {};
 
     if (
       !Object.keys(this.headers)
         .map((k) => k.toLocaleLowerCase())
-        .includes('content-type')
+        .includes("content-type")
     ) {
-      this.headers['Content-Type'] = 'application/json';
+      this.headers["Content-Type"] = "application/json";
     }
 
-    if (this.headers['Content-Type'] === 'application/json') {
+    if (this.headers["Content-Type"] === "application/json") {
       this.body = JSON.stringify(body);
     } else {
       this.body = body;
