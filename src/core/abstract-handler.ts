@@ -3,7 +3,7 @@ import { AHException } from "../framework/features/anthill-exception";
 import { AHAbstractHandlerParams } from "./models/abstract-handler-params";
 import { AHAwsContext } from "../framework/models/aws/aws-context";
 import { AHHandlerOptions } from "../framework/models/handler/handler-options";
-import { AHTimeTracker } from "..";
+import { AHTimeTracker } from "../framework/features/time-tracker";
 
 export abstract class AHAbstractHandler<T, U> {
   private static defaultOptions: AHHandlerOptions = {

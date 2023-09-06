@@ -1,4 +1,3 @@
-- Add some middlewares (a good source of candidate can be found here: https://github.com/middyjs/middy/tree/main/packages)
 - Add structural classes
   - Handler (that auto register handlers through anthill app)
   - 
@@ -10,5 +9,5 @@
   - spec out
 - Security spec (for swagger) 
 - OpenApi swagger generation
-  - 
 - Websocket ?
+- Add some middlewares (a good source of candidate can be found here: https://github.com/middyjs/middy/tree/main/packages)

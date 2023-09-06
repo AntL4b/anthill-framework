@@ -1,4 +1,4 @@
-import { AHAwsEvent } from "../..";
+import { AHAwsEvent } from "../models/aws/event/aws-event";
 import { AHAbstractHandler } from "../../core/abstract-handler";
 import { AHAwsContext } from "../models/aws/aws-context";
 import { AHException } from "./anthill-exception";
