@@ -1,9 +1,8 @@
-- Add structural classes
-  - Handler (that auto register handlers through anthill app)
-  - 
-- System for registering handlers with more ease
-  - register controller (https://spring.io/guides/tutorials/rest/)
-  -
+- helper for extracting info from AHAwsEvent (decorator / validator / DTO in ?)
+  - query param
+  - path param
+  - body param
+  - ...
 - DTO
   - spec in (will replace middleware for qs and body check)
   - spec out

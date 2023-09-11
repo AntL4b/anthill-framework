@@ -47,6 +47,12 @@ export { AHHeaderFieldMiddleware } from "./framework/features/middleware/header-
 export { AHQuerystringFieldMiddleware } from "./framework/features/middleware/querystring-field-middleware";
 
 /**
+ * DECORATORS
+ */
+
+export { RestHandler } from "./framework/decorators/restHandler";
+
+/**
  * HELPERS
  */
 export { AHEnvironmentHelper } from "./framework/helpers/environment-helper";

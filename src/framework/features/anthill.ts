@@ -1,9 +1,9 @@
 import { AHAwsEvent } from "../models/aws/event/aws-event";
-import { AHAbstractHandler } from "../../core/abstract-handler";
 import { AHAwsContext } from "../models/aws/aws-context";
 import { AHException } from "./anthill-exception";
 import { AHLambdaHandler } from "./handler/lambda-handler";
 import { AHRestHandler } from "./handler/rest-handler";
+import { AHCallable } from "../..";
 
 export class Anthill {
   private static instance: Anthill;
@@ -61,7 +61,7 @@ export class Anthill {
    * Expose all registred handlers
    * @returns All registred handlers mapped inside an object { [handlerName]: handler }
    */
-  exposeHandlers(): { [handlerName: string]: AHAbstractHandler<any, any> } {
+  exposeHandlers(): { [handlerName: string]: AHCallable<any, any> } {
     const exportObject = {};
 
     // Expose rest handlers
