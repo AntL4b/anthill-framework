@@ -12,25 +12,18 @@ describe('Anthill', () => {
     expect(app).toBeInstanceOf(Anthill);
   });
 
-  test('registerRestHandler', () => {
-    const restHandlerNumber = Anthill["restHandlers"].length;
+  test('registerHandler', () => {
+    const handlerNumber = Anthill["handlers"].length;
     const app = anthill();
-    app.registerRestHandler(AHTestResource.getDefaultRestHandler());
-    expect(Anthill["restHandlers"].length).toEqual(restHandlerNumber + 1);
-    expect(() => app.registerRestHandler(AHTestResource.getDefaultRestHandler())).toThrow(AHException);
-  });
+    app.registerHandler(AHTestResource.getDefaultRestHandler());
 
-  test('registerLambdaHandler', () => {
-    const restHandlerNumber = Anthill["lambdaHandlers"].length;
-    const app = anthill();
-    app.registerLambdaHandler(AHTestResource.getDefaultLambdaHandler());
-    expect(Anthill["lambdaHandlers"].length).toEqual(restHandlerNumber + 1);
-    expect(() => app.registerLambdaHandler(AHTestResource.getDefaultLambdaHandler())).toThrow(AHException);
+    expect(Anthill["handlers"].length).toEqual(handlerNumber + 1);
+    expect(() => app.registerHandler(AHTestResource.getDefaultRestHandler())).toThrow(AHException);
   });
 
   test('exposeHandlers', () => {
     const app = anthill();
-    app.registerRestHandler(AHTestResource.getDefaultRestHandler({
+    app.registerHandler(AHTestResource.getDefaultRestHandler({
       name: "restHandler",
     }));
     exports = app.exposeHandlers();

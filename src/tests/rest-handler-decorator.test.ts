@@ -8,16 +8,17 @@ describe('RestHandler decorator', () => {
 
   test('decorator add handler to anthill', () => {
     class AHTest {
-      @RestHandler({
-        method: AHRestMethodEnum.Get,
-      })
-      async listTest(event: AHAwsEvent, context: AHAwsContext): Promise<AHHttpResponse> {
+      @RestHandler({ method: AHRestMethodEnum.Get })
+      async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
         return AHPromiseHelper.promisify(AHHttpResponse.success(null))
       }
     }
 
     new AHTest();
     const app = anthill();
+
+    // app.configure() // TODO
+
     const handlers = app.exposeHandlers();
 
     expect(Object.keys(handlers).includes("listTest")).toBe(true);

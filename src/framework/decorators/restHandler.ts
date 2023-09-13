@@ -22,7 +22,7 @@ export function RestHandler(restHandlerOptions: Partial<AHRestHandlerParams>): M
     };
 
     const restHandler = new AHRestHandler(_restHandlerOptions);
-    Anthill.getInstance().registerRestHandler(restHandler);
+    Anthill.getInstance().registerHandler(restHandler);
 
     return descriptor;
   };
