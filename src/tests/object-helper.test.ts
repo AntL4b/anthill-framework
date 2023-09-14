@@ -21,6 +21,24 @@ describe('AHObjectHelper', () => {
       { a: null, b: 2, c: undefined, d: false, e: 0},
       { a: null, b: 2, c: undefined, d: false, e: 0}
     )).toEqual(true);
+
+    // Nested
+    expect(AHObjectHelper.isEquivalentObj(
+      { a: { b: 2, d: false, c: undefined, e: 0} },
+      { a: { b: 2, c: undefined, d: false, e: 0} },
+    )).toEqual(true);
+
+    expect(AHObjectHelper.isEquivalentObj(
+      { a: { b: 3, c: undefined, d: false, e: 0} },
+      { a: { b: 2, c: undefined, d: false, e: 0} },
+    )).toEqual(false);
+  });
+
+  test('isObject', () => {
+    expect(AHObjectHelper.isObject(null)).toEqual(false);
+    expect(AHObjectHelper.isObject({})).toEqual(true);
+    expect(AHObjectHelper.isObject(false)).toEqual(false);
+    expect(AHObjectHelper.isObject(1)).toEqual(false);
   });
 
   test('getSizeOf all managed types', () => {

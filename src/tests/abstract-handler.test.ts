@@ -1,6 +1,6 @@
 import { AHAwsContext, AHException, AHLogger, AHHandlerOptions } from "..";
 import { AHPromiseHelper } from "..";
-import { AHLambdaHandler } from "../framework/features/handler/lambda-handler";
+import { AHLambdaHandler } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 // Override default warn and error log method to avoid jest to crash
@@ -9,12 +9,6 @@ global.console.error = (message: string) => {
 };
 
 describe('AHAbstractHandler', () => {
-  beforeEach(() => {
-    AHLambdaHandler.setDefaultOptions({
-      displayPerformanceMetrics: false,
-    });
-  });
-
   test('constructor', () => {
     expect(() => {
       new AHLambdaHandler<any, any>({
@@ -22,16 +16,6 @@ describe('AHAbstractHandler', () => {
         callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
       });
     }).toThrow(AHException);
-  });
-
-  test('setDefaultOptions', () => {
-    const newDefaultOptions: AHHandlerOptions = {
-      displayPerformanceMetrics: true,
-    };
-
-    AHLambdaHandler.setDefaultOptions(newDefaultOptions);
-
-    expect(JSON.stringify(AHLambdaHandler["defaultOptions"])).toEqual(JSON.stringify(newDefaultOptions));
   });
 
   test('setOptions', () => {

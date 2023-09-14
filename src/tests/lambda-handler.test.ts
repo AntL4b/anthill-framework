@@ -1,5 +1,5 @@
 import { AHAwsContext, AHException } from "..";
-import { AHLambdaHandler } from "../framework/features/handler/lambda-handler";
+import { AHLambdaHandler } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 // Override default warn and error log method to avoid jest to crash
@@ -8,12 +8,6 @@ global.console.error = (message: string) => {
 };
 
 describe('AHLambdaHandler', () => {
-  beforeEach(() => {
-    AHLambdaHandler.setDefaultOptions({
-      displayPerformanceMetrics: false,
-    });
-  });
-
   test('constructor', () => {
     let handler = AHTestResource.getDefaultLambdaHandler();
     expect(handler).toBeInstanceOf(AHLambdaHandler);

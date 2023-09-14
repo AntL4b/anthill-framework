@@ -6,43 +6,29 @@ import { AHRestMethodEnum } from "../../models/enums/rest-method-enum";
 import { AHHttpResponse } from "../http-response";
 import { AHLogger } from "../logger";
 import { AHMiddleware } from "../middleware/middleware";
-import { AHRestHandlerParams } from "../../models/handler/rest-handler-params";
+import { AHRestHandlerConfig } from "../../models/handler/rest-handler-config";
 import { AHTimeTracker } from "../time-tracker";
 import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
+import { Anthill } from "../anthill";
 
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
 
-  private static defaultCacheConfig: AHCacheConfig = {
-    cachable: false,
-    ttl: 120,
-    maxCacheSize: 1000000,
-  };
-
+  private cacheConfig: AHCacheConfig = Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig;
+  private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
   private method: AHRestMethodEnum;
   private middlewares: Array<AHMiddleware<any>> = [];
-  private cacheConfig: AHCacheConfig = AHRestHandler.defaultCacheConfig;
-  private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
 
-  constructor(params: AHRestHandlerParams) {
+  constructor(params: AHRestHandlerConfig) {
+    // Apply restHandlerConfig options
+    params.options = { ...Anthill.getInstance()._configuration.restHandlerConfig.options, ...params.options };
     super(params);
 
     this.method = params.method;
 
     if (params.middlewares) { this.middlewares = params.middlewares; }
     if (params.cacheConfig) { this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig }; }
-  }
-
-  /**
-   * Set the default cache config
-   * @param cacheConfig The cache config (override) to set by default
-   */
-  static setDefaultCacheConfig(cacheConfig: AHCacheConfig): void {
-    AHRestHandler.defaultCacheConfig = {
-      ...AHRestHandler.defaultCacheConfig,
-      ...cacheConfig
-    }
   }
 
   /**
@@ -97,11 +83,14 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
       tracker.startSegment(`middleware-runBefore`);
 
-      // Run all the middlewares runBefore one by one
-      for (let i = 0; i < this.middlewares.length; i++) {
-        AHLogger.getInstance().debug(`Running runBefore for middleware ${i + 1} of ${this.middlewares.length}`);
+      // Add anthill configuration middlewares to middleware list
+      const middlewares = [...Anthill.getInstance()._configuration.restHandlerConfig.middlewares, ...this.middlewares];
 
-        const middlewareResult = await this.middlewares[i].runBefore(ev, context);
+      // Run all the middlewares runBefore one by one
+      for (let i = 0; i < middlewares.length; i++) {
+        AHLogger.getInstance().debug(`Running runBefore for middleware ${i + 1} of ${middlewares.length}`);
+
+        const middlewareResult = await middlewares[i].runBefore(ev, context);
 
         // The middleware returned an AHAwsEvent
         if (middlewareResult instanceof AHAwsEvent) {
@@ -163,9 +152,9 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       tracker.startSegment(`middleware-runAfter`);
 
       // Run all the middlewares runAfter one by one
-      for (let i = 0; i < this.middlewares.length; i++) {
-        AHLogger.getInstance().debug(`Running runAfter for middleware ${i + 1} of ${this.middlewares.length}`);
-        response = await this.middlewares[i].runAfter(response, ev, context);
+      for (let i = 0; i < middlewares.length; i++) {
+        AHLogger.getInstance().debug(`Running runAfter for middleware ${i + 1} of ${middlewares.length}`);
+        response = await middlewares[i].runAfter(response, ev, context);
       }
 
       tracker.stopSegment(`middleware-runAfter`);

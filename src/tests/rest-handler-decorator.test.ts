@@ -16,9 +16,6 @@ describe('RestHandler decorator', () => {
 
     new AHTest();
     const app = anthill();
-
-    // app.configure() // TODO
-
     const handlers = app.exposeHandlers();
 
     expect(Object.keys(handlers).includes("listTest")).toBe(true);

@@ -1,20 +1,17 @@
 import { AHCallable } from "../framework/models/handler/callable";
 import { AHException } from "../framework/features/anthill-exception";
-import { AHAbstractHandlerParams } from "./models/abstract-handler-params";
+import { AHAbstractHandlerConfig } from "./models/abstract-handler-config";
 import { AHAwsContext } from "../framework/models/aws/aws-context";
 import { AHHandlerOptions } from "../framework/models/handler/handler-options";
 import { AHTimeTracker } from "../framework/features/time-tracker";
 
 export abstract class AHAbstractHandler<T, U> {
-  private static defaultOptions: AHHandlerOptions = {
-    displayPerformanceMetrics: false,
-  };
 
   protected name: string;
   protected callable: AHCallable<T, U>;
-  protected options: AHHandlerOptions = AHAbstractHandler.defaultOptions;
+  protected options: AHHandlerOptions = { displayPerformanceMetrics: false, };
 
-  constructor(params: AHAbstractHandlerParams<T, U>) {
+  constructor(params: AHAbstractHandlerConfig<T, U>) {
     if (!/^[a-zA-z_]+[a-zA-z0-9]*$/.test(params.name)) {
       throw new AHException(
         `Invalid handler name: ${params.name}. Handler name must respect typescript var naming convention`,
@@ -27,17 +24,6 @@ export abstract class AHAbstractHandler<T, U> {
     if (params.options) {
       this.options = { ...this.options, ...params.options };
     }
-  }
-
-  /**
-   * Set the default options
-   * @param options The options (override) to set by default
-   */
-  static setDefaultOptions(options: AHHandlerOptions): void {
-    AHAbstractHandler.defaultOptions = {
-      ...AHAbstractHandler.defaultOptions,
-      ...options,
-    };
   }
 
   /**

@@ -2,12 +2,15 @@ import { AHLogger } from "../logger";
 import { AHTimeTracker } from "../time-tracker";
 import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
-import { AHLambdaHandlerParams } from "../../models/handler/lambda-handler-params";
+import { AHLambdaHandlerConfig } from "../../models/handler/lambda-handler-config";
+import { Anthill } from "../anthill";
 
 
 export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
 
-  constructor(params: AHLambdaHandlerParams<T, U>) {
+  constructor(params: AHLambdaHandlerConfig<T, U>) {
+    // Apply lambdaHandlerConfig options
+    params.options = { ...Anthill.getInstance()._configuration.lambdaHandlerConfig.options, ...params.options };
     super(params);
   }
 

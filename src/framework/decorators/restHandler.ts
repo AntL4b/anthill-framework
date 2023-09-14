@@ -1,10 +1,10 @@
 import { AHRestHandler } from "../features/handler/rest-handler";
 import { Anthill } from "../features/anthill";
 import { AHException } from "../features/anthill-exception";
-import { AHRestHandlerParams } from "../models/handler/rest-handler-params";
+import { AHRestHandlerConfig } from "../models/handler/rest-handler-config";
 
 
-export function RestHandler(restHandlerOptions: Partial<AHRestHandlerParams>): MethodDecorator {
+export function RestHandler(restHandlerOptions: Partial<AHRestHandlerConfig>): MethodDecorator {
   if (!restHandlerOptions.method) {
     throw new AHException("@RestHandler Missing rest handler method");
   }
@@ -14,7 +14,7 @@ export function RestHandler(restHandlerOptions: Partial<AHRestHandlerParams>): M
       restHandlerOptions.name = String(propertyKey);
     }
 
-    const _restHandlerOptions: AHRestHandlerParams = {
+    const _restHandlerOptions: AHRestHandlerConfig = {
       name: restHandlerOptions.name,
       method: restHandlerOptions.method,
       callable: descriptor.value,

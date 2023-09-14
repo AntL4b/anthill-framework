@@ -1,9 +1,9 @@
-import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerParams } from "../..";
+import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerConfig,  } from "../..";
 import { AHAwsEvent } from "../..";
 import { AHRestMethodEnum } from "../..";
 import { AHAwsContext } from "../..";
-import { AHLambdaHandler } from "../../framework/features/handler/lambda-handler";
-import { AHLambdaHandlerParams } from "../../framework/models/handler/lambda-handler-params";
+import { AHLambdaHandler } from "../..";
+import { AHLambdaHandlerConfig } from "../..";
 
 export class AHTestResource {
 
@@ -59,7 +59,7 @@ export class AHTestResource {
     return baseContext;
   }
 
-  static getDefaultRestHandler(paramOverride?: Partial<AHRestHandlerParams>): AHRestHandler {
+  static getDefaultRestHandler(paramOverride?: Partial<AHRestHandlerConfig>): AHRestHandler {
     return new AHRestHandler({
       ...{
         name: "handler",
@@ -74,7 +74,7 @@ export class AHTestResource {
     });
   }
 
-  static getDefaultLambdaHandler(paramOverride?: Partial<AHLambdaHandlerParams<any, any>>): AHLambdaHandler<any, any> {
+  static getDefaultLambdaHandler(paramOverride?: Partial<AHLambdaHandlerConfig<any, any>>): AHLambdaHandler<any, any> {
     return new AHLambdaHandler<any, any>({
       ...{
         name: "handler",

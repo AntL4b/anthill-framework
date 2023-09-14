@@ -14,33 +14,9 @@ global.console.error = (message: string) => {
 };
 
 describe('AHRestHandler', () => {
-  beforeEach(() => {
-    AHRestHandler.setDefaultCacheConfig({
-      cachable: false,
-      ttl: 120,
-      maxCacheSize: 1000000,
-    });
-
-    AHRestHandler.setDefaultOptions({
-      displayPerformanceMetrics: false,
-    });
-  });
-
   test('constructor', () => {
     let handler = AHTestResource.getDefaultRestHandler();
     expect(handler).toBeInstanceOf(AHRestHandler);
-  });
-
-  test('setDefaultCacheConfig', () => {
-    const newDefaultCacheConfig: AHCacheConfig = {
-      cachable: true,
-      ttl: 999,
-      maxCacheSize: 123456,
-    };
-
-    AHRestHandler.setDefaultCacheConfig(newDefaultCacheConfig);
-
-    expect(JSON.stringify(AHRestHandler["defaultCacheConfig"])).toEqual(JSON.stringify(newDefaultCacheConfig));
   });
 
   test('setCacheConfig', () => {
