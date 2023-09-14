@@ -14,7 +14,6 @@ import { Anthill } from "../anthill";
 
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
-
   private cacheConfig: AHCacheConfig = Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig;
   private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
   private method: AHRestMethodEnum;
@@ -52,9 +51,10 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * Run all the middlewares one by one before running the handler callable function
    * @param event The event to be passed through middlewares and callable function
    * @param context This object provides methods and properties that provide information about the invocation, function, and execution environment
+   * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns An http response
    */
-  async handleRequest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
+  async handleRequest(event: AHAwsEvent, context?: AHAwsContext, callback?: (...args: Array<any>) => any): Promise<AHHttpResponse> {
     const tracker: AHTimeTracker = new AHTimeTracker();
 
     try {
@@ -130,7 +130,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
         tracker.startSegment("callable-run");
 
         try {
-          response = await this.callable(ev, context);
+          response = await this.callable(ev, context, callback);
         } catch (e) {
           AHLogger.getInstance().error((e as { message: string }).message);
           response = AHHttpResponse.error({

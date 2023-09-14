@@ -56,7 +56,8 @@ export abstract class AHAbstractHandler<T, U> {
    * Handle the request
    * @param event The request event
    * @param context This object provides methods and properties that provide information about the invocation, function, and execution environment
+   * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns The request response
    */
-  abstract handleRequest(event: T, context?: AHAwsContext): Promise<U>;
+  abstract handleRequest(event: T, context?: AHAwsContext, callback?: (...args: Array<any>) => any): Promise<U>;
 }

@@ -12,6 +12,7 @@ const DEFAULT_OPTIONS: AHJsonBodyParserMiddlewareOptions = { reviver: null }
 
 /** Parse JSON body to js / ts object */
 export class AHJsonBodyParserMiddleware extends AHMiddleware<AHJsonBodyParserMiddlewareOptions> {
+
   constructor(options?: AHJsonBodyParserMiddlewareOptions) {
     super({ ...DEFAULT_OPTIONS, ...options});
   }

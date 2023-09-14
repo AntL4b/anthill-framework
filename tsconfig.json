@@ -28,7 +28,6 @@
     "esModuleInterop": true,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "experimentalDecorators": true,
   },
   "include": [
     "src"

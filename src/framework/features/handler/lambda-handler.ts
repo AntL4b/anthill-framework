@@ -19,9 +19,10 @@ export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
    * Run the handler callable function
    * @param event The event to be passed through the callable function
    * @param context This object provides methods and properties that provide information about the invocation, function, and execution environment
+   * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns A response
    */
-  async handleRequest(event: T, context?: AHAwsContext): Promise<U> {
+  async handleRequest(event: T, context?: AHAwsContext, callback?: (...args: Array<any>) => any): Promise<U> {
     const tracker: AHTimeTracker = new AHTimeTracker();
 
     try {
@@ -34,7 +35,7 @@ export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
       AHLogger.getInstance().debug("Running handler callable");
 
       tracker.startSegment("callable-run");
-      const callableReponse = await this.callable(event, context);
+      const callableReponse = await this.callable(event, context, callback);
       tracker.stopSegment("callable-run");
 
       tracker.stopTrackingSession();

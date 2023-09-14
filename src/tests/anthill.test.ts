@@ -117,18 +117,18 @@ describe("Anthill", () => {
     expect(AHTestResource.getDefaultLambdaHandler()["options"].displayPerformanceMetrics).toBe(false);
   });
 
-  test("registerHandler", () => {
+  test("_registerHandler", () => {
     const handlerNumber = anthill()["handlers"].length;
     const app = anthill();
-    app.registerHandler(AHTestResource.getDefaultRestHandler());
+    app._registerHandler(AHTestResource.getDefaultRestHandler());
 
     expect(anthill()["handlers"].length).toEqual(handlerNumber + 1);
-    expect(() => app.registerHandler(AHTestResource.getDefaultRestHandler())).toThrow(AHException);
+    expect(() => app._registerHandler(AHTestResource.getDefaultRestHandler())).toThrow(AHException);
   });
 
   test("exposeHandlers", () => {
     const app = anthill();
-    app.registerHandler(
+    app._registerHandler(
       AHTestResource.getDefaultRestHandler({
         name: "restHandler",
       }),

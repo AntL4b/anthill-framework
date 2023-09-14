@@ -73,10 +73,10 @@ export class Anthill {
   }
 
   /**
-   * Register a rest handler
+   * Register a rest handler (shouldn't be called manually unless you know what you're doing)
    * @param handler The handler to register
    */
-  registerHandler(handler: AHAbstractHandler<any, any>): void {
+  _registerHandler(handler: AHAbstractHandler<any, any>): void {
     if (this.handlers.map(h => h.getName()).includes(handler.getName())) {
       throw new AHException(
         `Duplicate handler with name ${handler.getName()}. Handler names must be unique within the application`,
@@ -96,8 +96,8 @@ export class Anthill {
     // Expose rest handlers
     for (const handler of this.handlers) {
       // Export a method that call the handler
-      exportObject[handler.getName()] = async (event: any, context: AHAwsContext) =>
-        await handler.handleRequest(event, context);
+      exportObject[handler.getName()] = async (event: any, context: AHAwsContext, callback: (...args: Array<any>) => any) =>
+        await handler.handleRequest(event, context, callback);
     }
 
     return exportObject;

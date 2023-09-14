@@ -1,6 +1,5 @@
 import { AHHttpResponseBody } from "../models/http-response-body";
 
-
 export class AHHttpResponse {
   statusCode: number;
   headers: { [key: string]: any };
@@ -62,16 +61,6 @@ export class AHHttpResponse {
   }
 
   /**
-   * Return a failure (status code 500) http response
-   * @param body the http response body
-   * @param headers the http response headers
-   * @returns a failure http response
-   */
-  static failure(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
-    return new AHHttpResponse(500, body, headers);
-  }
-
-  /**
    * Return a forbidden (status code 403) http response
    * @param body the http response body
    * @param headers the http response headers
@@ -79,5 +68,25 @@ export class AHHttpResponse {
    */
   static forbidden(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
     return new AHHttpResponse(403, body, headers);
+  }
+
+  /**
+   * Return a noçt found (status code 404) http response
+   * @param body the http response body
+   * @param headers the http response headers
+   * @returns a not found http response
+   */
+  static notFound(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
+    return new AHHttpResponse(404, body, headers);
+  }
+
+  /**
+   * Return a failure (status code 500) http response
+   * @param body the http response body
+   * @param headers the http response headers
+   * @returns a failure http response
+   */
+  static failure(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
+    return new AHHttpResponse(500, body, headers);
   }
 }

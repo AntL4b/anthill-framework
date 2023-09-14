@@ -8,7 +8,6 @@ import { AHTimeSegment } from "./time-segment";
 const LOG_SESSION_LINE_LENGTH = 50;
 
 export class AHTimeTracker {
-
   private state: AHTimeTrackerStateEnum = AHTimeTrackerStateEnum.Stopped;
   private timeSegments: Array<AHTimeSegment> = [];
   private trackingSessionSegmentName: string;

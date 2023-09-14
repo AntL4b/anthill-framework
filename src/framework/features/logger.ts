@@ -7,7 +7,6 @@ import { AHLoggerHandler } from "../models/logger/logger-handler";
 
 
 export class AHLogger {
-
   private static instance: AHLogger;
   
   private logLevel: AHLogLevelEnum;

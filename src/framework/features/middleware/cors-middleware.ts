@@ -44,6 +44,7 @@ const DEFAULT_OPTIONS: AHCorsMiddlewareOptions = {
 
 /** Parse JSON body to js / ts object */
 export class AHCorsMiddleware extends AHMiddleware<AHCorsMiddlewareOptions> {
+
   constructor(options?: AHCorsMiddlewareOptions) {
     super({ ...DEFAULT_OPTIONS, ...options});
   }
