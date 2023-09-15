@@ -72,7 +72,7 @@ export { AHAwsContext } from "./framework/models/aws/aws-context";
 export { AHAwsEvent } from "./framework/models/aws/event/aws-event";
 export { AHAwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
 export { AHAwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";
-export { AHCacheConfig } from "./framework/models/cache-config";
+export { AHRestHandlerCacheConfig } from "./framework/models/rest-handler-cache-config";
 export { AHEnvEnum } from "./framework/models/enums/env-enum";
 export { AHHttpResponseBodyStatusEnum } from "./framework/models/enums/http-response-body-status-enum";
 export { AHLogLevelEnum } from "./framework/models/enums/log-level-enum";

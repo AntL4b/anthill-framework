@@ -3,15 +3,16 @@ import { AHException } from "./anthill-exception";
 import { AHAnthillConfig } from "../models/anthill-config";
 import { AHAbstractHandler } from "../../core/abstract-handler";
 import { AHCallable } from "../models/handler/callable";
-import { AHCacheConfig } from "../models/cache-config";
 import { AHHandlerOptions } from "../models/handler/handler-options";
+import { AHRestHandlerCacheConfig } from "../models/rest-handler-cache-config";
 
 export class Anthill {
 
-  private static defaultCacheConfig: AHCacheConfig = {
+  private static defaultRestHandlerCacheConfig: AHRestHandlerCacheConfig = {
     cachable: false,
     ttl: 120,
     maxCacheSize: 1000000,
+    headersToInclude: [],
   };
 
   private static handlerDefaultOptions: AHHandlerOptions = {
@@ -31,7 +32,7 @@ export class Anthill {
     this._configuration = {
       restHandlerConfig: {
         middlewares: [],
-        cacheConfig: Anthill.defaultCacheConfig,
+        cacheConfig: Anthill.defaultRestHandlerCacheConfig,
         options: Anthill.handlerDefaultOptions
       },
       lambdaHandlerConfig: {

@@ -1,6 +1,5 @@
 import { AHHttpRequestCache } from "../../../core/cache/http-request-cache";
 import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHCacheConfig } from "../../models/cache-config";
 import { AHHttpResponseBodyStatusEnum } from "../../models/enums/http-response-body-status-enum";
 import { AHRestMethodEnum } from "../../models/enums/rest-method-enum";
 import { AHHttpResponse } from "../http-response";
@@ -11,10 +10,11 @@ import { AHTimeTracker } from "../time-tracker";
 import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
 import { Anthill } from "../anthill";
+import { AHRestHandlerCacheConfig } from "../../models/rest-handler-cache-config";
 
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
-  private cacheConfig: AHCacheConfig = Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig;
+  private cacheConfig: AHRestHandlerCacheConfig = Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig;
   private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
   private method: AHRestMethodEnum;
   private middlewares: Array<AHMiddleware<any>> = [];
@@ -34,7 +34,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * Set a new cache config for the handler
    * @param cacheConfig The cache config to be set
    */
-  setCacheConfig(cacheConfig: AHCacheConfig): void {
+  setCacheConfig(cacheConfig: AHRestHandlerCacheConfig): void {
     this.cacheConfig = { ...this.cacheConfig, ...cacheConfig };
   }
 
@@ -113,7 +113,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
         AHLogger.getInstance().debug("Try to get last http response from cache");
         response = this.httpCache.getCacheItem(
-          AHHttpRequestCache.buildCacheRequestParameters(ev),
+          AHHttpRequestCache.buildCacheRequestParameters(ev, this.cacheConfig.headersToInclude),
         );
 
         if (response !== null) {
@@ -143,7 +143,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
         if (this.cacheConfig.cachable) {
           this.httpCache.addDataInCache(
-            AHHttpRequestCache.buildCacheRequestParameters(ev),
+            AHHttpRequestCache.buildCacheRequestParameters(ev, this.cacheConfig.headersToInclude),
             response,
           );
         }

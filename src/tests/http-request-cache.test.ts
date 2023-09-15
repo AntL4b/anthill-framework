@@ -133,4 +133,73 @@ describe('AHHttpRequestCache', () => {
 
     expect(httpRequestCache.data.length).toEqual(0);
   });
+
+  test('headers to include', () => {
+    httpRequestCache.setConfig({
+      cachable: true,
+      ttl: 120,
+      maxCacheSize: 120000,
+    });
+
+    let request = AHHttpRequestCache.buildCacheRequestParameters(
+      AHTestResource.getBaseEvent({ headers: {"test-header": "test-header-value"}}),
+      ["test-header", "test-header-2"],
+    );
+
+    let request2 = AHHttpRequestCache.buildCacheRequestParameters(
+      AHTestResource.getBaseEvent({ headers: { "test-header": "test-header-2-value" }}),
+      ["test-header", "test-header-2"],
+    );
+
+    let request3 = AHHttpRequestCache.buildCacheRequestParameters(
+      AHTestResource.getBaseEvent({ headers: { "test-header": "test-header-value" }}),
+      ["test-header", "test-header-2"],
+    );
+
+    let request4 = AHHttpRequestCache.buildCacheRequestParameters(
+      AHTestResource.getBaseEvent({ headers: { "test-header-3": "test-header-value" }}),
+      ["test-header", "test-header-2"],
+    );
+
+    let request5 = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent(), ["test-header", "test-header-2"]);
+
+    let request6 = AHHttpRequestCache.buildCacheRequestParameters(
+      AHTestResource.getBaseEvent({ headers: {
+          "test-header": "test-header-value",
+          "test-header-2": "test-header-value-2",
+        },
+      }),
+      ["test-header", "test-header-2"],
+    );
+
+    let cacheResponse = httpRequestCache.getCacheItem(request);
+    expect(cacheResponse).toBe(null);
+
+    httpRequestCache.addDataInCache(request, new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success }));
+    expect(httpRequestCache.data.length).toBe(1);
+
+    cacheResponse = httpRequestCache.getCacheItem(request);
+    expect(cacheResponse).toBeInstanceOf(AHHttpResponse);
+
+    cacheResponse = httpRequestCache.getCacheItem(request2);
+    expect(cacheResponse).toBe(null);
+
+    cacheResponse = httpRequestCache.getCacheItem(request3);
+    expect(cacheResponse).toBeInstanceOf(AHHttpResponse);
+
+    cacheResponse = httpRequestCache.getCacheItem(request4);
+    expect(cacheResponse).toBe(null);
+
+    cacheResponse = httpRequestCache.getCacheItem(request5);
+    expect(cacheResponse).toBe(null);
+
+    httpRequestCache.addDataInCache(request4, new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success }));
+    expect(httpRequestCache.data.length).toBe(2);
+
+    cacheResponse = httpRequestCache.getCacheItem(request5);
+    expect(cacheResponse).toBeInstanceOf(AHHttpResponse);
+
+    cacheResponse = httpRequestCache.getCacheItem(request6);
+    expect(cacheResponse).toBe(null);
+  });
 });

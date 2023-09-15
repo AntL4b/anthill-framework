@@ -1,11 +1,10 @@
-import { AHAwsContext, AHException, AHMiddleware } from "..";
+import { AHAwsContext, AHException, AHMiddleware, AHObjectHelper, AHRestHandlerCacheConfig } from "..";
 import { AHPromiseHelper } from "..";
 import { AHQuerystringFieldMiddleware } from "..";
 import { AHAwsEvent } from "..";
 import { AHRestMethodEnum } from "..";
 import { AHHttpResponse } from "..";
 import { AHRestHandler } from "..";
-import { AHCacheConfig } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 // Override default warn and error log method to avoid jest to crash
@@ -20,16 +19,17 @@ describe('AHRestHandler', () => {
   });
 
   test('setCacheConfig', () => {
-    const newCacheConfig: AHCacheConfig = {
+    const newCacheConfig: AHRestHandlerCacheConfig = {
       cachable: true,
       ttl: 111,
       maxCacheSize: 654321,
+      headersToInclude: ["test-header"],
     };
 
     const handler = AHTestResource.getDefaultRestHandler();
     handler.setCacheConfig(newCacheConfig);
 
-    expect(JSON.stringify(handler["cacheConfig"])).toEqual(JSON.stringify(newCacheConfig));
+    expect(AHObjectHelper.isEquivalentObj(handler["cacheConfig"], newCacheConfig)).toBe(true);
   });
 
   test('addMiddleware', () => {

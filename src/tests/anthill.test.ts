@@ -1,4 +1,4 @@
-import { AHAwsContext, AHAwsEvent, AHCacheConfig, AHException, AHHttpResponse, AHJsonBodyParserMiddleware, AHMiddleware, AHObjectHelper, AHPromiseHelper, Anthill, anthill } from "..";
+import { AHAnthillConfig, AHAwsContext, AHAwsEvent, AHException, AHHttpResponse, AHJsonBodyParserMiddleware, AHMiddleware, AHObjectHelper, AHPromiseHelper, AHRestHandlerCacheConfig, Anthill, anthill } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("Anthill", () => {
@@ -12,12 +12,13 @@ describe("Anthill", () => {
   });
 
   test("configure", () => {
-    const configureObj = {
+    const configureObj: AHAnthillConfig = {
       restHandlerConfig: {
         cacheConfig: {
           cachable: true,
           ttl: 100,
           maxCacheSize: 1234,
+          headersToInclude: [],
         },
         middlewares: [new AHJsonBodyParserMiddleware()],
         options: {
@@ -38,10 +39,11 @@ describe("Anthill", () => {
   });
 
   test('configure cacheConfig', () => {
-    const cacheConfig: AHCacheConfig = {
+    const cacheConfig: AHRestHandlerCacheConfig = {
       cachable: true,
       ttl: 999,
       maxCacheSize: 123456,
+      headersToInclude: ["test-header"],
     };
 
     const app = anthill();
@@ -52,7 +54,7 @@ describe("Anthill", () => {
     });
 
     // Set cache config override to {} to ensure the global configuration is used
-    expect(AHObjectHelper.isEquivalentObj(AHTestResource.getDefaultRestHandler({ cacheConfig: {}})["cacheConfig"], cacheConfig)).toBe(true);
+    expect(AHObjectHelper.isEquivalentObj(AHTestResource.getDefaultRestHandler({ cacheConfig: {} })["cacheConfig"], cacheConfig)).toBe(true);
   });
 
   test('configure middleware', () => {
