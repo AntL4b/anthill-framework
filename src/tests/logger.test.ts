@@ -13,6 +13,10 @@ global.console.warn = (message: string) => {
 };
 
 describe('AHLogger', () => {
+  beforeEach(() => {
+    AHLogger["instance"] = null;
+  });
+
   test('constructor / getInstance', () => {
     process.env.ENV = AHEnvEnum.Dev;
 
@@ -54,6 +58,9 @@ describe('AHLogger', () => {
     expect(formatter).toHaveBeenCalledTimes(0);
     logger.info("info test");
     expect(formatter).toHaveBeenCalledTimes(1);
+
+    logger.info("info test", { obj: true});
+    expect(formatter).toHaveBeenCalledTimes(3);
   });
 
   test('addHandler', () => {
@@ -64,6 +71,9 @@ describe('AHLogger', () => {
     expect(handler).toHaveBeenCalledTimes(0);
     logger.info("info test");
     expect(handler).toHaveBeenCalledTimes(1);
+
+    logger.info("info test", { obj: true});
+    expect(handler).toHaveBeenCalledTimes(2);
   });
 
   test('setLogLevel', () => {

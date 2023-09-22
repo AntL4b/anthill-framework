@@ -55,7 +55,7 @@ export { AHQuerystringFieldMiddleware } from "./framework/features/middleware/qu
  * DECORATORS
  */
 
-export { RestHandler } from "./framework/decorators/restHandler";
+export { RestHandler } from "./framework/decorators/rest-handler-decorator";
 
 /**
  * HELPERS

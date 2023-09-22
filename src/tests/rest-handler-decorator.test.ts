@@ -9,7 +9,7 @@ describe('RestHandler decorator', () => {
   test('decorator add handler to anthill', () => {
     class AHTest {
       @RestHandler({ method: AHRestMethodEnum.Get })
-      async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
+      async listTest(event: string, context?: AHAwsContext): Promise<AHHttpResponse> {
         return AHPromiseHelper.promisify(AHHttpResponse.success(null))
       }
     }
