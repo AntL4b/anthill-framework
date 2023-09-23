@@ -9,7 +9,7 @@ describe('RestHandler decorator', () => {
   test('decorator add handler to anthill', () => {
     class AHTest {
       @RestHandler({ method: AHRestMethodEnum.Get })
-      async listTest(event: string, context?: AHAwsContext): Promise<AHHttpResponse> {
+      async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
         return AHPromiseHelper.promisify(AHHttpResponse.success(null))
       }
     }
@@ -26,7 +26,7 @@ describe('RestHandler decorator', () => {
     expect(() => {
       class AHTest {
         @RestHandler({})
-        async listTest(event: AHAwsEvent, context: AHAwsContext): Promise<AHHttpResponse> {
+        async listTest(event: AHAwsEvent, context: string): Promise<AHHttpResponse> {
           return AHPromiseHelper.promisify(AHHttpResponse.success(null))
         }
       }
