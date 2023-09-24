@@ -7,39 +7,21 @@ import { AHAwsEvent } from "../models/aws/event/aws-event";
 import { AHHttpResponse } from "../features/http-response";
 
 
-export function RestHandler <This, Args extends [AHAwsEvent, ...undefined[]], Return extends Promise<AHHttpResponse>>(restHandlerOptions: Partial<AHRestHandlerConfig>) {
+export function RestHandler <T, A extends [AHAwsEvent, ...undefined[]], R extends Promise<AHHttpResponse>>(restHandlerOptions: Partial<AHRestHandlerConfig>) {
   if (!restHandlerOptions.method) {
     throw new AHException("@RestHandler Missing rest handler method");
   }
 
   return (
-    target: (this: This, ...args: Args) => Return,
-    context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
+    target: (this: T, ...args: A) => R,
+    context: ClassMethodDecoratorContext<T, (this: T, ...args: A) => R>
     ) => {
       if (!restHandlerOptions.name) {
         restHandlerOptions.name = String(context.name);
       }
 
-      // find a way to add an instance of the target's class to a Dependency Injection Container and then call the instance method of class method in the callable 
-      // class DependencyContainer {
-      //   private instances: Map<string, any> = new Map();
-      
-      //   // Register a class constructor with a unique identifier
-      //   register<T>(identifier: string, constructor: new () => T) {
-      //     this.instances.set(identifier, constructor);
-      //   }
-      
-      //   // Resolve an instance by its identifier
-      //   resolve<T>(identifier: string): T {
-      //     const constructor = this.instances.get(identifier);
-      
-      //     if (!constructor) {
-      //       throw new Error(`Dependency not registered: ${identifier}`);
-      //     }
-      
-      //     return new constructor();
-      //   }
-      // }
+      // find a way to add an instance of the target's class to a Dependency Injection Container
+      // and then call the instance method of class method in the callable
 
       const _restHandlerOptions: AHRestHandlerConfig = {
         name: restHandlerOptions.name,
