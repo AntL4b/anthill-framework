@@ -1,5 +1,5 @@
-import { AHObjectHelper, Anthill, RestController, anthill } from "..";
-import { AHRestControllerClass } from "../core/models/controller-class/rest-controller-class";
+import { AHObjectHelper, Anthill, RestController, anthill } from "../packages";
+import { AHRestControllerClass } from "../packages/core/models/controller-class/rest-controller-class";
 
 describe("RestController decorator", () => {
   beforeEach(() => {

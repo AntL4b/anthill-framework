@@ -1,6 +1,4 @@
-import { AHQuerystringFieldMiddleware } from "..";
-import { AHAwsEvent } from "..";
-import { AHHttpResponse } from "..";
+import { AHQuerystringFieldMiddleware, AHAwsEvent, AHHttpResponse } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHQuerystringFieldMiddleware", () => {

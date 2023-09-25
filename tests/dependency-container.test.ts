@@ -1,4 +1,4 @@
-import { AHDependencyContainer } from "../core/dependency-container";
+import { AHDependencyContainer } from "../packages/core/dependency-container";
 
 describe("AHDependencyContainer", () => {
   test("register", () => {

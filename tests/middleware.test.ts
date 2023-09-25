@@ -1,6 +1,4 @@
-import { AHMiddleware } from "..";
-import { AHAwsEvent } from "..";
-import { AHHttpResponse } from "..";
+import { AHMiddleware, AHAwsEvent, AHHttpResponse } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHMiddleware", () => {

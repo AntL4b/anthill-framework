@@ -30,6 +30,7 @@
     "strictNullChecks": false,
   },
   "include": [
-    "src"
+    "packages",
+    "tests"
   ]
 }

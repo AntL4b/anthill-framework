@@ -1,5 +1,5 @@
-import { AHObjectHelper, Anthill, LambdaController, anthill } from "..";
-import { AHLambdaControllerClass } from "../core/models/controller-class/lambda-controller-class";
+import { AHObjectHelper, Anthill, LambdaController, anthill } from "../packages";
+import { AHLambdaControllerClass } from "../packages/core/models/controller-class/lambda-controller-class";
 
 describe("LambdaController decorator", () => {
   beforeEach(() => {

@@ -1,5 +1,4 @@
-import { AHCorsMiddleware, AHCorsMiddlewareOptions } from "..";
-import { AHHttpResponse } from "..";
+import { AHCorsMiddleware, AHCorsMiddlewareOptions, AHHttpResponse } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHCorsMiddleware", () => {

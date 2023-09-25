@@ -1,6 +1,4 @@
-import { AHHeaderFieldMiddleware } from "..";
-import { AHAwsEvent } from "..";
-import { AHHttpResponse } from "..";
+import { AHHeaderFieldMiddleware, AHAwsEvent, AHHttpResponse } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHHeaderFieldMiddleware", () => {

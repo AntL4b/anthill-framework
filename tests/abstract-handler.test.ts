@@ -7,7 +7,7 @@ import {
   Anthill,
   AHPromiseHelper,
   AHLambdaHandler,
-} from "..";
+} from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHAbstractHandler", () => {

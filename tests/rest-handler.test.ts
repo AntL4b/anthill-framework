@@ -15,7 +15,7 @@ import {
   AHRestMethodEnum,
   AHHttpResponse,
   AHRestHandler,
-} from "..";
+} from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHRestHandler", () => {

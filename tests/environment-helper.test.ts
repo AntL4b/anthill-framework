@@ -1,6 +1,4 @@
-import { AHException } from "..";
-import { AHEnvironmentHelper } from "..";
-import { AHEnvEnum } from "..";
+import { AHException, AHEnvironmentHelper, AHEnvEnum } from "../packages";
 
 describe("AHEnvironmentHelper", () => {
   test("Get dev environment", () => {

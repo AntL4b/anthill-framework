@@ -1,9 +1,14 @@
-import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerConfig } from "../..";
-import { AHAwsEvent } from "../..";
-import { AHRestMethodEnum } from "../..";
-import { AHAwsContext } from "../..";
-import { AHLambdaHandler } from "../..";
-import { AHLambdaHandlerConfig } from "../..";
+import {
+  AHHttpResponse,
+  AHPromiseHelper,
+  AHRestHandler,
+  AHRestHandlerConfig,
+  AHAwsEvent,
+  AHRestMethodEnum,
+  AHAwsContext,
+  AHLambdaHandler,
+  AHLambdaHandlerConfig,
+} from "../../packages";
 
 export class AHTestResource {
   static getBaseEvent(eventOverride?: Partial<AHAwsEvent>): AHAwsEvent {

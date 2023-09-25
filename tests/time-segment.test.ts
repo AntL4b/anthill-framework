@@ -1,4 +1,4 @@
-import { AHException, AHLogger, AHTimeSegment } from "..";
+import { AHException, AHLogger, AHTimeSegment } from "../packages";
 
 describe("AHTimeSegment", () => {
   test("constructor", () => {

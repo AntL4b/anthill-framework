@@ -9,7 +9,7 @@ import {
   RestController,
   RestHandler,
   anthill,
-} from "..";
+} from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("RestHandler decorator", () => {

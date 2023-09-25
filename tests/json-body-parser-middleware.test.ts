@@ -1,6 +1,4 @@
-import { AHJsonBodyParserMiddleware } from "..";
-import { AHAwsEvent } from "..";
-import { AHHttpResponse } from "..";
+import { AHJsonBodyParserMiddleware, AHAwsEvent, AHHttpResponse } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHJsonBodyParserMiddleware", () => {

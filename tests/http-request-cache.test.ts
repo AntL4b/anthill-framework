@@ -1,6 +1,5 @@
-import { AHHttpRequestCache } from "../core/cache/http-request-cache";
-import { AHHttpResponseBodyStatusEnum, AHObjectHelper } from "..";
-import { AHHttpResponse } from "..";
+import { AHHttpRequestCache } from "../packages/core/cache/http-request-cache";
+import { AHHttpResponseBodyStatusEnum, AHObjectHelper, AHHttpResponse } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHHttpRequestCache", () => {

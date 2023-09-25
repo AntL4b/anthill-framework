@@ -1,4 +1,4 @@
-import { AHAwsContext, AHException, Anthill, AHLambdaHandler } from "..";
+import { AHAwsContext, AHException, Anthill, AHLambdaHandler } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHLambdaHandler", () => {

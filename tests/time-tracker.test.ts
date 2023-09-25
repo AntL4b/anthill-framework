@@ -1,5 +1,5 @@
-import { AHException, AHLogger, AHTimeTracker } from "..";
-import { AHTimeTrackerStateEnum } from "../core/models/enums/time-tracker-state-enum";
+import { AHException, AHLogger, AHTimeTracker } from "../packages";
+import { AHTimeTrackerStateEnum } from "../packages/core/models/enums/time-tracker-state-enum";
 
 describe("AHTimeTracker", () => {
   test("startTrackingSession", () => {

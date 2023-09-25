@@ -1,6 +1,4 @@
-import { AHLogger, logDebug, logError, logInfo, logWarn } from "..";
-import { AHEnvEnum } from "..";
-import { AHLogLevelEnum } from "..";
+import { AHLogger, logDebug, logError, logInfo, logWarn, AHEnvEnum, AHLogLevelEnum } from "../packages";
 
 describe("AHLogger", () => {
   beforeEach(() => {

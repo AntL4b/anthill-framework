@@ -1,4 +1,4 @@
-import { AHException, AHPromiseHelper } from "..";
+import { AHException, AHPromiseHelper } from "../packages";
 
 describe("AHPromiseHelper", () => {
   test("promisify", async () => {

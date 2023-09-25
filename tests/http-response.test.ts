@@ -1,5 +1,4 @@
-import { AHHttpResponseBodyStatusEnum } from "..";
-import { AHHttpResponse } from "..";
+import { AHHttpResponseBodyStatusEnum, AHHttpResponse } from "../packages";
 
 describe("AHHttpResponse", () => {
   test("constructor", () => {

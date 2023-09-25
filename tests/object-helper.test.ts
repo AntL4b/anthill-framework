@@ -1,4 +1,4 @@
-import { AHObjectHelper } from "..";
+import { AHObjectHelper } from "../packages";
 
 describe("AHObjectHelper", () => {
   test("isEquivalentObj", () => {

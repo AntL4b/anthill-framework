@@ -1,5 +1,4 @@
-import { AHHttpRequestHelper } from "..";
-import { AHAwsEvent } from "..";
+import { AHHttpRequestHelper, AHAwsEvent } from "../packages";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHHttpRequestHelper", () => {
