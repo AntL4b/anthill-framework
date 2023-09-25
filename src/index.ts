@@ -57,6 +57,8 @@ export { AHQuerystringFieldMiddleware } from "./framework/features/middleware/qu
 
 export { RestController } from "./framework/decorators/rest-controller-decorator";
 export { RestHandler } from "./framework/decorators/rest-handler-decorator";
+export { LambdaController } from "./framework/decorators/lambda-controller-decorator";
+export { LambdaHandler } from "./framework/decorators/lambda-handler-decorator";
 
 /**
  * HELPERS
@@ -69,12 +71,14 @@ export { AHPromiseHelper } from "./framework/helpers/promise-helper";
 /**
  * MODELS
  */
+export {AHAwsCallback } from "./framework/models/aws/aws-callback"
 export { AHAwsContext } from "./framework/models/aws/aws-context";
 export { AHAwsEvent } from "./framework/models/aws/event/aws-event";
 export { AHAwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
 export { AHAwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";
 export { AHRestHandlerCacheConfig } from "./framework/models/rest-handler-cache-config";
 export { AHEnvEnum } from "./framework/models/enums/env-enum";
+export { AHHandlerConfigLevelEnum } from "./framework/models/enums/handler-config-level-enum";
 export { AHHttpResponseBodyStatusEnum } from "./framework/models/enums/http-response-body-status-enum";
 export { AHLogLevelEnum } from "./framework/models/enums/log-level-enum";
 export { AHRestMethodEnum } from "./framework/models/enums/rest-method-enum";

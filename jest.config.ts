@@ -11,7 +11,7 @@ module.exports = {
   roots: ["<rootDir>/src"],
   preset: "ts-jest",
   testEnvironment: "node",
-  collectCoverage: false,
+  collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.ts",
     "!src/index.ts",

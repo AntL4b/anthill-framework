@@ -5,6 +5,11 @@ import { AHRestHandlerConfig } from "../models/handler/rest-handler-config";
 import { AHAwsEvent } from "../models/aws/event/aws-event";
 import { AHHttpResponse } from "../features/http-response";
 
+/**
+ * REST handler decorator used to decorate handler method inside controller classes
+ * @param restHandlerOptions REST handler options that will be applied to this handler
+ * @returns The REST handler decorator
+ */
 export function RestHandler<T, A extends [AHAwsEvent, ...undefined[]], R extends Promise<AHHttpResponse>>(
   restHandlerOptions: Partial<AHRestHandlerConfig>,
 ) {

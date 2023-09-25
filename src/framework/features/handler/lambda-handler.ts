@@ -4,12 +4,20 @@ import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
 import { AHLambdaHandlerConfig } from "../../models/handler/lambda-handler-config";
 import { Anthill } from "../anthill";
+import { AHAwsCallback } from "../../models/aws/aws-callback";
+import { AHHandlerConfigLevelEnum } from "../../..";
 
 export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
   constructor(params: AHLambdaHandlerConfig<T, U>) {
     // Apply lambdaHandlerConfig options
-    params.options = { ...Anthill.getInstance()._configuration.lambdaHandlerConfig.options, ...params.options };
     super(params);
+
+    if (Anthill.getInstance()._configuration.lambdaHandlerConfig.options) {
+      this.setOptions(
+        Anthill.getInstance()._configuration.lambdaHandlerConfig.options,
+        AHHandlerConfigLevelEnum.Anthill,
+      );
+    }
   }
 
   /**
@@ -20,7 +28,7 @@ export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
    * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns A response
    */
-  async handleRequest(event: T, context?: AHAwsContext, callback?: (...args: Array<any>) => any): Promise<U> {
+  async handleRequest(event: T, context?: AHAwsContext, callback?: AHAwsCallback): Promise<U> {
     const tracker: AHTimeTracker = new AHTimeTracker();
 
     try {
@@ -33,7 +41,8 @@ export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
       AHLogger.getInstance().debug("Running handler callable");
 
       tracker.startSegment("callable-run");
-      const callableReponse = await this.callable(event, context, callback);
+      const controllerInstance = await this.getControllerInstance();
+      const callableReponse = await this.callable.call(controllerInstance, ...[event, context, callback]);
       tracker.stopSegment("callable-run");
 
       tracker.stopTrackingSession();
@@ -45,7 +54,7 @@ export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
       tracker.stopTrackingSession();
       this.displayPerformanceMetrics(tracker);
 
-      return null;
+      throw e;
     }
   }
 }

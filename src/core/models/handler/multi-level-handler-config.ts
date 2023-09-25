@@ -1,5 +1,5 @@
 export interface AHMultiLevelHandlerConfig<T> {
-  anthillLevel: T;
-  controllerLevel: T;
-  handlerLevelZ: T;
+  anthill?: T;
+  controller?: T;
+  handler?: T;
 }

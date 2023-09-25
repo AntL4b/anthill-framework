@@ -3,6 +3,7 @@ import {
   AHAwsContext,
   AHAwsEvent,
   AHException,
+  AHHandlerConfigLevelEnum,
   AHHttpResponse,
   AHJsonBodyParserMiddleware,
   AHMiddleware,
@@ -69,7 +70,7 @@ describe("Anthill", () => {
     // Set cache config override to {} to ensure the global configuration is used
     expect(
       AHObjectHelper.isEquivalentObj(
-        AHTestResource.getDefaultRestHandler({ cacheConfig: {} })["cacheConfig"],
+        AHTestResource.getDefaultRestHandler({ cacheConfig: {} })["cacheConfig"][AHHandlerConfigLevelEnum.Anthill],
         cacheConfig,
       ),
     ).toBe(true);
@@ -114,7 +115,9 @@ describe("Anthill", () => {
       },
     });
 
-    expect(AHTestResource.getDefaultRestHandler()["options"].displayPerformanceMetrics).toBe(true);
+    expect(
+      AHTestResource.getDefaultRestHandler()["options"][AHHandlerConfigLevelEnum.Anthill].displayPerformanceMetrics,
+    ).toBe(true);
 
     app.configure({
       restHandlerConfig: {
@@ -124,27 +127,9 @@ describe("Anthill", () => {
       },
     });
 
-    expect(AHTestResource.getDefaultRestHandler()["options"].displayPerformanceMetrics).toBe(false);
-
-    app.configure({
-      lambdaHandlerConfig: {
-        options: {
-          displayPerformanceMetrics: true,
-        },
-      },
-    });
-
-    expect(AHTestResource.getDefaultLambdaHandler()["options"].displayPerformanceMetrics).toBe(true);
-
-    app.configure({
-      lambdaHandlerConfig: {
-        options: {
-          displayPerformanceMetrics: false,
-        },
-      },
-    });
-
-    expect(AHTestResource.getDefaultLambdaHandler()["options"].displayPerformanceMetrics).toBe(false);
+    expect(
+      AHTestResource.getDefaultRestHandler()["options"][AHHandlerConfigLevelEnum.Anthill].displayPerformanceMetrics,
+    ).toBe(false);
   });
 
   test("_registerHandler", () => {

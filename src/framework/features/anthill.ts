@@ -6,6 +6,7 @@ import { AHCallable } from "../models/handler/callable";
 import { AHHandlerOptions } from "../models/handler/handler-options";
 import { AHRestHandlerCacheConfig } from "../models/rest-handler-cache-config";
 import { AHDependencyContainer } from "../../core/dependency-container";
+import { AHAwsCallback } from "../models/aws/aws-callback";
 
 export class Anthill {
   private static defaultRestHandlerCacheConfig: AHRestHandlerCacheConfig = {
@@ -106,7 +107,7 @@ export class Anthill {
       exportObject[handler.getName()] = async (
         event: any,
         context: AHAwsContext,
-        callback: (...args: Array<any>) => any,
+        callback: AHAwsCallback,
       ) => await handler.handleRequest(event, context, callback);
     }
 

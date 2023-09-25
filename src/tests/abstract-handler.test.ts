@@ -1,9 +1,21 @@
-import { AHAwsContext, AHException, AHLogger, AHHandlerOptions } from "..";
-import { AHPromiseHelper } from "..";
-import { AHLambdaHandler } from "..";
+import {
+  AHAwsContext,
+  AHException,
+  AHLogger,
+  AHHandlerOptions,
+  AHHandlerConfigLevelEnum,
+  Anthill,
+  AHPromiseHelper,
+  AHLambdaHandler,
+} from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("AHAbstractHandler", () => {
+  beforeEach(() => {
+    Anthill["instance"] = null;
+    Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
+  });
+
   test("constructor", () => {
     expect(() => {
       new AHLambdaHandler<any, any>({
@@ -22,7 +34,7 @@ describe("AHAbstractHandler", () => {
     const handler = AHTestResource.getDefaultLambdaHandler();
     handler.setOptions(newOptions);
 
-    expect(JSON.stringify(handler["options"])).toEqual(JSON.stringify(newOptions));
+    expect(JSON.stringify(handler["options"][AHHandlerConfigLevelEnum.Handler])).toEqual(JSON.stringify(newOptions));
   });
 
   test("getName", () => {

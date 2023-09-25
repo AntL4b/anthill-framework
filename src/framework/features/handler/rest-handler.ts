@@ -11,18 +11,23 @@ import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
 import { Anthill } from "../anthill";
 import { AHRestHandlerCacheConfig } from "../../models/rest-handler-cache-config";
-import { AHException } from "../anthill-exception";
-import { AHPromiseHelper } from "../../helpers/promise-helper";
+import { AHMultiLevelHandlerConfig } from "../../../core/models/handler/multi-level-handler-config";
+import { AHHandlerConfigLevelEnum } from "../../models/enums/handler-config-level-enum";
+import { AHAwsCallback } from "../../models/aws/aws-callback";
+import { AHRestControllerClass } from "../../../core/models/controller-class/rest-controller-class";
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
-  private cacheConfig: AHRestHandlerCacheConfig = Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig;
+  private cacheConfig: AHMultiLevelHandlerConfig<AHRestHandlerCacheConfig> = {
+    anthill: Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig,
+    controller: {},
+    handler: {},
+  };
   private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
   private method: AHRestMethodEnum;
   private middlewares: Array<AHMiddleware<any>> = [];
 
   constructor(params: AHRestHandlerConfig) {
     // Apply restHandlerConfig options
-    params.options = { ...Anthill.getInstance()._configuration.restHandlerConfig.options, ...params.options };
     super(params);
 
     this.method = params.method;
@@ -30,17 +35,26 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
     if (params.middlewares) {
       this.middlewares = params.middlewares;
     }
+
+    if (Anthill.getInstance()._configuration.restHandlerConfig.options) {
+      this.setOptions(Anthill.getInstance()._configuration.restHandlerConfig.options, AHHandlerConfigLevelEnum.Anthill);
+    }
+
     if (params.cacheConfig) {
-      this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig };
+      this.setCacheConfig(params.cacheConfig, AHHandlerConfigLevelEnum.Handler);
     }
   }
 
   /**
-   * Set a new cache config for the handler
+   * Set a new cache config
    * @param cacheConfig The cache config to be set
+   * @param configLevel The config level that should be applied for the given config
    */
-  setCacheConfig(cacheConfig: AHRestHandlerCacheConfig): void {
-    this.cacheConfig = { ...this.cacheConfig, ...cacheConfig };
+  setCacheConfig(
+    cacheConfig: AHRestHandlerCacheConfig,
+    configLevel: AHHandlerConfigLevelEnum = AHHandlerConfigLevelEnum.Handler,
+  ): void {
+    this.cacheConfig[configLevel] = { ...this.cacheConfig[configLevel], ...cacheConfig };
   }
 
   /**
@@ -59,37 +73,30 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns An http response
    */
-  async handleRequest(
-    event: AHAwsEvent,
-    context?: AHAwsContext,
-    callback?: (...args: Array<any>) => any,
-  ): Promise<AHHttpResponse> {
+  async handleRequest(event: AHAwsEvent, context?: AHAwsContext, callback?: AHAwsCallback): Promise<AHHttpResponse> {
     const tracker: AHTimeTracker = new AHTimeTracker();
 
     try {
       tracker.startTrackingSession(this.name + "-tracking-session");
 
-      const controllerName = await AHPromiseHelper.timeout(
-        this.controllerName,
-        100,
-        new AHException(
-          `Can't resolve controller name for handler ${this.name}. A handler method must be inside a class decorated with a controller decorator`,
-        ),
-      );
-      const controllerInstance = Anthill.getInstance()._dependencyContainer.resolve(controllerName);
+      // Apply controller instance config
+      await this.setupControllerInstance();
+
+      // Compute the multi level config into the one to be applied
+      const cacheConfig: AHRestHandlerCacheConfig = this.computeCacheConfig();
 
       // Make event an instance of AHAwsEvent
-      let ev: AHAwsEvent = new AHAwsEvent();
-      Object.assign(ev, event);
+      let _event: AHAwsEvent = new AHAwsEvent();
+      Object.assign(_event, event);
 
       AHLogger.getInstance().debug("Handling request");
       AHLogger.getInstance().debug(`Method: ${this.method}`);
       AHLogger.getInstance().debug(`Name: ${this.name}`);
 
-      if (this.cacheConfig.cachable) {
+      if (cacheConfig.cachable) {
         tracker.startSegment("cache-configuration");
-        this.httpCache.setConfig(this.cacheConfig);
-        this.httpCache.flushCache(this.cacheConfig.ttl);
+        this.httpCache.setConfig(cacheConfig);
+        this.httpCache.flushCache(cacheConfig.ttl);
         tracker.stopSegment("cache-configuration");
       }
 
@@ -97,22 +104,22 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       let response: AHHttpResponse = null;
 
       // Init middleware data with an empty object
-      ev.middlewareData = {};
+      _event.middlewareData = {};
 
       tracker.startSegment(`middleware-runBefore`);
 
-      // Add anthill configuration middlewares to middleware list
-      const middlewares = [...Anthill.getInstance()._configuration.restHandlerConfig.middlewares, ...this.middlewares];
+      // Add anthill and controller configuration middlewares to middleware list
+      const middlewares = await this.computeMiddlewares();
 
       // Run all the middlewares runBefore one by one
       for (let i = 0; i < middlewares.length; i++) {
         AHLogger.getInstance().debug(`Running runBefore for middleware ${i + 1} of ${middlewares.length}`);
 
-        const middlewareResult = await middlewares[i].runBefore(ev, context);
+        const middlewareResult = await middlewares[i].runBefore(_event, context);
 
         // The middleware returned an AHAwsEvent
         if (middlewareResult instanceof AHAwsEvent) {
-          ev = middlewareResult;
+          _event = middlewareResult;
         } else {
           // The middleware returned an HttpResponse
           AHLogger.getInstance().debug("Middleware returned an HTTP response");
@@ -126,12 +133,12 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       tracker.stopSegment(`middleware-runBefore`);
 
       // Try to retrieve any eventual cached response if cachable option is set
-      if (response === null && this.cacheConfig.cachable) {
+      if (response === null && cacheConfig.cachable) {
         tracker.startSegment("cache-retrieving");
 
         AHLogger.getInstance().debug("Try to get last http response from cache");
         response = this.httpCache.getCacheItem(
-          AHHttpRequestCache.buildCacheRequestParameters(ev, this.cacheConfig.headersToInclude),
+          AHHttpRequestCache.buildCacheRequestParameters(_event, cacheConfig.headersToInclude),
         );
 
         if (response !== null) {
@@ -148,7 +155,8 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
         tracker.startSegment("callable-run");
 
         try {
-          response = await this.callable.call(controllerInstance, ...[ev, context, callback]);
+          const controllerInstance = await this.getControllerInstance();
+          response = await this.callable.call(controllerInstance, ...[_event, context, callback]);
         } catch (e) {
           AHLogger.getInstance().error((e as { message: string }).message);
           response = AHHttpResponse.error({
@@ -159,9 +167,9 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
         tracker.stopSegment("callable-run");
 
-        if (this.cacheConfig.cachable) {
+        if (cacheConfig.cachable) {
           this.httpCache.addDataInCache(
-            AHHttpRequestCache.buildCacheRequestParameters(ev, this.cacheConfig.headersToInclude),
+            AHHttpRequestCache.buildCacheRequestParameters(_event, cacheConfig.headersToInclude),
             response,
           );
         }
@@ -172,7 +180,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       // Run all the middlewares runAfter one by one
       for (let i = 0; i < middlewares.length; i++) {
         AHLogger.getInstance().debug(`Running runAfter for middleware ${i + 1} of ${middlewares.length}`);
-        response = await middlewares[i].runAfter(response, ev, context);
+        response = await middlewares[i].runAfter(response, _event, context);
       }
 
       tracker.stopSegment(`middleware-runAfter`);
@@ -190,6 +198,70 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
         status: AHHttpResponseBodyStatusEnum.Error,
         message: (e as { message: string }).message,
       });
+    }
+  }
+
+  private computeCacheConfig(): AHRestHandlerCacheConfig {
+    const headersToInclude = [];
+
+    if (this.cacheConfig.anthill?.headersToInclude && this.cacheConfig.anthill?.headersToInclude.length) {
+      headersToInclude.push(...this.cacheConfig.anthill?.headersToInclude);
+    }
+
+    if (this.cacheConfig.controller?.headersToInclude && this.cacheConfig.controller?.headersToInclude.length) {
+      headersToInclude.push(...this.cacheConfig.controller?.headersToInclude);
+    }
+
+    if (this.cacheConfig.handler?.headersToInclude && this.cacheConfig.handler?.headersToInclude.length) {
+      headersToInclude.push(...this.cacheConfig.handler?.headersToInclude);
+    }
+
+    return {
+      ...this.cacheConfig.anthill,
+      ...this.cacheConfig.controller,
+      ...this.cacheConfig.handler,
+      headersToInclude: Array.from(new Set(headersToInclude)),
+    };
+  }
+
+  private async computeMiddlewares(): Promise<Array<AHMiddleware<any>>> {
+    // Retrieve the controller instance
+    const controllerInstance: InstanceType<AHRestControllerClass<any>> = await this.getControllerInstance();
+
+    const middlewares = [];
+
+    if (
+      Anthill.getInstance()._configuration.restHandlerConfig.middlewares &&
+      Anthill.getInstance()._configuration.restHandlerConfig.middlewares.length
+    ) {
+      middlewares.push(...Anthill.getInstance()._configuration.restHandlerConfig.middlewares);
+    }
+
+    if (
+      controllerInstance._restHandlerConfig?.middlewares &&
+      controllerInstance._restHandlerConfig.middlewares.length
+    ) {
+      middlewares.push(...controllerInstance._restHandlerConfig.middlewares);
+    }
+
+    if (this.middlewares && this.middlewares.length) {
+      middlewares.push(...this.middlewares);
+    }
+
+    return middlewares;
+  }
+
+  private async setupControllerInstance(): Promise<void> {
+    // Retrieve the controller instance
+    const controllerInstance = await this.getControllerInstance<InstanceType<AHRestControllerClass<any>>>();
+
+    // Set the controller level config and options
+    if (controllerInstance._restHandlerConfig?.options) {
+      this.setOptions(controllerInstance._restHandlerConfig?.options, AHHandlerConfigLevelEnum.Controller);
+    }
+
+    if (controllerInstance._restHandlerConfig?.cacheConfig) {
+      this.setCacheConfig(controllerInstance._restHandlerConfig?.cacheConfig, AHHandlerConfigLevelEnum.Controller);
     }
   }
 }

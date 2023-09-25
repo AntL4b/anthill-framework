@@ -12,8 +12,6 @@ import {
 } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
-// node ./node_modules/jest/bin/jest.js -i ./src/tests/rest-handler-decorator.test.ts  -c ./jest.config.ts -t "decorator add handler to anthill"
-
 describe("RestHandler decorator", () => {
   beforeEach(() => {
     Anthill["instance"] = null;
@@ -75,7 +73,9 @@ describe("RestHandler decorator", () => {
 
     expect(Object.keys(handlers).includes("listTest")).toBe(true);
 
+    // Should throw a managed error (i.e. 400 response code)
     const res = await handlers.listTest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
     expect(res).toBeInstanceOf(AHHttpResponse);
+    expect(res.statusCode).toEqual(400);
   });
 });
