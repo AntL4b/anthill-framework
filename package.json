@@ -27,7 +27,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc -p ./tsconfig-build.json",
     "clean": "rimraf dist/",
     "release": "npm run test && npm run build && dotenv release-it --",
     "test": "jest"

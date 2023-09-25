@@ -31,6 +31,6 @@
   },
   "include": [
     "packages",
-    "tests"
+    "tests",
   ]
 }
