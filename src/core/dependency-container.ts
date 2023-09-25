@@ -1,24 +1,32 @@
 import { AHException } from "../framework/features/anthill-exception";
+import { AHDependencyContainerMap } from "./models/dependency-container-map";
 
 
-class DependencyContainer {
-  private instances: Map<string, any> = new Map();
+export class AHDependencyContainer {
+  private container: AHDependencyContainerMap = {};
 
-  // Register a class constructor with a unique identifier
   register<T>(identifier: string, constructor: new () => T) {
-    if (!this.instances.has(identifier)) {
-      this.instances.set(identifier, constructor);
+    console.log("registering " + identifier);
+    
+    if (!Object.keys(this.container).includes(identifier)) {
+      this.container[identifier] = {
+        constructor: constructor,
+        instance: null,
+      };
     }
   }
 
-  // Resolve an instance by its identifier
   resolve<T>(identifier: string): T {
-    const constructor = this.instances.get(identifier);
-
-    if (!constructor) {
-      throw new AHException(`Dependency not registered: ${identifier}`);
+    console.log("resolving " + identifier);
+    
+    if (!Object.keys(this.container).includes(identifier)) {
+      throw new AHException(`Dependency ${identifier} has never been registered`);
     }
 
-    return new constructor();
+    if (!this.container[identifier].instance) {
+      this.container[identifier].instance = new this.container[identifier].constructor();
+    }
+
+    return this.container[identifier].instance;
   }
 }

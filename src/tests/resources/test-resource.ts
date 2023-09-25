@@ -62,6 +62,7 @@ export class AHTestResource {
   static getDefaultRestHandler(paramOverride?: Partial<AHRestHandlerConfig>): AHRestHandler {
     return new AHRestHandler({
       ...{
+        controllerName: AHPromiseHelper.promisify("controller"),
         name: "handler",
         method: AHRestMethodEnum.Get,
         middlewares: [],
@@ -77,6 +78,7 @@ export class AHTestResource {
   static getDefaultLambdaHandler(paramOverride?: Partial<AHLambdaHandlerConfig<any, any>>): AHLambdaHandler<any, any> {
     return new AHLambdaHandler<any, any>({
       ...{
+        controllerName: AHPromiseHelper.promisify("controller"),
         name: "handler",
         callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
       },

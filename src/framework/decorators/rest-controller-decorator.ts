@@ -1,18 +1,14 @@
-/* import { AHRestHandlerOverridableConfig } from "../models/handler/rest-handler-overridable-config";
-
-type Constructor<T = {}> = new (...args: any[]) => T;
+import { Anthill } from "../features/anthill";
+import { AHRestHandlerOverridableConfig } from "../models/handler/rest-handler-overridable-config";
 
 export function RestController(restControllerOptions: AHRestHandlerOverridableConfig): any {
-  return <Class extends Constructor>(
-    Value: Class,
-    context: ClassDecoratorContext<Class>
+  return <T extends { new (...args: any[]): T; _restHandlerConfig: AHRestHandlerOverridableConfig }>(
+    target: T,
+    context: ClassDecoratorContext<T>,
   ) => {
-    const _this = this;
-    return class extends Value {
-      constructor(...args: any[]) {
-        super(...args);
-        _this.instances.add(this);
-      }
-    };
+    Anthill.getInstance()._dependencyContainer.register<T>(context.name, target);
+    Anthill.getInstance()._dependencyContainer.resolve<T>(context.name)._restHandlerConfig = restControllerOptions;
+
+    return target;
   };
-} */
+}

@@ -60,6 +60,9 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
     try {
       tracker.startTrackingSession(this.name + "-tracking-session");
 
+      const controllerName = await this.controllerName;
+      const controllerInstance = Anthill.getInstance()._dependencyContainer.resolve(controllerName);
+
       // Make event an instance of AHAwsEvent
       let ev: AHAwsEvent = new AHAwsEvent();
       Object.assign(ev, event);
@@ -130,7 +133,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
         tracker.startSegment("callable-run");
 
         try {
-          response = await this.callable(ev, context, callback);
+          response = await this.callable.call(controllerInstance, ...[ev, context, callback]);
         } catch (e) {
           AHLogger.getInstance().error((e as { message: string }).message);
           response = AHHttpResponse.error({

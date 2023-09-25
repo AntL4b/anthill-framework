@@ -5,6 +5,7 @@ import { AHAbstractHandler } from "../../core/abstract-handler";
 import { AHCallable } from "../models/handler/callable";
 import { AHHandlerOptions } from "../models/handler/handler-options";
 import { AHRestHandlerCacheConfig } from "../models/rest-handler-cache-config";
+import { AHDependencyContainer } from "../../core/dependency-container";
 
 export class Anthill {
 
@@ -22,11 +23,14 @@ export class Anthill {
   private static instance: Anthill;
   private handlers: Array<AHAbstractHandler<any, any>>;
 
-  // Shouldn't be set directly by user
+    // Shouldn't be set directly by user
+  _dependencyContainer: AHDependencyContainer;
   _configuration: AHAnthillConfig;
 
   private constructor() {
     this.handlers = [];
+    
+    this._dependencyContainer = new AHDependencyContainer();
 
     // Default configuration if configure isn't called
     this._configuration = {

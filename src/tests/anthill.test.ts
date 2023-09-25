@@ -57,7 +57,7 @@ describe("Anthill", () => {
     expect(AHObjectHelper.isEquivalentObj(AHTestResource.getDefaultRestHandler({ cacheConfig: {} })["cacheConfig"], cacheConfig)).toBe(true);
   });
 
-  test('configure middleware', () => {
+  test('configure middleware', async () => {
     const _middlewareFunction = jest.fn((event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> => AHPromiseHelper.promisify(event));
     class AHTestMiddleware extends AHMiddleware<any> {
       override runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
@@ -72,7 +72,12 @@ describe("Anthill", () => {
       }
     });
 
-    expect(AHTestResource.getDefaultRestHandler({ middlewares: []}).handleRequest(AHTestResource.getBaseEvent())).resolves.toBeInstanceOf(AHHttpResponse);
+    // Register default controller for rest handler
+    Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
+
+    const res = await AHTestResource.getDefaultRestHandler({ middlewares: []}).handleRequest(AHTestResource.getBaseEvent());
+
+    expect(res).toBeInstanceOf(AHHttpResponse);
     expect(_middlewareFunction).toHaveBeenCalled();
   });
 

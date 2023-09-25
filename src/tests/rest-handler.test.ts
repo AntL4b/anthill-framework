@@ -1,4 +1,4 @@
-import { AHAwsContext, AHException, AHMiddleware, AHObjectHelper, AHRestHandlerCacheConfig } from "..";
+import { AHAwsContext, AHException, AHMiddleware, AHObjectHelper, AHRestHandlerCacheConfig, Anthill, anthill } from "..";
 import { AHPromiseHelper } from "..";
 import { AHQuerystringFieldMiddleware } from "..";
 import { AHAwsEvent } from "..";
@@ -13,6 +13,10 @@ global.console.error = (message: string) => {
 };
 
 describe('AHRestHandler', () => {
+  beforeAll(() => {
+    Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
+  })
+
   test('constructor', () => {
     let handler = AHTestResource.getDefaultRestHandler();
     expect(handler).toBeInstanceOf(AHRestHandler);

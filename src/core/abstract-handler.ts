@@ -7,6 +7,7 @@ import { AHTimeTracker } from "../framework/features/time-tracker";
 
 export abstract class AHAbstractHandler<T, U> {
 
+  protected controllerName: Promise<string>;
   protected name: string;
   protected callable: AHCallable<T, U>;
   protected options: AHHandlerOptions = { displayPerformanceMetrics: false, };
@@ -18,6 +19,7 @@ export abstract class AHAbstractHandler<T, U> {
       );
     }
 
+    this.controllerName = params.controllerName;
     this.name = params.name;
     this.callable = params.callable;
 

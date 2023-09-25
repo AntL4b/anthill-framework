@@ -12,6 +12,7 @@ describe('AHAbstractHandler', () => {
   test('constructor', () => {
     expect(() => {
       new AHLambdaHandler<any, any>({
+        controllerName: AHPromiseHelper.promisify("controller"),
         name: "invalid-name",
         callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
       });
