@@ -1,38 +1,31 @@
-import { AHAwsContext, AHException } from "..";
-import { AHLambdaHandler } from "../framework/features/handler/lambda-handler";
+import { AHAwsContext, AHException, Anthill, AHLambdaHandler } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
-// Override default warn and error log method to avoid jest to crash
-global.console.error = (message: string) => {
-  console.log(`error: ${message}`);
-};
-
-describe('AHLambdaHandler', () => {
+describe("AHLambdaHandler", () => {
   beforeEach(() => {
-    AHLambdaHandler.setDefaultOptions({
-      displayPerformanceMetrics: false,
-    });
+    Anthill["instance"] = null;
+    Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
   });
 
-  test('constructor', () => {
+  test("constructor", () => {
     let handler = AHTestResource.getDefaultLambdaHandler();
     expect(handler).toBeInstanceOf(AHLambdaHandler);
   });
 
-  test('handleRequest', async () => {
+  test("handleRequest", async () => {
     const handler = AHTestResource.getDefaultLambdaHandler();
     const response = await handler.handleRequest(null, AHTestResource.getBaseContext());
 
     expect(response).toBeNull();
   });
 
-  test('handleRequest with exception', async () => {
+  test("handleRequest with exception", async () => {
     const handler = AHTestResource.getDefaultLambdaHandler({
-      callable: (event: any, context: AHAwsContext) => { throw new AHException("error")}
+      callable: (event: any, context: AHAwsContext) => {
+        throw new AHException("error");
+      },
     });
-    
-    const response = await handler.handleRequest(null, AHTestResource.getBaseContext());
 
-    expect(response).toBeNull();
+    expect(handler.handleRequest(null, AHTestResource.getBaseContext())).rejects.toThrow(AHException);
   });
 });

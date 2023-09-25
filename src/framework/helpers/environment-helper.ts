@@ -1,10 +1,7 @@
-
 import { AHException } from "../features/anthill-exception";
 import { AHEnvEnum } from "../models/enums/env-enum";
 
-
 export class AHEnvironmentHelper {
-
   /**
    * Get the current environment
    * @returns The current environment

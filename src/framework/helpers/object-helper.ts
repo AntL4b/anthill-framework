@@ -7,32 +7,41 @@ const ECMA_SIZES = {
 export class AHObjectHelper {
   /**
    * Compare an object with another and returns if the objects are equivalent
-   * @param a First object to compare
-   * @param b Second object to compare
-   * @returns True is a object is equivalent to b object, false otherwise
+   * @param obj1 First object to compare
+   * @param obj2 Second object to compare
+   * @returns True is obj1 object is equivalent to obj2 object, false otherwise
    */
-  static isEquivalentObj(a: any, b: any) {
-    if (!a && !b) {
-      return true;
-    } else if (a && b) {
-      // Create arrays of property names
-      const aProps = Object.keys(a);
-      const bProps = Object.keys(b);
+  static isEquivalentObj(obj1: any, obj2: any): boolean {
+    if (!obj1 || !obj2) {
+      return obj1 === obj2;
+    }
 
-      // If number of properties is different, objects are not equivalent
-      if (aProps.length !== bProps.length) {
+    const props1 = Object.getOwnPropertyNames(obj1);
+    const props2 = Object.getOwnPropertyNames(obj2);
+
+    if (props1.length != props2.length) {
+      return false;
+    }
+
+    for (let i = 0; i < props1.length; i++) {
+      let val1 = obj1[props1[i]];
+      let val2 = obj2[props1[i]];
+      let isObjects = AHObjectHelper.isObject(val1) && AHObjectHelper.isObject(val2);
+
+      if ((isObjects && !AHObjectHelper.isEquivalentObj(val1, val2)) || (!isObjects && val1 !== val2)) {
         return false;
       }
+    }
+    return true;
+  }
 
-      // Verify if all the keys are in both aProps and bProps
-      // && If values of same property are not equal, objects are not equivalent
-      if (!aProps.every((p) => bProps.includes(p) && a[p] === b[p])) {
-        return false;
-      }
-
-      // Objects are equivalent
-      return true;
-    } else return false;
+  /**
+   * Check that a given value is an object
+   * @param object The given value
+   * @returns True if the given value is an object, false otherwise
+   */
+  static isObject(object: any): boolean {
+    return object != null && typeof object === "object";
   }
 
   /**

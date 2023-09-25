@@ -1,20 +1,48 @@
-import { AHAwsEvent } from "../models/aws/event/aws-event";
 import { AHAwsContext } from "../models/aws/aws-context";
 import { AHException } from "./anthill-exception";
-import { AHLambdaHandler } from "./handler/lambda-handler";
-import { AHRestHandler } from "./handler/rest-handler";
-import { AHCallable } from "../..";
+import { AHAnthillConfig } from "../models/anthill-config";
+import { AHAbstractHandler } from "../../core/abstract-handler";
+import { AHCallable } from "../models/handler/callable";
+import { AHHandlerOptions } from "../models/handler/handler-options";
+import { AHRestHandlerCacheConfig } from "../models/rest-handler-cache-config";
+import { AHDependencyContainer } from "../../core/dependency-container";
+import { AHAwsCallback } from "../models/aws/aws-callback";
 
 export class Anthill {
+  private static defaultRestHandlerCacheConfig: AHRestHandlerCacheConfig = {
+    cachable: false,
+    ttl: 120,
+    maxCacheSize: 1000000,
+    headersToInclude: [],
+  };
+
+  private static handlerDefaultOptions: AHHandlerOptions = {
+    displayPerformanceMetrics: false,
+  };
+
   private static instance: Anthill;
-  private static handlerNames: Array<string>;
-  private static restHandlers: Array<AHRestHandler>;
-  private static lambdaHandlers: Array<AHLambdaHandler<any, any>>;
+  private handlers: Array<AHAbstractHandler<any, any>>;
+
+  // Shouldn't be set directly by user
+  _dependencyContainer: AHDependencyContainer;
+  _configuration: AHAnthillConfig;
 
   private constructor() {
-    Anthill.restHandlers = [];
-    Anthill.lambdaHandlers = [];
-    Anthill.handlerNames = [];
+    this.handlers = [];
+
+    this._dependencyContainer = new AHDependencyContainer();
+
+    // Default configuration if configure isn't called
+    this._configuration = {
+      restHandlerConfig: {
+        middlewares: [],
+        cacheConfig: Anthill.defaultRestHandlerCacheConfig,
+        options: Anthill.handlerDefaultOptions,
+      },
+      lambdaHandlerConfig: {
+        options: Anthill.handlerDefaultOptions,
+      },
+    };
   }
 
   /**
@@ -30,31 +58,40 @@ export class Anthill {
   }
 
   /**
-   * Register a rest handler
-   * @param restHandler The handler to register
+   * Configure the anthill application
+   * @param anthillConfig The configuration object for configuring an anthill application
    */
-  registerRestHandler(restHandler: AHRestHandler): void {
-    this.registerHandlerName(restHandler.getName());
-    Anthill.restHandlers.push(restHandler);
+  configure(anthillConfig?: AHAnthillConfig): void {
+    anthillConfig = { ...anthillConfig }; // Will be an empty object even if anthillConfig is null
+
+    // Apply configuration on top of default configuration
+    this._configuration = {
+      restHandlerConfig: {
+        cacheConfig: {
+          ...this._configuration.restHandlerConfig.cacheConfig,
+          ...anthillConfig?.restHandlerConfig?.cacheConfig,
+        },
+        middlewares: anthillConfig?.restHandlerConfig?.middlewares || [],
+        options: { ...this._configuration.restHandlerConfig.options, ...anthillConfig?.restHandlerConfig?.options },
+      },
+      lambdaHandlerConfig: {
+        options: { ...this._configuration.lambdaHandlerConfig.options, ...anthillConfig?.lambdaHandlerConfig?.options },
+      },
+    };
   }
 
   /**
-   * Register a lambda handler
-   * @param lambdaHandler The handler to register
+   * Register a rest handler (shouldn't be called manually unless you know what you're doing)
+   * @param handler The handler to register
    */
-  registerLambdaHandler(lambdaHandler: AHLambdaHandler<any, any>): void {
-    this.registerHandlerName(lambdaHandler.getName());
-    Anthill.lambdaHandlers.push(lambdaHandler);
-  }
-
-  private registerHandlerName(handlerName: string) {
-    if (Anthill.handlerNames.includes(handlerName)) {
+  _registerHandler(handler: AHAbstractHandler<any, any>): void {
+    if (this.handlers.map((h) => h.getName()).includes(handler.getName())) {
       throw new AHException(
-        `Duplicate handler with name ${handlerName}. Handler names must be unique within the application`,
+        `Duplicate handler with name ${handler.getName()}. Handler names must be unique within the application`,
       );
     }
 
-    Anthill.handlerNames.push(handlerName);
+    this.handlers.push(handler);
   }
 
   /**
@@ -65,10 +102,13 @@ export class Anthill {
     const exportObject = {};
 
     // Expose rest handlers
-    for (const handler of Anthill.restHandlers) {
+    for (const handler of this.handlers) {
       // Export a method that call the handler
-      exportObject[handler.getName()] = async (event: AHAwsEvent, context: AHAwsContext) =>
-        await handler.handleRequest(event, context);
+      exportObject[handler.getName()] = async (
+        event: any,
+        context: AHAwsContext,
+        callback: AHAwsCallback,
+      ) => await handler.handleRequest(event, context, callback);
     }
 
     return exportObject;

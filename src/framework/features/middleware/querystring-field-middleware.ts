@@ -4,7 +4,6 @@ import { AHPromiseHelper } from "../../helpers/promise-helper";
 import { AHMiddleware } from "./middleware";
 import { AHAwsContext } from "../../models/aws/aws-context";
 
-
 export class AHQuerystringFieldMiddleware extends AHMiddleware<Array<string>> {
   constructor(payload: Array<string>) {
     super(payload);

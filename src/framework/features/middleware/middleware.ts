@@ -3,7 +3,6 @@ import { AHAwsContext } from "../../models/aws/aws-context";
 import { AHAwsEvent } from "../../models/aws/event/aws-event";
 import { AHHttpResponse } from "../http-response";
 
-
 export class AHMiddleware<T> {
   payload: T;
 

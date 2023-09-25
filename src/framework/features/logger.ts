@@ -5,18 +5,16 @@ import { AHEnvironmentHelper } from "../helpers/environment-helper";
 import { AHLoggerFormatter } from "../models/logger/logger-formatter";
 import { AHLoggerHandler } from "../models/logger/logger-handler";
 
-
 export class AHLogger {
-
   private static instance: AHLogger;
-  
+
   private logLevel: AHLogLevelEnum;
   private formatter: AHLoggerFormatter;
   private handlers: Array<AHLoggerHandler>;
 
   private constructor() {
-    this.formatter = (payload: string) => {
-      return payload;
+    this.formatter = (payload: any) => {
+      return JSON.stringify(payload, null, 2);
     };
 
     const env = AHEnvironmentHelper.getEnv();
@@ -25,8 +23,10 @@ export class AHLogger {
     this.logLevel = AHEnvEnum.Dev === env ? AHLogLevelEnum.Debug : AHLogLevelEnum.Info;
 
     this.handlers = [
-      (message: string, logLevel: AHLogLevelEnum, context: AHLoggerContext) => {
-        console[logLevel](`${new Date().toISOString()} :: ${logLevel} :: ${message}`);
+      (messages: Array<any>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => {
+        for (let message of messages) {
+          console[logLevel](`${new Date().toISOString()} :: ${logLevel} :: ${message}`);
+        }
       },
     ];
   }
@@ -55,7 +55,7 @@ export class AHLogger {
    * Add a log handler
    * @param handler: the handler to be added
    */
-  addHandler(handler: (message: string, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void): void {
+  addHandler(handler: (message: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void): void {
     this.handlers.push(handler);
   }
 
@@ -72,7 +72,7 @@ export class AHLogger {
    * Log paylog with debug level
    * @param payload payload to be logged
    */
-  debug(payload: any): void {
+  debug(...payload: Array<any>): void {
     if (this.logLevel === AHLogLevelEnum.Debug) {
       this.performLog(payload, AHLogLevelEnum.Debug, this.buildContext());
     }
@@ -82,7 +82,7 @@ export class AHLogger {
    * Log paylog with info level
    * @param payload payload to be logged
    */
-  info(payload: any): void {
+  info(...payload: Array<any>): void {
     if (this.logLevel === AHLogLevelEnum.Debug || this.logLevel === AHLogLevelEnum.Info) {
       this.performLog(payload, AHLogLevelEnum.Info, this.buildContext());
     }
@@ -92,7 +92,7 @@ export class AHLogger {
    * Log paylog with warn level
    * @param payload payload to be logged
    */
-  warn(payload: any): void {
+  warn(...payload: Array<any>): void {
     if (this.logLevel !== AHLogLevelEnum.Error) {
       this.performLog(payload, AHLogLevelEnum.Warn, this.buildContext());
     }
@@ -102,14 +102,15 @@ export class AHLogger {
    * Log paylog with error level
    * @param payload payload to be logged
    */
-  error(payload: any): void {
+  error(...payload: Array<any>): void {
     this.performLog(payload, AHLogLevelEnum.Error, this.buildContext());
   }
 
-  private performLog(payload: any, logLevel: AHLogLevelEnum, context: AHLoggerContext): void {
+  private performLog(payload: Array<any>, logLevel: AHLogLevelEnum, context: AHLoggerContext): void {
+    payload = payload.map((p) => this.formatter(p));
     for (let index = 0; index < this.handlers.length; index++) {
       const handler = this.handlers[index];
-      handler(this.formatter(payload), logLevel, context);
+      handler(payload, logLevel, context);
     }
   }
 
@@ -121,18 +122,18 @@ export class AHLogger {
   }
 }
 
-export function logDebug(payload: any): void {
+export function logDebug(...payload: Array<any>): void {
   return AHLogger.getInstance().debug(payload);
-};
+}
 
-export function logInfo(payload: any): void {
+export function logInfo(...payload: Array<any>): void {
   return AHLogger.getInstance().info(payload);
-};
+}
 
-export function logWarn(payload: any): void {
+export function logWarn(...payload: Array<any>): void {
   return AHLogger.getInstance().info(payload);
-};
+}
 
-export function logError(payload: any): void {
+export function logError(...payload: Array<any>): void {
   return AHLogger.getInstance().error(payload);
-};
+}

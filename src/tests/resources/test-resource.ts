@@ -1,12 +1,11 @@
-import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerParams } from "../..";
+import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerConfig } from "../..";
 import { AHAwsEvent } from "../..";
 import { AHRestMethodEnum } from "../..";
 import { AHAwsContext } from "../..";
-import { AHLambdaHandler } from "../../framework/features/handler/lambda-handler";
-import { AHLambdaHandlerParams } from "../../framework/models/handler/lambda-handler-params";
+import { AHLambdaHandler } from "../..";
+import { AHLambdaHandlerConfig } from "../..";
 
 export class AHTestResource {
-
   static getBaseEvent(eventOverride?: Partial<AHAwsEvent>): AHAwsEvent {
     const baseEvent: AHAwsEvent = new AHAwsEvent();
 
@@ -14,7 +13,7 @@ export class AHTestResource {
       ressource: "",
       path: "/",
       httpMethod: AHRestMethodEnum.Post,
-      headers: { "Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       requestContext: {
         ressourceId: "",
         resourcePath: "",
@@ -32,7 +31,7 @@ export class AHTestResource {
         },
       },
       isBase64Encoded: false,
-      ...eventOverride
+      ...eventOverride,
     });
 
     return baseEvent;
@@ -53,34 +52,36 @@ export class AHTestResource {
       logStreamName: "test-logStreamName",
       memoryLimitInMB: "1024",
       getRemainingTimeInMillis: () => 1000000,
-      ...contextOverride
+      ...contextOverride,
     });
 
     return baseContext;
   }
 
-  static getDefaultRestHandler(paramOverride?: Partial<AHRestHandlerParams>): AHRestHandler {
+  static getDefaultRestHandler(paramOverride?: Partial<AHRestHandlerConfig>): AHRestHandler {
     return new AHRestHandler({
       ...{
+        controllerName: AHPromiseHelper.promisify("controller"),
         name: "handler",
         method: AHRestMethodEnum.Get,
         middlewares: [],
         callable: (event: AHAwsEvent, context: AHAwsContext) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
         cacheConfig: {
-          cachable: false
+          cachable: false,
         },
       },
-      ...paramOverride
+      ...paramOverride,
     });
   }
 
-  static getDefaultLambdaHandler(paramOverride?: Partial<AHLambdaHandlerParams<any, any>>): AHLambdaHandler<any, any> {
+  static getDefaultLambdaHandler(paramOverride?: Partial<AHLambdaHandlerConfig<any, any>>): AHLambdaHandler<any, any> {
     return new AHLambdaHandler<any, any>({
       ...{
+        controllerName: AHPromiseHelper.promisify("controller"),
         name: "handler",
         callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
       },
-      ...paramOverride
+      ...paramOverride,
     });
   }
 }

@@ -1,14 +1,13 @@
 import { AHException, AHLogger, AHTimeSegment } from "..";
 
-
-describe('AHTimeSegment', () => {
-  test('constructor', () => {
+describe("AHTimeSegment", () => {
+  test("constructor", () => {
     const timeSegment = new AHTimeSegment("test-segment");
     expect(timeSegment).toBeTruthy();
     expect(timeSegment.name).toEqual("test-segment");
   });
 
-  test('start', () => {
+  test("start", () => {
     const timeSegment = new AHTimeSegment();
     expect(timeSegment.startTime).toBeFalsy();
     timeSegment.start();
@@ -16,7 +15,7 @@ describe('AHTimeSegment', () => {
     expect(() => timeSegment.start()).toThrow(AHException);
   });
 
-  test('stop', () => {
+  test("stop", () => {
     const timeSegment = new AHTimeSegment();
     timeSegment.start();
     expect(timeSegment.endTime).toBeFalsy();
@@ -34,7 +33,7 @@ describe('AHTimeSegment', () => {
     expect(handler).toHaveBeenCalledTimes(1);
   });
 
-  test('getDuration', () => {
+  test("getDuration", () => {
     const timeSegment = new AHTimeSegment();
     timeSegment.start();
     const d1 = timeSegment.getDuration();
@@ -46,5 +45,4 @@ describe('AHTimeSegment', () => {
     const d3 = timeSegment.getDuration();
     expect(d2).toEqual(d3);
   });
-
 });

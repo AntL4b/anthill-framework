@@ -2,18 +2,12 @@ import { AHLogger, logDebug, logError, logInfo, logWarn } from "..";
 import { AHEnvEnum } from "..";
 import { AHLogLevelEnum } from "..";
 
+describe("AHLogger", () => {
+  beforeEach(() => {
+    AHLogger["instance"] = null;
+  });
 
-// Override default warn and error log method to avoid jest to crash
-global.console.error = (message: string) => {
-  console.log(`error: ${message}`);
-};
-
-global.console.warn = (message: string) => {
-  console.log(`warn: ${message}`);
-};
-
-describe('AHLogger', () => {
-  test('constructor / getInstance', () => {
+  test("constructor / getInstance", () => {
     process.env.ENV = AHEnvEnum.Dev;
 
     // Use object property notation to affect private member instance
@@ -29,7 +23,7 @@ describe('AHLogger', () => {
     expect(AHLogger.getInstance()).toBeInstanceOf(AHLogger);
   });
 
-  test('Log all level', () => {
+  test("Log all level", () => {
     const logger = AHLogger.getInstance();
 
     expect(logger.debug("debug test")).toBeUndefined();
@@ -38,14 +32,14 @@ describe('AHLogger', () => {
     expect(logger.error("error test")).toBeUndefined();
   });
 
-  test('Log all level alias method', () => {
+  test("Log all level alias method", () => {
     expect(logDebug("debug test")).toBeUndefined();
     expect(logInfo("info test")).toBeUndefined();
     expect(logWarn("warn test")).toBeUndefined();
     expect(logError("error test")).toBeUndefined();
   });
 
-  test('setformatter', () => {
+  test("setformatter", () => {
     const logger = AHLogger.getInstance();
     const formatter = jest.fn(() => "string");
     logger.setformatter(formatter);
@@ -54,9 +48,12 @@ describe('AHLogger', () => {
     expect(formatter).toHaveBeenCalledTimes(0);
     logger.info("info test");
     expect(formatter).toHaveBeenCalledTimes(1);
+
+    logger.info("info test", { obj: true });
+    expect(formatter).toHaveBeenCalledTimes(3);
   });
 
-  test('addHandler', () => {
+  test("addHandler", () => {
     const logger = AHLogger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
@@ -64,9 +61,12 @@ describe('AHLogger', () => {
     expect(handler).toHaveBeenCalledTimes(0);
     logger.info("info test");
     expect(handler).toHaveBeenCalledTimes(1);
+
+    logger.info("info test", { obj: true });
+    expect(handler).toHaveBeenCalledTimes(2);
   });
 
-  test('setLogLevel', () => {
+  test("setLogLevel", () => {
     const logger = AHLogger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
