@@ -3,7 +3,6 @@ import { AHLogger } from "../../framework/features/logger";
 import { AHCacheConfig } from "../models/cache/cache-config";
 import { AHCacheData } from "../models/cache/cache-data";
 
-
 export abstract class AHCache<T, U> {
   data: Array<AHCacheData<T, U>> = [];
   currentCacheSize: number = 0;

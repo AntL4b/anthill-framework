@@ -1,9 +1,7 @@
-
 import { AHException } from "./anthill-exception";
 import { logInfo } from "./logger";
 import { AHTimeTrackerStateEnum } from "../../core/models/enums/time-tracker-state-enum";
 import { AHTimeSegment } from "./time-segment";
-
 
 const LOG_SESSION_LINE_LENGTH = 50;
 
@@ -35,10 +33,10 @@ export class AHTimeTracker {
    */
   startSegment(segmentName: string): void {
     if (this.state === AHTimeTrackerStateEnum.Stopped) {
-      throw new AHException("Start segment failed: Time tracker session is stopped")
+      throw new AHException("Start segment failed: Time tracker session is stopped");
     }
 
-    if (this.timeSegments.find(s => s.name === segmentName)) {
+    if (this.timeSegments.find((s) => s.name === segmentName)) {
       throw new AHException(`Time segment ${segmentName} already exists`);
     }
 
@@ -55,7 +53,7 @@ export class AHTimeTracker {
    */
   stopSegment(segmentName: string): number {
     if (this.state === AHTimeTrackerStateEnum.Stopped) {
-      throw new AHException("Stop segment failed: Time tracker session is stopped")
+      throw new AHException("Stop segment failed: Time tracker session is stopped");
     }
 
     const segment = this.getSegment(segmentName);
@@ -70,7 +68,7 @@ export class AHTimeTracker {
    * @returns The segment named by segmentName
    */
   getSegment(segmentName: string): AHTimeSegment {
-    const segmentIndex = this.timeSegments.findIndex(s => s.name === segmentName);
+    const segmentIndex = this.timeSegments.findIndex((s) => s.name === segmentName);
 
     if (segmentIndex === -1) {
       throw new AHException(`Time segment ${segmentName} doesn't exist`);
@@ -97,7 +95,7 @@ export class AHTimeTracker {
         segment.stop();
       }
     }
-    
+
     this.state = AHTimeTrackerStateEnum.Stopped;
 
     return sessionDuration;
@@ -107,47 +105,58 @@ export class AHTimeTracker {
    * Log the tracking session
    */
   logTrackingSession(): void {
-    const maxSegmentNameLength = Math.max(...this.timeSegments.map(s => s.name.length));
+    const maxSegmentNameLength = Math.max(...this.timeSegments.map((s) => s.name.length));
 
     const getXPointsStr = (x: number) => {
       let res = "";
-      while (res.length < x) { res = res + "."; }
+      while (res.length < x) {
+        res = res + ".";
+      }
       return res;
-    }
+    };
 
     const getXSpacesStr = (x: number) => {
       let res = "";
-      while (res.length < x) { res = res + " "; }
+      while (res.length < x) {
+        res = res + " ";
+      }
       return res;
-    }
+    };
 
     const getXXStr = (x: number) => {
       let res = "";
-      while (res.length < x) { res = res + "x"; }
+      while (res.length < x) {
+        res = res + "x";
+      }
       return res;
-    }
+    };
 
     const fillStrWithTrailingSpaces = (str: string, length: number) => {
       return str + getXSpacesStr(length - str.length);
-    }
+    };
 
     const now = performance.now();
     const sessionSegment = this.getSegment(this.trackingSessionSegmentName);
 
-    // Don't use getDuration to refer to the same end time (now) for all segments 
+    // Don't use getDuration to refer to the same end time (now) for all segments
     const sessionDuration = (sessionSegment.endTime || now) - sessionSegment.startTime;
 
     for (const segment of this.timeSegments) {
       const segmentDuration = (segment.endTime || now) - segment.startTime;
-      const segmentBlocLength = Math.round(segmentDuration / sessionDuration * LOG_SESSION_LINE_LENGTH);
-      const segmentBlocStartIndex = Math.round((segment.startTime - sessionSegment.startTime) / sessionDuration * LOG_SESSION_LINE_LENGTH);
+      const segmentBlocLength = Math.round((segmentDuration / sessionDuration) * LOG_SESSION_LINE_LENGTH);
+      const segmentBlocStartIndex = Math.round(
+        ((segment.startTime - sessionSegment.startTime) / sessionDuration) * LOG_SESSION_LINE_LENGTH,
+      );
 
       logInfo(
-        fillStrWithTrailingSpaces(segment.name, maxSegmentNameLength) + ": "
-        + getXPointsStr(segmentBlocStartIndex)
-        + "[" + getXXStr(segmentBlocLength) + "]"
-        + getXPointsStr(LOG_SESSION_LINE_LENGTH - segmentBlocStartIndex - segmentBlocLength)
-        + `(${Math.round(segmentDuration * 1000) / 1000} ms)` // 3 digits round
+        fillStrWithTrailingSpaces(segment.name, maxSegmentNameLength) +
+          ": " +
+          getXPointsStr(segmentBlocStartIndex) +
+          "[" +
+          getXXStr(segmentBlocLength) +
+          "]" +
+          getXPointsStr(LOG_SESSION_LINE_LENGTH - segmentBlocStartIndex - segmentBlocLength) +
+          `(${Math.round(segmentDuration * 1000) / 1000} ms)`, // 3 digits round
       );
     }
   }

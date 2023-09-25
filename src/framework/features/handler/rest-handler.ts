@@ -11,7 +11,8 @@ import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
 import { Anthill } from "../anthill";
 import { AHRestHandlerCacheConfig } from "../../models/rest-handler-cache-config";
-
+import { AHException } from "../anthill-exception";
+import { AHPromiseHelper } from "../../helpers/promise-helper";
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
   private cacheConfig: AHRestHandlerCacheConfig = Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig;
@@ -26,8 +27,12 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
     this.method = params.method;
 
-    if (params.middlewares) { this.middlewares = params.middlewares; }
-    if (params.cacheConfig) { this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig }; }
+    if (params.middlewares) {
+      this.middlewares = params.middlewares;
+    }
+    if (params.cacheConfig) {
+      this.cacheConfig = { ...this.cacheConfig, ...params.cacheConfig };
+    }
   }
 
   /**
@@ -40,7 +45,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
   /**
    * Add a middleware to the middleware pipeline execution
-   * @param middleware 
+   * @param middleware
    */
   addMiddleware(middleware: AHMiddleware<any>): void {
     this.middlewares.push(middleware);
@@ -54,13 +59,23 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns An http response
    */
-  async handleRequest(event: AHAwsEvent, context?: AHAwsContext, callback?: (...args: Array<any>) => any): Promise<AHHttpResponse> {
+  async handleRequest(
+    event: AHAwsEvent,
+    context?: AHAwsContext,
+    callback?: (...args: Array<any>) => any,
+  ): Promise<AHHttpResponse> {
     const tracker: AHTimeTracker = new AHTimeTracker();
 
     try {
       tracker.startTrackingSession(this.name + "-tracking-session");
 
-      const controllerName = await this.controllerName;
+      const controllerName = await AHPromiseHelper.timeout(
+        this.controllerName,
+        100,
+        new AHException(
+          `Can't resolve controller name for handler ${this.name}. A handler method must be inside a class decorated with a controller decorator`,
+        ),
+      );
       const controllerInstance = Anthill.getInstance()._dependencyContainer.resolve(controllerName);
 
       // Make event an instance of AHAwsEvent

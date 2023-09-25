@@ -5,10 +5,9 @@ import { AHEnvironmentHelper } from "../helpers/environment-helper";
 import { AHLoggerFormatter } from "../models/logger/logger-formatter";
 import { AHLoggerHandler } from "../models/logger/logger-handler";
 
-
 export class AHLogger {
   private static instance: AHLogger;
-  
+
   private logLevel: AHLogLevelEnum;
   private formatter: AHLoggerFormatter;
   private handlers: Array<AHLoggerHandler>;
@@ -25,7 +24,7 @@ export class AHLogger {
 
     this.handlers = [
       (messages: Array<any>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => {
-        for(let message of messages) {
+        for (let message of messages) {
           console[logLevel](`${new Date().toISOString()} :: ${logLevel} :: ${message}`);
         }
       },
@@ -108,7 +107,7 @@ export class AHLogger {
   }
 
   private performLog(payload: Array<any>, logLevel: AHLogLevelEnum, context: AHLoggerContext): void {
-    payload = payload.map(p => this.formatter(p));
+    payload = payload.map((p) => this.formatter(p));
     for (let index = 0; index < this.handlers.length; index++) {
       const handler = this.handlers[index];
       handler(payload, logLevel, context);
@@ -125,16 +124,16 @@ export class AHLogger {
 
 export function logDebug(...payload: Array<any>): void {
   return AHLogger.getInstance().debug(payload);
-};
+}
 
 export function logInfo(...payload: Array<any>): void {
   return AHLogger.getInstance().info(payload);
-};
+}
 
 export function logWarn(...payload: Array<any>): void {
   return AHLogger.getInstance().info(payload);
-};
+}
 
 export function logError(...payload: Array<any>): void {
   return AHLogger.getInstance().error(payload);
-};
+}

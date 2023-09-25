@@ -6,15 +6,13 @@ import { AHHttpRequestHelper } from "../../helpers/http-request-helper";
 import { AHJsonBodyParserMiddlewareOptions } from "../../models/middleware/json-body-parser-middleware-options";
 import { AHAwsContext } from "../../models/aws/aws-context";
 
-
 const JSON_MIME_PATTERN = /^application\/(.+\+)?json($|;.+)/;
-const DEFAULT_OPTIONS: AHJsonBodyParserMiddlewareOptions = { reviver: null }
+const DEFAULT_OPTIONS: AHJsonBodyParserMiddlewareOptions = { reviver: null };
 
 /** Parse JSON body to js / ts object */
 export class AHJsonBodyParserMiddleware extends AHMiddleware<AHJsonBodyParserMiddlewareOptions> {
-
   constructor(options?: AHJsonBodyParserMiddlewareOptions) {
-    super({ ...DEFAULT_OPTIONS, ...options});
+    super({ ...DEFAULT_OPTIONS, ...options });
   }
 
   override runBefore(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {

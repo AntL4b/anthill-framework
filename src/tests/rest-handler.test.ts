@@ -1,4 +1,11 @@
-import { AHAwsContext, AHException, AHMiddleware, AHObjectHelper, AHRestHandlerCacheConfig, Anthill, anthill } from "..";
+import {
+  AHAwsContext,
+  AHException,
+  AHMiddleware,
+  AHObjectHelper,
+  AHRestHandlerCacheConfig,
+  Anthill,
+} from "..";
 import { AHPromiseHelper } from "..";
 import { AHQuerystringFieldMiddleware } from "..";
 import { AHAwsEvent } from "..";
@@ -7,22 +14,17 @@ import { AHHttpResponse } from "..";
 import { AHRestHandler } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
-// Override default warn and error log method to avoid jest to crash
-global.console.error = (message: string) => {
-  console.log(`error: ${message}`);
-};
-
-describe('AHRestHandler', () => {
+describe("AHRestHandler", () => {
   beforeAll(() => {
     Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
-  })
+  });
 
-  test('constructor', () => {
+  test("constructor", () => {
     let handler = AHTestResource.getDefaultRestHandler();
     expect(handler).toBeInstanceOf(AHRestHandler);
   });
 
-  test('setCacheConfig', () => {
+  test("setCacheConfig", () => {
     const newCacheConfig: AHRestHandlerCacheConfig = {
       cachable: true,
       ttl: 111,
@@ -36,7 +38,7 @@ describe('AHRestHandler', () => {
     expect(AHObjectHelper.isEquivalentObj(handler["cacheConfig"], newCacheConfig)).toBe(true);
   });
 
-  test('addMiddleware', () => {
+  test("addMiddleware", () => {
     const handler = AHTestResource.getDefaultRestHandler();
 
     expect(handler["middlewares"].length).toEqual(0);
@@ -44,7 +46,7 @@ describe('AHRestHandler', () => {
     expect(handler["middlewares"].length).toEqual(1);
   });
 
-  test('handleRequest without middleware', async () => {
+  test("handleRequest without middleware", async () => {
     const handler = AHTestResource.getDefaultRestHandler();
     const response = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
 
@@ -53,7 +55,7 @@ describe('AHRestHandler', () => {
     expect(response.body).toEqual("null");
   });
 
-  test('handleRequest with middleware', async () => {
+  test("handleRequest with middleware", async () => {
     const handler = AHTestResource.getDefaultRestHandler();
     handler.addMiddleware(new AHQuerystringFieldMiddleware(["test"]));
 
@@ -64,11 +66,11 @@ describe('AHRestHandler', () => {
 
     event.queryStringParameters = { test: "test" };
 
-    response = await handler.handleRequest(event, AHTestResource.getBaseContext());    
+    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
     expect(response.statusCode).toEqual(200);
   });
 
-  test('handleRequest with middleware throwing an error', async () => {
+  test("handleRequest with middleware throwing an error", async () => {
     const handler = AHTestResource.getDefaultRestHandler();
 
     class MyDummyMiddleware extends AHMiddleware<void> {
@@ -85,7 +87,7 @@ describe('AHRestHandler', () => {
     expect(response.statusCode).toEqual(400);
   });
 
-  test('handleRequest hit cache', async () => {
+  test("handleRequest hit cache", async () => {
     const _callable = jest.fn((event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)));
     const handler = AHTestResource.getDefaultRestHandler({
       name: "handler",
@@ -121,7 +123,7 @@ describe('AHRestHandler', () => {
     expect(_callable).toHaveBeenCalledTimes(2);
   });
 
-  test('handleRequest callable throws exception', async () => {
+  test("handleRequest callable throws exception", async () => {
     const errMess = "Error message";
     const handler = AHTestResource.getDefaultRestHandler({
       name: "handler",

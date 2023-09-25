@@ -1,7 +1,6 @@
 import { AHAwsEventRequestContext } from "./aws-event-request-context";
 import { AHRestMethodEnum } from "../../enums/rest-method-enum";
 
-
 export class AHAwsEvent {
   ressource: string;
   path: string;

@@ -21,7 +21,7 @@ export class AHTimeSegment {
     if (this.startTime) {
       throw new AHException(`Segment was already started (${this.name})`);
     }
-    
+
     this.startTime = performance.now();
   }
 
@@ -37,7 +37,11 @@ export class AHTimeSegment {
     this.endTime = performance.now();
 
     if (verbose) {
-      logInfo(`Time segment ${this.name} ends. Start: ${this.startTime} | End: ${this.endTime} | Duration: ${this.endTime - this.startTime}`);
+      logInfo(
+        `Time segment ${this.name} ends. Start: ${this.startTime} | End: ${this.endTime} | Duration: ${
+          this.endTime - this.startTime
+        }`,
+      );
     }
 
     return this.endTime - this.startTime;

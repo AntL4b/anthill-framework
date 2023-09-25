@@ -8,7 +8,6 @@ import { AHRestHandlerCacheConfig } from "../models/rest-handler-cache-config";
 import { AHDependencyContainer } from "../../core/dependency-container";
 
 export class Anthill {
-
   private static defaultRestHandlerCacheConfig: AHRestHandlerCacheConfig = {
     cachable: false,
     ttl: 120,
@@ -23,13 +22,13 @@ export class Anthill {
   private static instance: Anthill;
   private handlers: Array<AHAbstractHandler<any, any>>;
 
-    // Shouldn't be set directly by user
+  // Shouldn't be set directly by user
   _dependencyContainer: AHDependencyContainer;
   _configuration: AHAnthillConfig;
 
   private constructor() {
     this.handlers = [];
-    
+
     this._dependencyContainer = new AHDependencyContainer();
 
     // Default configuration if configure isn't called
@@ -37,11 +36,11 @@ export class Anthill {
       restHandlerConfig: {
         middlewares: [],
         cacheConfig: Anthill.defaultRestHandlerCacheConfig,
-        options: Anthill.handlerDefaultOptions
+        options: Anthill.handlerDefaultOptions,
       },
       lambdaHandlerConfig: {
         options: Anthill.handlerDefaultOptions,
-      }
+      },
     };
   }
 
@@ -67,13 +66,16 @@ export class Anthill {
     // Apply configuration on top of default configuration
     this._configuration = {
       restHandlerConfig: {
-        cacheConfig: { ...this._configuration.restHandlerConfig.cacheConfig, ...anthillConfig?.restHandlerConfig?.cacheConfig },
+        cacheConfig: {
+          ...this._configuration.restHandlerConfig.cacheConfig,
+          ...anthillConfig?.restHandlerConfig?.cacheConfig,
+        },
         middlewares: anthillConfig?.restHandlerConfig?.middlewares || [],
         options: { ...this._configuration.restHandlerConfig.options, ...anthillConfig?.restHandlerConfig?.options },
       },
       lambdaHandlerConfig: {
         options: { ...this._configuration.lambdaHandlerConfig.options, ...anthillConfig?.lambdaHandlerConfig?.options },
-      }
+      },
     };
   }
 
@@ -82,7 +84,7 @@ export class Anthill {
    * @param handler The handler to register
    */
   _registerHandler(handler: AHAbstractHandler<any, any>): void {
-    if (this.handlers.map(h => h.getName()).includes(handler.getName())) {
+    if (this.handlers.map((h) => h.getName()).includes(handler.getName())) {
       throw new AHException(
         `Duplicate handler with name ${handler.getName()}. Handler names must be unique within the application`,
       );
@@ -101,8 +103,11 @@ export class Anthill {
     // Expose rest handlers
     for (const handler of this.handlers) {
       // Export a method that call the handler
-      exportObject[handler.getName()] = async (event: any, context: AHAwsContext, callback: (...args: Array<any>) => any) =>
-        await handler.handleRequest(event, context, callback);
+      exportObject[handler.getName()] = async (
+        event: any,
+        context: AHAwsContext,
+        callback: (...args: Array<any>) => any,
+      ) => await handler.handleRequest(event, context, callback);
     }
 
     return exportObject;

@@ -1,7 +1,6 @@
 import { AHAwsEventRequestContextIdentity } from "./aws-event-request-context-identity";
 import { AHRestMethodEnum } from "../../enums/rest-method-enum";
 
-
 export interface AHAwsEventRequestContext {
   ressourceId: string;
   resourcePath: string;

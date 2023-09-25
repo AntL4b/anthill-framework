@@ -1,6 +1,5 @@
 import { AHHttpResponseBodyStatusEnum } from "./enums/http-response-body-status-enum";
 
-
 export interface AHHttpResponseBody {
   status?: AHHttpResponseBodyStatusEnum;
   message?: string;

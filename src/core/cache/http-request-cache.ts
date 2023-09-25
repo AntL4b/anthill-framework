@@ -6,9 +6,7 @@ import { AHCache } from "./cache";
 import { AHHttpRequestParameters } from "../models/cache/http-request-parameters";
 import { AHHttpRequestHelper } from "../../framework/helpers/http-request-helper";
 
-
 export class AHHttpRequestCache extends AHCache<AHHttpRequestParameters, AHHttpResponse> {
-
   /**
    * Get a cache item with its id
    * @param id The Id of the item to find inside the cache
@@ -17,10 +15,10 @@ export class AHHttpRequestCache extends AHCache<AHHttpRequestParameters, AHHttpR
   getCacheItem(id: AHHttpRequestParameters): AHHttpResponse {
     return super._getCacheItem((data: AHCacheData<AHHttpRequestParameters, AHHttpResponse>) => {
       return (
-        data.id.path === id.path
-        && AHObjectHelper.isEquivalentObj(data.id.pathParameters, id.pathParameters)
-        && AHObjectHelper.isEquivalentObj(data.id.queryStringParameters, id.queryStringParameters)
-        && AHObjectHelper.isEquivalentObj(data.id.headersIncluded, id.headersIncluded)
+        data.id.path === id.path &&
+        AHObjectHelper.isEquivalentObj(data.id.pathParameters, id.pathParameters) &&
+        AHObjectHelper.isEquivalentObj(data.id.queryStringParameters, id.queryStringParameters) &&
+        AHObjectHelper.isEquivalentObj(data.id.headersIncluded, id.headersIncluded)
       );
     });
   }

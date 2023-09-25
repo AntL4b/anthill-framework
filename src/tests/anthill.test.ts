@@ -1,4 +1,17 @@
-import { AHAnthillConfig, AHAwsContext, AHAwsEvent, AHException, AHHttpResponse, AHJsonBodyParserMiddleware, AHMiddleware, AHObjectHelper, AHPromiseHelper, AHRestHandlerCacheConfig, Anthill, anthill } from "..";
+import {
+  AHAnthillConfig,
+  AHAwsContext,
+  AHAwsEvent,
+  AHException,
+  AHHttpResponse,
+  AHJsonBodyParserMiddleware,
+  AHMiddleware,
+  AHObjectHelper,
+  AHPromiseHelper,
+  AHRestHandlerCacheConfig,
+  Anthill,
+  anthill,
+} from "..";
 import { AHTestResource } from "./resources/test-resource";
 
 describe("Anthill", () => {
@@ -38,7 +51,7 @@ describe("Anthill", () => {
     expect(AHObjectHelper.isEquivalentObj(anthill()["_configuration"], configureObj)).toBe(true);
   });
 
-  test('configure cacheConfig', () => {
+  test("configure cacheConfig", () => {
     const cacheConfig: AHRestHandlerCacheConfig = {
       cachable: true,
       ttl: 999,
@@ -49,16 +62,24 @@ describe("Anthill", () => {
     const app = anthill();
     app.configure({
       restHandlerConfig: {
-        cacheConfig: cacheConfig
-      }
+        cacheConfig: cacheConfig,
+      },
     });
 
     // Set cache config override to {} to ensure the global configuration is used
-    expect(AHObjectHelper.isEquivalentObj(AHTestResource.getDefaultRestHandler({ cacheConfig: {} })["cacheConfig"], cacheConfig)).toBe(true);
+    expect(
+      AHObjectHelper.isEquivalentObj(
+        AHTestResource.getDefaultRestHandler({ cacheConfig: {} })["cacheConfig"],
+        cacheConfig,
+      ),
+    ).toBe(true);
   });
 
-  test('configure middleware', async () => {
-    const _middlewareFunction = jest.fn((event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> => AHPromiseHelper.promisify(event));
+  test("configure middleware", async () => {
+    const _middlewareFunction = jest.fn(
+      (event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> =>
+        AHPromiseHelper.promisify(event),
+    );
     class AHTestMiddleware extends AHMiddleware<any> {
       override runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
         return _middlewareFunction(event, context);
@@ -69,26 +90,28 @@ describe("Anthill", () => {
     app.configure({
       restHandlerConfig: {
         middlewares: [new AHTestMiddleware()],
-      }
+      },
     });
 
     // Register default controller for rest handler
     Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
 
-    const res = await AHTestResource.getDefaultRestHandler({ middlewares: []}).handleRequest(AHTestResource.getBaseEvent());
+    const res = await AHTestResource.getDefaultRestHandler({ middlewares: [] }).handleRequest(
+      AHTestResource.getBaseEvent(),
+    );
 
     expect(res).toBeInstanceOf(AHHttpResponse);
     expect(_middlewareFunction).toHaveBeenCalled();
   });
 
-  test('configure options', () => {
+  test("configure options", () => {
     const app = anthill();
     app.configure({
       restHandlerConfig: {
         options: {
           displayPerformanceMetrics: true,
         },
-      }
+      },
     });
 
     expect(AHTestResource.getDefaultRestHandler()["options"].displayPerformanceMetrics).toBe(true);
@@ -98,7 +121,7 @@ describe("Anthill", () => {
         options: {
           displayPerformanceMetrics: false,
         },
-      }
+      },
     });
 
     expect(AHTestResource.getDefaultRestHandler()["options"].displayPerformanceMetrics).toBe(false);
@@ -108,7 +131,7 @@ describe("Anthill", () => {
         options: {
           displayPerformanceMetrics: true,
         },
-      }
+      },
     });
 
     expect(AHTestResource.getDefaultLambdaHandler()["options"].displayPerformanceMetrics).toBe(true);
@@ -118,7 +141,7 @@ describe("Anthill", () => {
         options: {
           displayPerformanceMetrics: false,
         },
-      }
+      },
     });
 
     expect(AHTestResource.getDefaultLambdaHandler()["options"].displayPerformanceMetrics).toBe(false);
@@ -133,7 +156,7 @@ describe("Anthill", () => {
     expect(() => app._registerHandler(AHTestResource.getDefaultRestHandler())).toThrow(AHException);
   });
 
-  test("exposeHandlers", () => {
+  test("exposeHandlers", async () => {
     const app = anthill();
     app._registerHandler(
       AHTestResource.getDefaultRestHandler({
@@ -141,6 +164,8 @@ describe("Anthill", () => {
       }),
     );
     exports = app.exposeHandlers();
-    expect(exports.restHandler(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext())).resolves.toBeTruthy();
+
+    const res = await exports.restHandler(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
+    expect(res).toBeTruthy();
   });
 });

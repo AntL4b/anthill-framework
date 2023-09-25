@@ -5,7 +5,6 @@ const ECMA_SIZES = {
 };
 
 export class AHObjectHelper {
-
   /**
    * Compare an object with another and returns if the objects are equivalent
    * @param obj1 First object to compare

@@ -3,13 +3,8 @@ import { AHPromiseHelper } from "..";
 import { AHLambdaHandler } from "..";
 import { AHTestResource } from "./resources/test-resource";
 
-// Override default warn and error log method to avoid jest to crash
-global.console.error = (message: string) => {
-  console.log(`error: ${message}`);
-};
-
-describe('AHAbstractHandler', () => {
-  test('constructor', () => {
+describe("AHAbstractHandler", () => {
+  test("constructor", () => {
     expect(() => {
       new AHLambdaHandler<any, any>({
         controllerName: AHPromiseHelper.promisify("controller"),
@@ -19,7 +14,7 @@ describe('AHAbstractHandler', () => {
     }).toThrow(AHException);
   });
 
-  test('setOptions', () => {
+  test("setOptions", () => {
     const newOptions: AHHandlerOptions = {
       displayPerformanceMetrics: true,
     };
@@ -30,12 +25,12 @@ describe('AHAbstractHandler', () => {
     expect(JSON.stringify(handler["options"])).toEqual(JSON.stringify(newOptions));
   });
 
-  test('getName', () => {
+  test("getName", () => {
     const handler = AHTestResource.getDefaultRestHandler();
     expect(handler.getName()).toEqual("handler");
   });
 
-  test('displayPerformanceMetrics', async () => {
+  test("displayPerformanceMetrics", async () => {
     const logger = AHLogger.getInstance();
     const logHandler = jest.fn(() => {});
     logger.addHandler(logHandler);

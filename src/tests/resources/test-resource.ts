@@ -1,4 +1,4 @@
-import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerConfig,  } from "../..";
+import { AHHttpResponse, AHPromiseHelper, AHRestHandler, AHRestHandlerConfig } from "../..";
 import { AHAwsEvent } from "../..";
 import { AHRestMethodEnum } from "../..";
 import { AHAwsContext } from "../..";
@@ -6,7 +6,6 @@ import { AHLambdaHandler } from "../..";
 import { AHLambdaHandlerConfig } from "../..";
 
 export class AHTestResource {
-
   static getBaseEvent(eventOverride?: Partial<AHAwsEvent>): AHAwsEvent {
     const baseEvent: AHAwsEvent = new AHAwsEvent();
 
@@ -14,7 +13,7 @@ export class AHTestResource {
       ressource: "",
       path: "/",
       httpMethod: AHRestMethodEnum.Post,
-      headers: { "Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       requestContext: {
         ressourceId: "",
         resourcePath: "",
@@ -32,7 +31,7 @@ export class AHTestResource {
         },
       },
       isBase64Encoded: false,
-      ...eventOverride
+      ...eventOverride,
     });
 
     return baseEvent;
@@ -53,7 +52,7 @@ export class AHTestResource {
       logStreamName: "test-logStreamName",
       memoryLimitInMB: "1024",
       getRemainingTimeInMillis: () => 1000000,
-      ...contextOverride
+      ...contextOverride,
     });
 
     return baseContext;
@@ -68,10 +67,10 @@ export class AHTestResource {
         middlewares: [],
         callable: (event: AHAwsEvent, context: AHAwsContext) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
         cacheConfig: {
-          cachable: false
+          cachable: false,
         },
       },
-      ...paramOverride
+      ...paramOverride,
     });
   }
 
@@ -82,7 +81,7 @@ export class AHTestResource {
         name: "handler",
         callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
       },
-      ...paramOverride
+      ...paramOverride,
     });
   }
 }

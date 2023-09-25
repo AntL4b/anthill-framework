@@ -5,9 +5,7 @@ import { AHAwsContext } from "../../models/aws/aws-context";
 import { AHLambdaHandlerConfig } from "../../models/handler/lambda-handler-config";
 import { Anthill } from "../anthill";
 
-
 export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
-
   constructor(params: AHLambdaHandlerConfig<T, U>) {
     // Apply lambdaHandlerConfig options
     params.options = { ...Anthill.getInstance()._configuration.lambdaHandlerConfig.options, ...params.options };

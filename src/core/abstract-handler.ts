@@ -1,16 +1,15 @@
 import { AHCallable } from "../framework/models/handler/callable";
 import { AHException } from "../framework/features/anthill-exception";
-import { AHAbstractHandlerConfig } from "./models/abstract-handler-config";
+import { AHAbstractHandlerConfig } from "./models/handler/abstract-handler-config";
 import { AHAwsContext } from "../framework/models/aws/aws-context";
 import { AHHandlerOptions } from "../framework/models/handler/handler-options";
 import { AHTimeTracker } from "../framework/features/time-tracker";
 
 export abstract class AHAbstractHandler<T, U> {
-
   protected controllerName: Promise<string>;
   protected name: string;
   protected callable: AHCallable<T, U>;
-  protected options: AHHandlerOptions = { displayPerformanceMetrics: false, };
+  protected options: AHHandlerOptions = { displayPerformanceMetrics: false };
 
   constructor(params: AHAbstractHandlerConfig<T, U>) {
     if (!/^[a-zA-z_]+[a-zA-z0-9]*$/.test(params.name)) {

@@ -1,9 +1,8 @@
-import { AHException, AHLogger, AHTimeTracker} from "..";
+import { AHException, AHLogger, AHTimeTracker } from "..";
 import { AHTimeTrackerStateEnum } from "../core/models/enums/time-tracker-state-enum";
 
-
-describe('AHTimeTracker', () => {
-  test('startTrackingSession', () => {
+describe("AHTimeTracker", () => {
+  test("startTrackingSession", () => {
     const tracker = new AHTimeTracker();
     expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
     tracker.startTrackingSession();
@@ -11,7 +10,7 @@ describe('AHTimeTracker', () => {
     expect(tracker["timeSegments"].length).toEqual(1);
   });
 
-  test('re startTrackingSession', () => {
+  test("re startTrackingSession", () => {
     const tracker = new AHTimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
@@ -20,7 +19,7 @@ describe('AHTimeTracker', () => {
     expect(tracker["timeSegments"].length).toEqual(2);
   });
 
-  test('startSegment', () => {
+  test("startSegment", () => {
     const tracker = new AHTimeTracker();
 
     // Tracking stopped
@@ -36,7 +35,7 @@ describe('AHTimeTracker', () => {
     expect(() => tracker.startSegment("test-segment")).toThrow(AHException);
   });
 
-  test('stopSegment', () => {
+  test("stopSegment", () => {
     const tracker = new AHTimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
@@ -50,7 +49,7 @@ describe('AHTimeTracker', () => {
     expect(() => tracker.stopSegment("inexistant-segment")).toThrow(AHException);
   });
 
-  test('stopSegment when tracking is stopped', () => {
+  test("stopSegment when tracking is stopped", () => {
     const tracker = new AHTimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
@@ -58,7 +57,7 @@ describe('AHTimeTracker', () => {
     expect(() => tracker.stopSegment("test-segment")).toThrow(AHException);
   });
 
-  test('getSegment', () => {
+  test("getSegment", () => {
     const tracker = new AHTimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
@@ -66,7 +65,7 @@ describe('AHTimeTracker', () => {
     expect(() => tracker.getSegment("inexistant-segment")).toThrow(AHException);
   });
 
-  test('stopTrackingSession', () => {
+  test("stopTrackingSession", () => {
     const tracker = new AHTimeTracker();
     tracker.startTrackingSession();
     expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Started);
@@ -76,7 +75,7 @@ describe('AHTimeTracker', () => {
     expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
   });
 
-  test('logTrackingSession', () => {
+  test("logTrackingSession", () => {
     const tracker = new AHTimeTracker();
     const logger = AHLogger.getInstance();
     const handler = jest.fn(() => {});
