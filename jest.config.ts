@@ -8,14 +8,13 @@ module.exports = {
     "tsx",
     "js"
   ],
-  roots: ["<rootDir>/packages", "<rootDir>/tests"],
+  roots: ["<rootDir>/tests"],
   preset: "ts-jest",
   testEnvironment: "node",
   collectCoverage: true,
   collectCoverageFrom: [
     "packages/**/*.ts",
     "!packages/index.ts",
-    "!packages/tests/resources/test-resource.ts"
   ],
   coverageDirectory: "coverage",
   testPathIgnorePatterns: [
