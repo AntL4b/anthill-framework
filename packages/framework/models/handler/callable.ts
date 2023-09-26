@@ -5,4 +5,4 @@ export type AHCallable<T, U> = (
   event: T,
   context?: AHAwsContext,
   callback?: AHAwsCallback,
-) => Promise<U>;
+) => Promise<U> | U;

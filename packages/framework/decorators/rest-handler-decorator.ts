@@ -10,7 +10,7 @@ import { AHHttpResponse } from "../features/http-response";
  * @param restHandlerOptions REST handler options that will be applied to this handler
  * @returns The REST handler decorator
  */
-export function RestHandler<T, A extends [AHAwsEvent, ...undefined[]], R extends Promise<AHHttpResponse>>(
+export function RestHandler<T, A extends [AHAwsEvent, ...undefined[]], R extends Promise<AHHttpResponse> | AHHttpResponse>(
   restHandlerOptions: Partial<AHRestHandlerConfig>,
 ) {
   if (!restHandlerOptions.method) {

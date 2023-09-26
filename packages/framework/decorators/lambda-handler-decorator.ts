@@ -7,7 +7,7 @@ import { AHLambdaHandlerConfig } from "../models/handler/lambda-handler-config";
  * @param lambdaHandlerOptions Lambda handler options that will be applied to this handler
  * @returns The lambda handler decorator
  */
-export function LambdaHandler<T, A extends [any, ...undefined[]], R extends Promise<any>>(
+export function LambdaHandler<T, A extends [any, ...undefined[]], R extends Promise<any> | any>(
   lambdaHandlerOptions: Partial<AHLambdaHandlerConfig<any, any>> = {},
 ) {
   return (target: (this: T, ...args: A) => R, context: ClassMethodDecoratorContext<T, (this: T, ...args: A) => R>) => {
