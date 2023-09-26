@@ -22,20 +22,7 @@ export function RestHandler<T, A extends [AHAwsEvent, ...undefined[]], R extends
       restHandlerOptions.name = String(context.name);
     }
 
-    const controllerNamePromise = new Promise<any>((resolve) => {
-      context.addInitializer(function () {
-        if (typeof this === "object") {
-          // Instance method
-          return resolve(this.constructor.name);
-        }
-
-        // static method
-        return resolve((this as any).name);
-      });
-    });
-
     const _restHandlerOptions: AHRestHandlerConfig = {
-      controllerName: controllerNamePromise,
       name: restHandlerOptions.name,
       method: restHandlerOptions.method,
       callable: target as any,
@@ -44,6 +31,17 @@ export function RestHandler<T, A extends [AHAwsEvent, ...undefined[]], R extends
 
     const restHandler = new AHRestHandler(_restHandlerOptions);
     Anthill.getInstance()._registerHandler(restHandler);
+
+    context.addInitializer(function () {
+      if (typeof this === "object") {
+        // Instance method
+        restHandler.controllerName = this.constructor.name;
+      } else {
+        // static method
+        restHandler.controllerName = (this as any).name;
+      }
+    });
+
     return target;
   };
 }

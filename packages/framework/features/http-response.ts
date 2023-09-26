@@ -6,7 +6,7 @@ export class AHHttpResponse {
   body: AHHttpResponseBody | any;
 
   constructor(statusCode: number, body?: AHHttpResponseBody | any, headers?: { [key: string]: any }) {
-    this.headers = headers || {};
+    this.headers = { ...headers };
 
     if (
       !Object.keys(this.headers)

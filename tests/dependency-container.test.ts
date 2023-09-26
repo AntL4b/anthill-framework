@@ -1,3 +1,4 @@
+import { AHException } from "../packages";
 import { AHDependencyContainer } from "../packages/core/dependency-container";
 
 describe("AHDependencyContainer", () => {
@@ -21,5 +22,10 @@ describe("AHDependencyContainer", () => {
     
     expect(instance).toBeInstanceOf(Test);
     expect(dependencyContainer["container"]["Test"].instance).toEqual(instance);
+  });
+
+  test("resolve fails", () => {
+    const dependencyContainer = new AHDependencyContainer();    
+    expect(() => { dependencyContainer.resolve<any>("Test") }).toThrow(AHException);
   });
 });

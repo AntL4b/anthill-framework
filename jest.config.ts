@@ -1,12 +1,12 @@
 module.exports = {
   transform: {
-    ".(ts|tsx)": "ts-jest"
+    ".(ts|tsx)": "ts-jest",
   },
   testRegex: "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
   moduleFileExtensions: [
     "ts",
     "tsx",
-    "js"
+    "js",
   ],
   roots: ["<rootDir>/tests"],
   preset: "ts-jest",
@@ -18,7 +18,7 @@ module.exports = {
   ],
   coverageDirectory: "coverage",
   testPathIgnorePatterns: [
-    "/node_modules/"
+    "/node_modules/",
   ],
   verbose: true,
   coverageThreshold: {
@@ -26,7 +26,7 @@ module.exports = {
       branches: 100,
       functions: 100,
       lines: 100,
-      statements: 100
-    }
-  }
+      statements: 100,
+    },
+  },
 }

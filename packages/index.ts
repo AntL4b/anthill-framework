@@ -71,14 +71,13 @@ export { AHPromiseHelper } from "./framework/helpers/promise-helper";
 /**
  * MODELS
  */
-export {AHAwsCallback } from "./framework/models/aws/aws-callback"
+export { AHAwsCallback } from "./framework/models/aws/aws-callback"
 export { AHAwsContext } from "./framework/models/aws/aws-context";
 export { AHAwsEvent } from "./framework/models/aws/event/aws-event";
 export { AHAwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
 export { AHAwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";
 export { AHRestHandlerCacheConfig } from "./framework/models/rest-handler-cache-config";
 export { AHEnvEnum } from "./framework/models/enums/env-enum";
-export { AHHandlerConfigLevelEnum } from "./framework/models/enums/handler-config-level-enum";
 export { AHHttpResponseBodyStatusEnum } from "./framework/models/enums/http-response-body-status-enum";
 export { AHLogLevelEnum } from "./framework/models/enums/log-level-enum";
 export { AHRestMethodEnum } from "./framework/models/enums/rest-method-enum";
@@ -88,10 +87,10 @@ export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
 export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
 export { AHCorsMiddlewareOptions } from "./framework/models/middleware/cors-middleware-options";
 export { AHJsonBodyParserMiddlewareOptions } from "./framework/models/middleware/json-body-parser-middleware-options";
-export { AHAnthillConfig } from "./framework/models/anthill-config";
+export { AHAnthillConfig } from "./framework/models/anthill/anthill-config";
 export { AHRestHandlerOverridableConfig } from "./framework/models/handler/rest-handler-overridable-config";
 export { AHLambdaHandlerOverridableConfig } from "./framework/models/handler/lambda-handler-overridable-config";
 export { AHRestHandlerConfig } from "./framework/models/handler/rest-handler-config";
 export { AHLambdaHandlerConfig } from "./framework/models/handler/lambda-handler-config";
-export { AHHandlerOptions } from "./framework/models/handler/handler-options";
+export { AHAnthillOptions } from "./framework/models/anthill/anthill-options";
 export { AHCallable } from "./framework/models/handler/callable";

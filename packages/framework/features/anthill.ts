@@ -1,12 +1,14 @@
 import { AHAwsContext } from "../models/aws/aws-context";
 import { AHException } from "./anthill-exception";
-import { AHAnthillConfig } from "../models/anthill-config";
+import { AHAnthillConfig } from "../models/anthill/anthill-config";
 import { AHAbstractHandler } from "../../core/abstract-handler";
 import { AHCallable } from "../models/handler/callable";
-import { AHHandlerOptions } from "../models/handler/handler-options";
+import { AHAnthillOptions } from "../models/anthill/anthill-options";
 import { AHRestHandlerCacheConfig } from "../models/rest-handler-cache-config";
 import { AHDependencyContainer } from "../../core/dependency-container";
 import { AHAwsCallback } from "../models/aws/aws-callback";
+import { AHLogLevelEnum } from "../models/enums/log-level-enum";
+import { AHLogger } from "../features/logger";
 
 export class Anthill {
   private static defaultRestHandlerCacheConfig: AHRestHandlerCacheConfig = {
@@ -16,12 +18,15 @@ export class Anthill {
     headersToInclude: [],
   };
 
-  private static handlerDefaultOptions: AHHandlerOptions = {
+  private static defaultOptions: AHAnthillOptions = {
     displayPerformanceMetrics: false,
+    defaultLogLevel: AHLogLevelEnum.Info,
   };
 
   private static instance: Anthill;
+
   private handlers: Array<AHAbstractHandler<any, any>>;
+  private registeredControllerNames: Array<string>;
 
   // Shouldn't be set directly by user
   _dependencyContainer: AHDependencyContainer;
@@ -29,19 +34,19 @@ export class Anthill {
 
   private constructor() {
     this.handlers = [];
+    this.registeredControllerNames = [];
 
     this._dependencyContainer = new AHDependencyContainer();
 
     // Default configuration if configure isn't called
     this._configuration = {
+      controllers: [],
       restHandlerConfig: {
         middlewares: [],
         cacheConfig: Anthill.defaultRestHandlerCacheConfig,
-        options: Anthill.handlerDefaultOptions,
       },
-      lambdaHandlerConfig: {
-        options: Anthill.handlerDefaultOptions,
-      },
+      lambdaHandlerConfig: {},
+      options: Anthill.defaultOptions,
     };
   }
 
@@ -61,23 +66,31 @@ export class Anthill {
    * Configure the anthill application
    * @param anthillConfig The configuration object for configuring an anthill application
    */
-  configure(anthillConfig?: AHAnthillConfig): void {
-    anthillConfig = { ...anthillConfig }; // Will be an empty object even if anthillConfig is null
-
+  configure(anthillConfig: AHAnthillConfig): void {
     // Apply configuration on top of default configuration
     this._configuration = {
+      controllers: anthillConfig?.controllers || [],
       restHandlerConfig: {
         cacheConfig: {
           ...this._configuration.restHandlerConfig.cacheConfig,
           ...anthillConfig?.restHandlerConfig?.cacheConfig,
         },
         middlewares: anthillConfig?.restHandlerConfig?.middlewares || [],
-        options: { ...this._configuration.restHandlerConfig.options, ...anthillConfig?.restHandlerConfig?.options },
       },
       lambdaHandlerConfig: {
-        options: { ...this._configuration.lambdaHandlerConfig.options, ...anthillConfig?.lambdaHandlerConfig?.options },
+        ...this._configuration.lambdaHandlerConfig,
+        ...anthillConfig?.lambdaHandlerConfig,
+      },
+      options: {
+        ...this._configuration.options,
+        ...anthillConfig?.options,
       },
     };
+
+    // Register controller names using their static property _controllerName
+    this.registeredControllerNames = this._configuration.controllers.map((c) => c.prototype._controllerName);
+
+    AHLogger.getInstance().setLogLevel(this._configuration.options.defaultLogLevel);
   }
 
   /**
@@ -103,12 +116,11 @@ export class Anthill {
 
     // Expose rest handlers
     for (const handler of this.handlers) {
-      // Export a method that call the handler
-      exportObject[handler.getName()] = async (
-        event: any,
-        context: AHAwsContext,
-        callback: AHAwsCallback,
-      ) => await handler.handleRequest(event, context, callback);
+      if (this.registeredControllerNames.includes(handler.controllerName)) {
+        // Export a method that call the handler
+        exportObject[handler.getName()] = async (event: any, context: AHAwsContext, callback: AHAwsCallback) =>
+          await handler.handleRequest(event, context, callback);
+      }
     }
 
     return exportObject;

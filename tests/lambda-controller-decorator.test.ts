@@ -1,5 +1,5 @@
 import { AHObjectHelper, Anthill, LambdaController, anthill } from "../packages";
-import { AHLambdaControllerClass } from "../packages/core/models/controller-class/lambda-controller-class";
+import { AHLambdaControllerClass } from "../packages/core/models/lambda-controller-class";
 
 describe("LambdaController decorator", () => {
   beforeEach(() => {
@@ -11,6 +11,9 @@ describe("LambdaController decorator", () => {
     class AHTest {}
 
     const app = anthill();
+    app.configure({
+      controllers: [AHTest]
+    });
 
     expect(Object.keys(app["_dependencyContainer"]["container"]).includes("AHTest")).toEqual(true);
   });
@@ -24,9 +27,11 @@ describe("LambdaController decorator", () => {
     class AHTest {}
 
     const app = anthill();
+    app.configure({
+      controllers: [AHTest]
+    });
 
-    const controllerInstance: InstanceType<AHLambdaControllerClass<any>> =
-      app["_dependencyContainer"].resolve<InstanceType<AHLambdaControllerClass<any>>>("AHTest");
+    const controllerInstance = app["_dependencyContainer"].resolve<InstanceType<AHLambdaControllerClass>>("AHTest");
 
     expect(
       AHObjectHelper.isEquivalentObj(controllerInstance._lambdaHandlerConfig, {

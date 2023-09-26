@@ -27,11 +27,15 @@ describe("LambdaHandler decorator", () => {
 
       @LambdaHandler()
       static async listTest2(event: any, context?: AHAwsContext): Promise<string> {
-        return "OK";
+        return "OK2";
       }
     }
 
     const app = anthill();
+    app.configure({
+      controllers: [AHTest],
+    });
+
     const handlers = app.exposeHandlers();
 
     expect(Object.keys(handlers).includes("listTest")).toBe(true);
@@ -41,7 +45,7 @@ describe("LambdaHandler decorator", () => {
     const res2 = await handlers.listTest2(null, AHTestResource.getBaseContext());
 
     expect(res).toEqual("OK");
-    expect(res2).toEqual("OK");
+    expect(res2).toEqual("OK2");
   });
 
   test("decorator without contoller", async () => {
@@ -53,11 +57,16 @@ describe("LambdaHandler decorator", () => {
     }
 
     const app = anthill();
+    app.configure({
+      controllers: [AHTest],
+    });
+
     const handlers = app.exposeHandlers();
+    expect(Object.keys(handlers).includes("listTest")).toBe(false);
 
-    expect(Object.keys(handlers).includes("listTest")).toBe(true);
+    const handler = Anthill.getInstance()["handlers"].find(h => h.getName() === "listTest");
+    const res = handler.handleRequest(null, AHTestResource.getBaseContext());
 
-    const res = handlers.listTest(null, AHTestResource.getBaseContext());
     expect(res).rejects.toThrow(AHException);
   });
 });

@@ -11,17 +11,11 @@ import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
 import { Anthill } from "../anthill";
 import { AHRestHandlerCacheConfig } from "../../models/rest-handler-cache-config";
-import { AHMultiLevelHandlerConfig } from "../../../core/models/handler/multi-level-handler-config";
-import { AHHandlerConfigLevelEnum } from "../../models/enums/handler-config-level-enum";
 import { AHAwsCallback } from "../../models/aws/aws-callback";
-import { AHRestControllerClass } from "../../../core/models/controller-class/rest-controller-class";
+import { AHRestControllerClass } from "../../../core/models/rest-controller-class";
 
 export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
-  private cacheConfig: AHMultiLevelHandlerConfig<AHRestHandlerCacheConfig> = {
-    anthill: Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig,
-    controller: {},
-    handler: {},
-  };
+  private cacheConfig: AHRestHandlerCacheConfig = {};
   private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
   private method: AHRestMethodEnum;
   private middlewares: Array<AHMiddleware<any>> = [];
@@ -36,25 +30,17 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       this.middlewares = params.middlewares;
     }
 
-    if (Anthill.getInstance()._configuration.restHandlerConfig.options) {
-      this.setOptions(Anthill.getInstance()._configuration.restHandlerConfig.options, AHHandlerConfigLevelEnum.Anthill);
-    }
-
     if (params.cacheConfig) {
-      this.setCacheConfig(params.cacheConfig, AHHandlerConfigLevelEnum.Handler);
+      this.setCacheConfig(params.cacheConfig);
     }
   }
 
   /**
    * Set a new cache config
    * @param cacheConfig The cache config to be set
-   * @param configLevel The config level that should be applied for the given config
    */
-  setCacheConfig(
-    cacheConfig: AHRestHandlerCacheConfig,
-    configLevel: AHHandlerConfigLevelEnum = AHHandlerConfigLevelEnum.Handler,
-  ): void {
-    this.cacheConfig[configLevel] = { ...this.cacheConfig[configLevel], ...cacheConfig };
+  setCacheConfig(cacheConfig: AHRestHandlerCacheConfig): void {
+    this.cacheConfig = { ...this.cacheConfig, ...cacheConfig };
   }
 
   /**
@@ -78,9 +64,6 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
     try {
       tracker.startTrackingSession(this.name + "-tracking-session");
-
-      // Apply controller instance config
-      await this.setupControllerInstance();
 
       // Compute the multi level config into the one to be applied
       const cacheConfig: AHRestHandlerCacheConfig = this.computeCacheConfig();
@@ -204,29 +187,37 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
   private computeCacheConfig(): AHRestHandlerCacheConfig {
     const headersToInclude = [];
 
-    if (this.cacheConfig.anthill?.headersToInclude && this.cacheConfig.anthill?.headersToInclude.length) {
-      headersToInclude.push(...this.cacheConfig.anthill?.headersToInclude);
+    if (
+      Anthill.getInstance()._configuration.restHandlerConfig?.cacheConfig?.headersToInclude &&
+      Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig.headersToInclude.length
+    ) {
+      headersToInclude.push(...Anthill.getInstance()._configuration.restHandlerConfig.cacheConfig.headersToInclude);
     }
 
-    if (this.cacheConfig.controller?.headersToInclude && this.cacheConfig.controller?.headersToInclude.length) {
-      headersToInclude.push(...this.cacheConfig.controller?.headersToInclude);
+    const controllerInstance = this.getControllerInstance<any>();
+
+    if (
+      controllerInstance._restHandlerConfig?.cacheConfig?.headersToInclude &&
+      controllerInstance._restHandlerConfig.cacheConfig.headersToInclude.length
+    ) {
+      headersToInclude.push(...controllerInstance._restHandlerConfig.cacheConfig.headersToInclude);
     }
 
-    if (this.cacheConfig.handler?.headersToInclude && this.cacheConfig.handler?.headersToInclude.length) {
-      headersToInclude.push(...this.cacheConfig.handler?.headersToInclude);
+    if (this.cacheConfig?.headersToInclude && this.cacheConfig?.headersToInclude.length) {
+      headersToInclude.push(...this.cacheConfig.headersToInclude);
     }
 
     return {
-      ...this.cacheConfig.anthill,
-      ...this.cacheConfig.controller,
-      ...this.cacheConfig.handler,
+      ...Anthill.getInstance()._configuration.restHandlerConfig?.cacheConfig,
+      ...controllerInstance._restHandlerConfig?.cacheConfig,
+      ...this.cacheConfig,
       headersToInclude: Array.from(new Set(headersToInclude)),
     };
   }
 
   private async computeMiddlewares(): Promise<Array<AHMiddleware<any>>> {
     // Retrieve the controller instance
-    const controllerInstance: InstanceType<AHRestControllerClass<any>> = await this.getControllerInstance();
+    const controllerInstance: InstanceType<AHRestControllerClass> = await this.getControllerInstance();
 
     const middlewares = [];
 
@@ -249,19 +240,5 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
     }
 
     return middlewares;
-  }
-
-  private async setupControllerInstance(): Promise<void> {
-    // Retrieve the controller instance
-    const controllerInstance = await this.getControllerInstance<InstanceType<AHRestControllerClass<any>>>();
-
-    // Set the controller level config and options
-    if (controllerInstance._restHandlerConfig?.options) {
-      this.setOptions(controllerInstance._restHandlerConfig?.options, AHHandlerConfigLevelEnum.Controller);
-    }
-
-    if (controllerInstance._restHandlerConfig?.cacheConfig) {
-      this.setCacheConfig(controllerInstance._restHandlerConfig?.cacheConfig, AHHandlerConfigLevelEnum.Controller);
-    }
   }
 }

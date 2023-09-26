@@ -3,21 +3,12 @@ import { AHTimeTracker } from "../time-tracker";
 import { AHAbstractHandler } from "../../../core/abstract-handler";
 import { AHAwsContext } from "../../models/aws/aws-context";
 import { AHLambdaHandlerConfig } from "../../models/handler/lambda-handler-config";
-import { Anthill } from "../anthill";
 import { AHAwsCallback } from "../../models/aws/aws-callback";
-import { AHHandlerConfigLevelEnum } from "../../..";
 
 export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
   constructor(params: AHLambdaHandlerConfig<T, U>) {
     // Apply lambdaHandlerConfig options
     super(params);
-
-    if (Anthill.getInstance()._configuration.lambdaHandlerConfig.options) {
-      this.setOptions(
-        Anthill.getInstance()._configuration.lambdaHandlerConfig.options,
-        AHHandlerConfigLevelEnum.Anthill,
-      );
-    }
   }
 
   /**

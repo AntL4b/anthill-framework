@@ -1,7 +1,6 @@
 import {
   AHAwsContext,
   AHException,
-  AHHandlerConfigLevelEnum,
   AHMiddleware,
   AHObjectHelper,
   AHRestHandlerCacheConfig,
@@ -40,9 +39,7 @@ describe("AHRestHandler", () => {
     const handler = AHTestResource.getDefaultRestHandler();
     handler.setCacheConfig(newCacheConfig);
 
-    expect(
-      AHObjectHelper.isEquivalentObj(handler["cacheConfig"][AHHandlerConfigLevelEnum.Handler], newCacheConfig),
-    ).toBe(true);
+    expect(AHObjectHelper.isEquivalentObj(handler["cacheConfig"], newCacheConfig)).toBe(true);
   });
 
   test("addMiddleware", () => {
@@ -95,17 +92,6 @@ describe("AHRestHandler", () => {
   });
 
   test("multi level cache", async () => {
-    const app = anthill();
-    app.configure({
-      restHandlerConfig: {
-        cacheConfig: {
-          cachable: true,
-          maxCacheSize: 123456,
-          headersToInclude: ["test-header-anthill"],
-        },
-      },
-    });
-
     @RestController({
       cacheConfig: {
         cachable: false,
@@ -120,12 +106,24 @@ describe("AHRestHandler", () => {
           cachable: true,
           maxCacheSize: 12345678,
           headersToInclude: ["test-header-handler"],
-        }
+        },
       })
       async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
         return AHPromiseHelper.promisify(AHHttpResponse.success(null));
       }
     }
+
+    const app = anthill();
+    app.configure({
+      controllers: [AHTest],
+      restHandlerConfig: {
+        cacheConfig: {
+          cachable: true,
+          maxCacheSize: 123456,
+          headersToInclude: ["test-header-anthill"],
+        },
+      },
+    });
 
     const handlers = app.exposeHandlers();
     expect(Object.keys(handlers).includes("listTest")).toBe(true);
@@ -133,7 +131,7 @@ describe("AHRestHandler", () => {
     const res = await handlers.listTest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
     expect(res).toBeInstanceOf(AHHttpResponse);
 
-    const handler = app["handlers"].find(h => h.getName() === "listTest");
+    const handler = app["handlers"].find((h) => h.getName() === "listTest");
 
     expect(
       AHObjectHelper.isEquivalentObj(handler["computeCacheConfig"](), {
@@ -166,25 +164,26 @@ describe("AHRestHandler", () => {
     const controllerMiddleware = new ControllerMiddleware();
     const handlerMiddleware = new HandlerMiddleware();
 
-    const app = anthill();
-    app.configure({
-      restHandlerConfig: {
-        middlewares: [anthillMiddleware],
-      },
-    });
-
     @RestController({
-      middlewares: [controllerMiddleware]
+      middlewares: [controllerMiddleware],
     })
     class AHTest {
       @RestHandler({
         method: AHRestMethodEnum.Get,
-        middlewares: [handlerMiddleware]
+        middlewares: [handlerMiddleware],
       })
       async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
         return AHPromiseHelper.promisify(AHHttpResponse.success(null));
       }
     }
+
+    const app = anthill();
+    app.configure({
+      controllers: [AHTest],
+      restHandlerConfig: {
+        middlewares: [anthillMiddleware],
+      },
+    });
 
     const handlers = app.exposeHandlers();
     expect(Object.keys(handlers).includes("listTest")).toBe(true);
@@ -192,15 +191,11 @@ describe("AHRestHandler", () => {
     const res = await handlers.listTest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
     expect(res).toBeInstanceOf(AHHttpResponse);
 
-    const handler = app["handlers"].find(h => h.getName() === "listTest");
+    const handler = app["handlers"].find((h) => h.getName() === "listTest");
     const middlewares = await handler["computeMiddlewares"]();
 
     expect(
-      AHObjectHelper.isEquivalentObj(middlewares, [
-        anthillMiddleware,
-        controllerMiddleware,
-        handlerMiddleware,
-      ]),
+      AHObjectHelper.isEquivalentObj(middlewares, [anthillMiddleware, controllerMiddleware, handlerMiddleware]),
     ).toBe(true);
   });
 

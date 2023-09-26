@@ -1,6 +1,6 @@
-import { AHRestControllerClass } from "../../core/models/controller-class/rest-controller-class";
-import { Anthill } from "../features/anthill";
 import { AHRestHandlerOverridableConfig } from "../models/handler/rest-handler-overridable-config";
+import { AHRestControllerClass } from "../../core/models/rest-controller-class";
+import { Anthill } from "../features/anthill";
 
 /**
  * REST controller decorator used to decorate controller classes
@@ -8,10 +8,11 @@ import { AHRestHandlerOverridableConfig } from "../models/handler/rest-handler-o
  * @returns The REST controller decorator
  */
 export function RestController(restControllerOptions: AHRestHandlerOverridableConfig = {}): any {
-  return <T extends AHRestControllerClass<T>>(target: T, context: ClassDecoratorContext<T>) => {
-    Anthill.getInstance()._dependencyContainer.register<T>(context.name, target);
+  return <T extends AHRestControllerClass>(target: T, context: ClassDecoratorContext<T>) => {
+    Anthill.getInstance()._dependencyContainer.register(context.name, target);
     Anthill.getInstance()._dependencyContainer.resolve<T>(context.name)._restHandlerConfig = restControllerOptions;
 
+    target.prototype._controllerName = context.name;
     return target;
   };
 }

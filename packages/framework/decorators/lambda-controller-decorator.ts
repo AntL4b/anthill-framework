@@ -1,5 +1,5 @@
 import { AHLambdaHandlerOverridableConfig } from "../models/handler/lambda-handler-overridable-config";
-import { AHLambdaControllerClass } from "../../core/models/controller-class/lambda-controller-class";
+import { AHLambdaControllerClass } from "../../core/models/lambda-controller-class";
 import { Anthill } from "../features/anthill";
 
 /**
@@ -8,10 +8,11 @@ import { Anthill } from "../features/anthill";
  * @returns The lambda controller decorator
  */
 export function LambdaController(lambdaControllerOptions: AHLambdaHandlerOverridableConfig = {}): any {
-  return <T extends AHLambdaControllerClass<T>>(target: T, context: ClassDecoratorContext<T>) => {
-    Anthill.getInstance()._dependencyContainer.register<T>(context.name, target);
+  return <T extends AHLambdaControllerClass>(target: T, context: ClassDecoratorContext<T>) => {
+    Anthill.getInstance()._dependencyContainer.register(context.name, target);
     Anthill.getInstance()._dependencyContainer.resolve<T>(context.name)._lambdaHandlerConfig = lambdaControllerOptions;
 
+    target.prototype._controllerName = context.name;
     return target;
   };
 }
