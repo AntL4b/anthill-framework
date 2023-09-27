@@ -24,7 +24,11 @@ export class AHJsonBodyParserMiddleware extends AHMiddleware<AHJsonBodyParserMid
       }
 
       const data = event.isBase64Encoded ? Buffer.from(event.body, "base64").toString() : event.body;
-      event.body = JSON.parse(data, this.payload.reviver);
+
+      event.middlewareData = {
+        ...event.middlewareData,
+        body: JSON.parse(data, this.payload.reviver),
+      };
     }
 
     return AHPromiseHelper.promisify(event);

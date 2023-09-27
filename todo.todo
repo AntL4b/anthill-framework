@@ -1,7 +1,7 @@
 - helper for extracting info from AHAwsEvent (decorator / validator / DTO in ?)
   - query param
   - path param
-  - body param
+  - body param (prio parsed from middleware json body)
   - ...
 - DTO
   - spec in (will replace middleware for qs and body check)
@@ -10,3 +10,18 @@
 - OpenApi swagger generation
 - Websocket ?
 - Add some middlewares (a good source of candidate can be found here: https://github.com/middyjs/middy/tree/main/packages)
+
+
+- Documentation
+  - Quick start
+  - Basic REST todo example (remove Cors from serverless)
+    - Accessing path params
+    - Accessing body params
+    - Accessing querystring params
+  - Middlewares
+    - Use existing ones
+    - Create your own
+  - Deal with Cors
+  - Create lambdas
+    - Add Cors to serverless
+    - Use middleware

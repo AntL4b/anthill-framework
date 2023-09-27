@@ -15,7 +15,7 @@ describe("AHJsonBodyParserMiddleware", () => {
     const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHAwsEvent);
-    expect(JSON.stringify(result.body)).toEqual(JSON.stringify({ key: "test1" }));
+    expect(JSON.stringify((result as AHAwsEvent).middlewareData.body)).toEqual(JSON.stringify({ key: "test1" }));
   });
 
   test("Body specified Base64", async () => {
@@ -24,7 +24,7 @@ describe("AHJsonBodyParserMiddleware", () => {
     const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
 
     expect(result).toBeInstanceOf(AHAwsEvent);
-    expect(JSON.stringify(result.body)).toEqual(JSON.stringify({ key: "test1" }));
+    expect(JSON.stringify((result as AHAwsEvent).middlewareData.body)).toEqual(JSON.stringify({ key: "test1" }));
   });
 
   test("Unsupported media type", async () => {
