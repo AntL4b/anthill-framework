@@ -3,6 +3,7 @@
   - path param
   - body param (prio parsed from middleware json body)
   - ...
+- Testing
 - DTO
   - spec in (will replace middleware for qs and body check)
   - spec out
@@ -14,7 +15,12 @@
 
 - Documentation
   - Quick start
+  - Installation
+  - Configuration
+  - Decorators
   - Basic REST todo example (remove Cors from serverless)
+    - Project structure
+    - Routing (no routing)
     - Accessing path params
     - Accessing body params
     - Accessing querystring params
