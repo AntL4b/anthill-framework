@@ -18,9 +18,9 @@
   - Installation
   - Handler lifecycle (draw.io style croquis)
   - Configuration (inheritance)
-  - Decorators
   - Basic REST todo example (remove Cors from serverless)
     - Project structure
+    - Decorators
     - Routing (no routing)
     - Accessing path params
     - Accessing body params

@@ -161,7 +161,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       tracker.startSegment(`middleware-runAfter`);
 
       // Run all the middlewares runAfter one by one
-      for (let i = 0; i < middlewares.length; i++) {
+      for (let i = middlewares.length - 1; i >= 0 ; i--) {
         AHLogger.getInstance().debug(`Running runAfter for middleware ${i + 1} of ${middlewares.length}`);
         response = await middlewares[i].runAfter(response, _event, context);
       }

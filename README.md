@@ -64,6 +64,67 @@ This is a [Node.js](https://nodejs.org/en/) module available through the npm reg
 $ npm install @antl4b/anthill-framework --save
 ```
 
+## Handler lifecycle
+
+![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/request-lifecycle.drawio.png?raw=true)
+
+## Configuration
+
+Anthill framework uses a configuration inheritance system allowing to apply some common logic winthin you app, controller or handler scope.
+
+Ex: For dealing with cors for all the REST handlers of the application, set it on Anthill app scope:
+
+```ts
+app.configure({
+  controllers: [MyController],
+  restHandlerConfig: {
+    middlewares: [new AHCorsMiddleware()]
+  }
+});
+```
+
+Ex: The following code will enable caching and require that an "Authorization" header is provided for each of the controller handlers.
+The second handler configuration will override the caching configuration to apply a shorter TTL
+
+```ts
+@RestController({
+  cacheConfig: {
+    cachable: true,
+    ttl: 120,
+    },
+  middlewares: [new AHHeaderFieldMiddleware(["Authorization"])],
+})
+class MyController {
+  /**
+   * My First handler
+   */
+  @RestHandler({ method: AHRestMethodEnum.Get })
+  myHandler1(event: AHAwsEvent): AHHttpResponse {
+    return AHHttpResponse.success({
+      status: AHHttpResponseBodyStatusEnum.Success
+    });
+  }
+
+  /**
+   * My second handler
+   */
+  @RestHandler({
+    method: AHRestMethodEnum.Get,
+    cacheConfig: { ttl: 60 },
+  })
+  myHandler2(event: AHAwsEvent): AHHttpResponse {
+    return AHHttpResponse.success({
+      status: AHHttpResponseBodyStatusEnum.Success,
+    });
+  }
+}
+```
+
+Here is an example of how 3 layers of configuration can work. Note that middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
+
+
+## Basic REST todo example
+
 [build-image]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml/badge.svg
 [build-url]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml
 [coveralls-image]: https://coveralls.io/repos/github/AntL4b/anthill-framework/badge.svg
