@@ -124,9 +124,9 @@ class MyController {
 Here is an example of how 3 layers of configuration can work.
 
 > [!NOTE]  
-> Middleware inheritance is cumulative so the 3 layers of middleware will be applied successively
-> From Anthill to Handler during runBefore and in reversed order during runAfter
-> See more in [Middlewares](#middlewares) section
+> Middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
+> From Anthill to Handler during runBefore and in reversed order during runAfter.
+> See more in [Middlewares](#middlewares) section.
 
 ## Basic REST todo example
 
