@@ -64,7 +64,7 @@ This is a [Node.js](https://nodejs.org/en/) module available through the npm reg
 $ npm install @antl4b/anthill-framework --save
 ```
 
-## Handler lifecycle
+## Request lifecycle
 
 ![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/request-lifecycle.drawio.png?raw=true)
 
@@ -75,6 +75,7 @@ Anthill framework uses a configuration inheritance system allowing to apply some
 Ex: For dealing with cors for all the REST handlers of the application, set it on Anthill app scope:
 
 ```ts
+const app = anthill();
 app.configure({
   controllers: [MyController],
   restHandlerConfig: {
@@ -120,8 +121,9 @@ class MyController {
 }
 ```
 
-Here is an example of how 3 layers of configuration can work. Note that middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
+Here is an example of how 3 layers of configuration can work.
 
+> :info: Note that middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
 
 ## Basic REST todo example
 
