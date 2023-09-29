@@ -8,13 +8,13 @@ A lightweight, fast and reliable dependence less TypeScript framework for buildi
 [![NPM Version][npm-version-image]][npm-url]
 [![NPM Install Size][npm-install-size-image]][npm-install-size-url]
 
-The project aims to provide an environment and tools for developing REST API using AWS Lambdas and API Gateway. It comes with an HTTP request handling system that can handle caching requests, run middlewares, deal with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration)
+The project aims to provide an environment and tools for developing REST API using AWS Lambda and API Gateway. Anthill framework comes with an HTTP request handling system capable of caching, running middlewares, dealing with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration)
 
-Anthill comes with strong typing and structure because code benefits from being explicit and readability counts.
+Anthill comes with strong typing and structure because readability counts and code benefits from being explicit.
 
 ## Quick start
 
-Here is how we can code a simple "Hello world" example:
+Here is the code for an "Hello world" example:
 
 ```ts
 import {

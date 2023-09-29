@@ -16,7 +16,8 @@
 - Documentation
   - Quick start
   - Installation
-  - Configuration
+  - Handler lifecycle (draw.io style croquis)
+  - Configuration (inheritance)
   - Decorators
   - Basic REST todo example (remove Cors from serverless)
     - Project structure
@@ -24,10 +25,21 @@
     - Accessing path params
     - Accessing body params
     - Accessing querystring params
+    - Making a handler async
   - Middlewares
     - Use existing ones
     - Create your own
+    - Example: cognito authentication
+  - Cache
   - Deal with Cors
+  - Full example
+    - authentication
+    - dynamodb
+    - cors
+    - cache
   - Create lambdas
     - Add Cors to serverless
     - Use middleware
+  - Extras
+    - Logger
+    - Time tracker
