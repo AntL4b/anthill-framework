@@ -5,6 +5,7 @@ dist/
 
 *~
 *.bkp
+*.dtmp
 *.sw[mnpcod]
 *.log
 *.lock
