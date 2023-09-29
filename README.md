@@ -123,9 +123,14 @@ class MyController {
 
 Here is an example of how 3 layers of configuration can work.
 
-> :info: Note that middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
+> [!NOTE]  
+> Middleware inheritance is cumulative so the 3 layers of middleware will be applied successively
+> From Anthill to Handler during runBefore and in reversed order during runAfter
+> See more in [Middlewares](#middlewares) section
 
 ## Basic REST todo example
+
+## Middlewares
 
 [build-image]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml/badge.svg
 [build-url]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml
