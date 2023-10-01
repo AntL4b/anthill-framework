@@ -1,0 +1,70 @@
+{
+  "name": "@antl4b/anthill-framework",
+  "version": "1.0.0",
+  "description": "AntL4b framework for serverless backend projects",
+  "author": "AntL4b <ant1.antlab@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "Anthill",
+    "Framework",
+    "AWS",
+    "Lambda",
+    "Api Gateway",
+    "Serverless",
+    "Microservices"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntL4b/anthill-framework.git"
+  },
+  "scripts": {
+    "test": "echo \"No test specified\""
+  },
+  "dependencies": {
+    "@antl4b/anthill-framework": "file:../.."
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "import-sort-cli": "^6.0.0",
+    "import-sort-parser-typescript": "^6.0.0",
+    "import-sort-style-module": "^6.0.0",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "serverless-domain-manager": "^6.4.1",
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "5.2.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{css,scss,html}": [
+      "prettier --write"
+    ],
+    "!(*.d).{ts,tsx}": [
+      "prettier --write",
+      "import-sort --write"
+    ]
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "printWidth": 120,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
+  },
+  "importSort": {
+    ".tsx?": {
+      "parser": "typescript",
+      "style": "module"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/StayTunedAds/staytuned-backend-api/issues"
+  },
+  "homepage": "https://github.com/StayTunedAds/staytuned-backend-api#readme"
+}

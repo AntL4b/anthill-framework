@@ -1,0 +1,75 @@
+# For full config options, check the docs:
+#    docs.serverless.com
+
+service: todo-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: eu-west-1
+  deploymentBucket:
+    name: s3-serverless-deployment-bucket  # Need to be created on S3
+
+  environment:
+    ENV: ${self:custom.environment.ENV}
+    REGION: ${self:custom.environment.REGION}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+        - lambda:InvokeAsync
+      Resource: "*"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline # serverless-offline needs to be last in the list
+
+package:
+  individually: false
+  exclude:
+    - tests/**
+
+functions:
+  create-todo:
+    handler: src/index.createTodo
+    timeout: 12
+    events:
+      - http:
+          path: /todos
+          method: post
+  list-todos:
+    handler: src/index.listTodos
+    timeout: 12
+    events:
+      - http:
+          path: /todos
+          method: get
+  get-todo:
+    handler: src/index.getTodo
+    timeout: 12
+    events:
+      - http:
+          path: /todos/{id}
+          method: get
+  delete-todo:
+    handler: src/index.deleteTodo
+    timeout: 12
+    events:
+      - http:
+          path: /todos/{id}
+          method: delete
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  environment: ${file(../env.yml):${self:custom.stage}, file(../env.yml):dev}
+  allowedHeaders:
+    - Accept
+    - Content-Type
+    - X-Amz-Date
+    - Date
+    - Authorization
+    - X-Api-Key
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
