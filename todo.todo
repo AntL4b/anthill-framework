@@ -38,8 +38,6 @@
     - cors
     - cache
   - Create lambdas
-    - Add Cors to serverless
-    - Use middleware
   - Extras
     - Logger
     - Time tracker

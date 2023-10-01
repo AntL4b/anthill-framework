@@ -5,7 +5,7 @@ service: todo-api
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs16.x
   stage: dev
   region: eu-west-1
   deploymentBucket:
@@ -64,12 +64,3 @@ functions:
 custom:
   stage: ${opt:stage, self:provider.stage}
   environment: ${file(../env.yml):${self:custom.stage}, file(../env.yml):dev}
-  allowedHeaders:
-    - Accept
-    - Content-Type
-    - X-Amz-Date
-    - Date
-    - Authorization
-    - X-Api-Key
-    - X-Amz-Security-Token
-    - X-Amz-User-Agent
