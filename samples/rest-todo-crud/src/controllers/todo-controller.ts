@@ -22,8 +22,8 @@ export class TodoController {
     middlewares: [new AHJsonBodyParserMiddleware()],
   })
   createTodo(event: AHAwsEvent): AHHttpResponse {
-    // Get parsed body from middleware data
-    const body = event.middlewareData.body;
+    // Get parsed body data
+    const body = event.body;
 
     if (!body.value) {
       throw new AHException("Todo value not found in body");
