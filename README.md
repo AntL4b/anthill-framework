@@ -1,18 +1,24 @@
-# Anthill Framework
+<div align="center">
+  <img src="https://github.com/AntL4b/anthill-framework/blob/main/docs/images/logo.png?raw=true" width="240" alt="Anthill Framework logo" />
+</div>
 
-A lightweight, fast and reliable dependence-less TypeScript framework for building powerful serverless backend applications on AWS.
+<div align="center">
+A lightweight, fast and reliable dependence-less TypeScript framework for building serverless applications on AWS.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AntL4b/anthill-framework/blob/main/LICENSE)
 [![Build][build-image]][build-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![NPM Version][npm-version-image]][npm-url]
 [![NPM Install Size][npm-install-size-image]][npm-install-size-url]
+</div>
 
-The project aims to provide an environment and tools for developing REST API using AWS Lambda and API Gateway. Anthill framework comes with an HTTP request handling system capable of caching, running middlewares, dealing with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration).
+# Description
+
+The project aims to provide an environment and tools for developing REST API using AWS Lambda and API Gateway. Anthill Framework comes with an HTTP request handling system capable of caching, running middlewares, dealing with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration).
 
 Anthill comes with strong typing and structure because readability counts and code benefits from being explicit.
 
-## Why Anthill framework ?
+# Why Anthill Framework ?
 
 There are a lot of existing frameworks to build amazing web backends.
 So, why should you use Anthill ?
@@ -22,7 +28,7 @@ So, why should you use Anthill ?
 - It's crazy fast compared to other framework even when facing cold starts
 - It's 100% TypeScript and everything is strongly typed
 
-## Quick start
+# Quick start
 
 Here is the code for an "Hello world" example:
 
@@ -138,17 +144,59 @@ Here is an example of how 3 layers of configuration can work.
 > From Anthill to Handler during runBefore and in reversed order during runAfter.
 > See more in [Middlewares](#middlewares) section.
 
-## Routing
-## Controllers & Handlers
-### REST
-### Lambdas
-## Middlewares
-### Use existing ones
-### Create your own
-### Example: cognito authentication
-## Cache
-## Logger
-## Time tracker
+# Routing
+
+Anthill Framework doesn't provide a proper way of routing requests to a given handler according to some path related rules.
+Traditional frameworks used to do it this way but, being in a serverless context, routing of requests to handlers benefits from being carried out by API Gateway.
+
+Here is an example of how requests can be routed to handlers using Serverless YML configuration file:
+
+```yml
+create-resource:
+  handler: src/index.createResource
+  events:
+    - http:
+        path: /resources
+        method: post
+list-resources:
+  handler: src/index.listResources
+  events:
+    - http:
+        path: /resources
+        method: get
+get-resource:
+  handler: src/index.getResource
+  events:
+    - http:
+        path: /resources/{id}
+        method: get
+delete-resource:
+  handler: src/index.deleteResource
+  events:
+    - http:
+        path: /resources/{id}
+        method: delete
+```
+
+For more information on routing to handler, see [Serverless official documentation](https://www.serverless.com/).
+
+Ensuring that each service is hosted by a single Lambda also helps a lot in terms of monitoring and troubleshooting.
+Plus, it doesn't cost anything extra.
+
+![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/lambda-monitoring.png?raw=true)
+
+If you're still not convinced and want to map an ANY method event to a single handler, then feel free to [create your own middleware](#create-your-own) to manage routing rules the way you prefer !
+
+# Controllers & Handlers
+## REST
+## Lambdas
+# Middlewares
+## Use existing ones
+## Create your own
+## Example: cognito authentication
+# Cache
+# Logger
+# Time tracker
 
 
 [build-image]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml/badge.svg
