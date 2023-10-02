@@ -1,18 +1,18 @@
 <p align="center">
-  <img src="https://github.com/AntL4b/anthill-framework/blob/main/docs/images/logo.png?raw=true" width="240" alt="Anthill Framework logo" />
+  <img src="https://github.com/AntL4b/anthill-framework/blob/main/docs/images/logo.png?raw=true" width="120" alt="Anthill Framework logo" />
 </p>
 
 <p align="center">
 A lightweight, fast and reliable dependence-less TypeScript framework for building serverless applications on AWS.
 </p>
 
-<p align="center">
+<div align="center">
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AntL4b/anthill-framework/blob/main/LICENSE)
 [![Build][build-image]][build-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![NPM Version][npm-version-image]][npm-url]
 [![NPM Install Size][npm-install-size-image]][npm-install-size-url]
-</p>
+</div>
 
 ## Description
 
