@@ -1,24 +1,26 @@
-<div align="center">
+<p align="center">
   <img src="https://github.com/AntL4b/anthill-framework/blob/main/docs/images/logo.png?raw=true" width="240" alt="Anthill Framework logo" />
-</div>
+</p>
 
-<div align="center">
+<p align="center">
 A lightweight, fast and reliable dependence-less TypeScript framework for building serverless applications on AWS.
+</p>
 
+<p align="center">
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AntL4b/anthill-framework/blob/main/LICENSE)
 [![Build][build-image]][build-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![NPM Version][npm-version-image]][npm-url]
 [![NPM Install Size][npm-install-size-image]][npm-install-size-url]
-</div>
+</p>
 
-# Description
+## Description
 
 The project aims to provide an environment and tools for developing REST API using AWS Lambda and API Gateway. Anthill Framework comes with an HTTP request handling system capable of caching, running middlewares, dealing with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration).
 
 Anthill comes with strong typing and structure because readability counts and code benefits from being explicit.
 
-# Why Anthill Framework ?
+## Why Anthill Framework ?
 
 There are a lot of existing frameworks to build amazing web backends.
 So, why should you use Anthill ?
@@ -28,7 +30,7 @@ So, why should you use Anthill ?
 - It's crazy fast compared to other framework even when facing cold starts
 - It's 100% TypeScript and everything is strongly typed
 
-# Quick start
+## Quick start
 
 Here is the code for an "Hello world" example:
 
@@ -144,7 +146,7 @@ Here is an example of how 3 layers of configuration can work.
 > From Anthill to Handler during runBefore and in reversed order during runAfter.
 > See more in [Middlewares](#middlewares) section.
 
-# Routing
+## Routing
 
 Anthill Framework doesn't provide a proper way of routing requests to a given handler according to some path related rules.
 Traditional frameworks used to do it this way but, being in a serverless context, routing of requests to handlers benefits from being carried out by API Gateway.
@@ -187,16 +189,16 @@ Plus, it doesn't cost anything extra.
 
 If you're still not convinced and want to map an ANY method event to a single handler, then feel free to [create your own middleware](#create-your-own) to manage routing rules the way you prefer !
 
-# Controllers & Handlers
-## REST
-## Lambdas
-# Middlewares
-## Use existing ones
-## Create your own
-## Example: cognito authentication
-# Cache
-# Logger
-# Time tracker
+## Controllers & Handlers
+### REST
+### Lambdas
+## Middlewares
+### Use existing ones
+### Create your own
+### Example: cognito authentication
+## Cache
+## Logger
+## Time tracker
 
 
 [build-image]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml/badge.svg
