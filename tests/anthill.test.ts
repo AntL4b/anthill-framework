@@ -35,7 +35,7 @@ describe("Anthill", () => {
       controllers: [],
       restHandlerConfig: {
         cacheConfig: {
-          cachable: true,
+          cacheable: true,
           ttl: 100,
           maxCacheSize: 1234,
           headersToInclude: [],
@@ -85,7 +85,7 @@ describe("Anthill", () => {
 
   test("configure cacheConfig", () => {
     const cacheConfig: AHRestHandlerCacheConfig = {
-      cachable: true,
+      cacheable: true,
       ttl: 999,
       maxCacheSize: 123456,
       headersToInclude: ["test-header"],

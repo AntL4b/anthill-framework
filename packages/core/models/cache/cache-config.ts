@@ -1,5 +1,5 @@
 export interface AHCacheConfig {
-  cachable?: boolean;
+  cacheable?: boolean;
   ttl?: number;
   maxCacheSize?: number;
 }

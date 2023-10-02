@@ -11,33 +11,8 @@
 - OpenApi swagger generation
 - Websocket ?
 - Add some middlewares (a good source of candidate can be found here: https://github.com/middyjs/middy/tree/main/packages)
-
-
-- Documentation
-  - Quick start
-  - Installation
-  - Handler lifecycle (draw.io style croquis)
-  - Configuration (inheritance)
-  - Basic REST todo example (remove Cors from serverless)
-    - Project structure
-    - Decorators
-    - Routing (no routing)
-    - Accessing path params
-    - Accessing body params
-    - Accessing querystring params
-    - Making a handler async
-  - Middlewares
-    - Use existing ones
-    - Create your own
-    - Example: cognito authentication
-  - Cache
-  - Deal with Cors
-  - Full example
-    - authentication
-    - dynamodb
-    - cors
-    - cache
-  - Create lambdas
-  - Extras
-    - Logger
-    - Time tracker
+- New sample
+  - authentication
+  - dynamodb
+  - cors
+  - cache

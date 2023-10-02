@@ -30,7 +30,7 @@ describe("AHRestHandler", () => {
 
   test("setCacheConfig", () => {
     const newCacheConfig: AHRestHandlerCacheConfig = {
-      cachable: true,
+      cacheable: true,
       ttl: 111,
       maxCacheSize: 654321,
       headersToInclude: ["test-header"],
@@ -94,7 +94,7 @@ describe("AHRestHandler", () => {
   test("multi level cache", async () => {
     @RestController({
       cacheConfig: {
-        cachable: false,
+        cacheable: false,
         ttl: 123456,
         headersToInclude: ["test-header-controller"],
       },
@@ -103,7 +103,7 @@ describe("AHRestHandler", () => {
       @RestHandler({
         method: AHRestMethodEnum.Get,
         cacheConfig: {
-          cachable: true,
+          cacheable: true,
           maxCacheSize: 12345678,
           headersToInclude: ["test-header-handler"],
         },
@@ -118,7 +118,7 @@ describe("AHRestHandler", () => {
       controllers: [AHTest],
       restHandlerConfig: {
         cacheConfig: {
-          cachable: true,
+          cacheable: true,
           maxCacheSize: 123456,
           headersToInclude: ["test-header-anthill"],
         },
@@ -135,7 +135,7 @@ describe("AHRestHandler", () => {
 
     expect(
       AHObjectHelper.isEquivalentObj(handler["computeCacheConfig"](), {
-        cachable: true,
+        cacheable: true,
         ttl: 123456,
         maxCacheSize: 12345678,
         headersToInclude: ["test-header-anthill", "test-header-controller", "test-header-handler"],
@@ -207,7 +207,7 @@ describe("AHRestHandler", () => {
       middlewares: [],
       callable: _callable,
       cacheConfig: {
-        cachable: true,
+        cacheable: true,
         ttl: 120,
         maxCacheSize: 120000,
       },
@@ -226,7 +226,7 @@ describe("AHRestHandler", () => {
 
     // Remove cache hit
     handler.setCacheConfig({
-      cachable: false,
+      cacheable: false,
     });
 
     // Check that the callable is called

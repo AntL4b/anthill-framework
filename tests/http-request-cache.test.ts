@@ -10,7 +10,7 @@ describe("AHHttpRequestCache", () => {
 
   // Set default cache config
   httpRequestCache.setConfig({
-    cachable: true,
+    cacheable: true,
     ttl: 120,
     maxCacheSize: 120000,
   });
@@ -64,7 +64,7 @@ describe("AHHttpRequestCache", () => {
 
     // Set maxCacheSize with twice the size of the response
     httpRequestCache.setConfig({
-      cachable: true,
+      cacheable: true,
       ttl: 120,
       maxCacheSize: sizeOfResponse * 2,
     });
@@ -79,7 +79,7 @@ describe("AHHttpRequestCache", () => {
 
     // Repeat the same process with maxCacheSize set with the size of the response
     httpRequestCache.setConfig({
-      cachable: true,
+      cacheable: true,
       ttl: 120,
       maxCacheSize: sizeOfResponse,
     });
@@ -100,7 +100,7 @@ describe("AHHttpRequestCache", () => {
       }) - 1;
 
     httpRequestCache.setConfig({
-      cachable: true,
+      cacheable: true,
       ttl: 120,
       maxCacheSize: sizeOfResponse,
     });
@@ -112,7 +112,7 @@ describe("AHHttpRequestCache", () => {
 
   test("headers to include", () => {
     httpRequestCache.setConfig({
-      cachable: true,
+      cacheable: true,
       ttl: 120,
       maxCacheSize: 120000,
     });

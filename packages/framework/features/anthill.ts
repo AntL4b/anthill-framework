@@ -12,7 +12,7 @@ import { AHLogger } from "../features/logger";
 
 export class Anthill {
   private static defaultRestHandlerCacheConfig: AHRestHandlerCacheConfig = {
-    cachable: false,
+    cacheable: false,
     ttl: 120,
     maxCacheSize: 1000000,
     headersToInclude: [],

@@ -71,7 +71,7 @@ export class AHTestResource {
         middlewares: [],
         callable: (event: AHAwsEvent, context: AHAwsContext) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
         cacheConfig: {
-          cachable: false,
+          cacheable: false,
         },
       },
       ...paramOverride,

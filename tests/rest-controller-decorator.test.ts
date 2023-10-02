@@ -22,7 +22,7 @@ describe("RestController decorator", () => {
     @RestController({
       middlewares: [],
       cacheConfig: {
-        cachable: true,
+        cacheable: true,
       },
     })
     class AHTest {}
@@ -37,7 +37,7 @@ describe("RestController decorator", () => {
     expect(AHObjectHelper.isEquivalentObj(controllerInstance._restHandlerConfig, {
       middlewares: [],
       cacheConfig: {
-        cachable: true,
+        cacheable: true,
       },
     })).toEqual(true);
   });

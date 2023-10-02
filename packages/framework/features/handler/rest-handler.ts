@@ -76,7 +76,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       AHLogger.getInstance().debug(`Method: ${this.method}`);
       AHLogger.getInstance().debug(`Name: ${this.name}`);
 
-      if (cacheConfig.cachable) {
+      if (cacheConfig.cacheable) {
         tracker.startSegment("cache-configuration");
         this.httpCache.setConfig(cacheConfig);
         this.httpCache.flushCache(cacheConfig.ttl);
@@ -115,8 +115,8 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
       tracker.stopSegment(`middleware-runBefore`);
 
-      // Try to retrieve any eventual cached response if cachable option is set
-      if (response === null && cacheConfig.cachable) {
+      // Try to retrieve any eventual cached response if cacheable option is set
+      if (response === null && cacheConfig.cacheable) {
         tracker.startSegment("cache-retrieving");
 
         AHLogger.getInstance().debug("Try to get last http response from cache");
@@ -150,7 +150,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
         tracker.stopSegment("callable-run");
 
-        if (cacheConfig.cachable) {
+        if (cacheConfig.cacheable) {
           this.httpCache.addDataInCache(
             AHHttpRequestCache.buildCacheRequestParameters(_event, cacheConfig.headersToInclude),
             response,
