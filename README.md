@@ -6,12 +6,13 @@
 A lightweight, fast and reliable dependence-less TypeScript framework for building serverless applications on AWS.
 </p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AntL4b/anthill-framework/blob/main/LICENSE)
-[![Build][build-image]][build-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
-[![NPM Version][npm-version-image]][npm-url]
-[![NPM Install Size][npm-install-size-image]][npm-install-size-url]
-
+<p align="center">
+  <a href="https://github.com/AntL4b/anthill-framework/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" /></a>
+  <a href="https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml" target="_blank"><img src="https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml/badge.svg" alt="Build" /></a>
+  <a href="https://coveralls.io/github/AntL4b/anthill-framework" target="_blank"><img src="https://coveralls.io/repos/github/AntL4b/anthill-framework/badge.svg" alt="Coverage Status" /></a>
+  <a href="https://www.npmjs.com/package/@antl4b/anthill-framework" target="_blank"><img src="https://badgen.net/npm/v/@antl4b/anthill-framework" alt="NPM Version" /></a>
+  <a href="https://packagephobia.com/result?p=@antl4b/anthill-framework" target="_blank"><img src="https://badgen.net/packagephobia/install/@antl4b/anthill-framework" alt="NPM Install Size" /></a>
+</p>
 
 ## Description
 
@@ -198,13 +199,3 @@ If you're still not convinced and want to map an ANY method event to a single ha
 ## Cache
 ## Logger
 ## Time tracker
-
-
-[build-image]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml/badge.svg
-[build-url]: https://github.com/AntL4b/anthill-framework/actions/workflows/build.yml
-[coveralls-image]: https://coveralls.io/repos/github/AntL4b/anthill-framework/badge.svg
-[coveralls-url]: https://coveralls.io/github/AntL4b/anthill-framework
-[npm-version-image]: https://badgen.net/npm/v/@antl4b/anthill-framework
-[npm-url]: https://www.npmjs.com/package/@antl4b/anthill-framework
-[npm-install-size-image]: https://badgen.net/packagephobia/install/@antl4b/anthill-framework
-[npm-install-size-url]: https://packagephobia.com/result?p=@antl4b/anthill-framework
