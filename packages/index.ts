@@ -89,6 +89,7 @@ export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
 export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
 export { AHCorsMiddlewareOptions } from "./framework/models/middleware/cors-middleware-options";
 export { AHJsonBodyParserMiddlewareOptions } from "./framework/models/middleware/json-body-parser-middleware-options";
+export { RunBeforeReturnType } from "./framework/models/middleware/run-before-return-type";
 export { AHAnthillConfig } from "./framework/models/anthill/anthill-config";
 export { AHRestHandlerOverridableConfig } from "./framework/models/handler/rest-handler-overridable-config";
 export { AHLambdaHandlerOverridableConfig } from "./framework/models/handler/lambda-handler-overridable-config";

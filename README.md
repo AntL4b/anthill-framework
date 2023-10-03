@@ -228,7 +228,8 @@ They are the main entry points for the code implementation
 To create controllers and handlers, Anthill Framework uses classes and decorators.
 Two types of controllers and handlers are available: `@RestController` / `@LambdaController` going in pair with `@RestHandler` / `@LambdaHandler`
 
-> :warning: All handlers within the app MUST have different names.
+> [!WARNING]
+> All handlers within the app MUST have different names.
 > By default, the handler registration system will use the handler method name but there's a chance this name won't be unique.
 > Ex: MyController1.list() and MyController2.list() won't work.
 > If two handlers located in two controllers have the same name, you will have to declare an alternative name for at least one handler.
@@ -308,6 +309,52 @@ lambdaHandlerMethod(
 ```
 
 ## Middlewares
+
+Middlewares are classes that extend `AHMiddleware` containing methods executed before and after the handler is called (or the cache is retrieved).
+
+The `runBefore()` method executed before calling the handler has the capability of:
+- Executing any code
+- Making changes to the incoming request event
+- End the request lifecycle by returning an `AHHttpResponse`
+
+Its signature is as follow:
+
+```ts
+type RunBeforeReturnType = AHAwsEvent | AHHttpResponse;
+runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<RunBeforeReturnType> | RunBeforeReturnType;
+```
+
+It must return the event even if not altering it or an `AHHttpReponse` to end the request lifecycle.
+
+The `runAfter()` method executed after a response has been emitted (either by the handler, the cache or a middleware `runBefore()`) has the capability of:
+- Executing any code
+- Making changes to the request response
+
+Its signature is as follow:
+
+```ts
+runAfter(httpResponse: AHHttpResponse, event: AHAwsEvent, context: AHAwsContext): Promise<AHHttpResponse> | AHHttpResponse
+```
+
+It must return the httpResponse even if not altering it.
+
+Both `runBefore()` and the `runAfter()` methods can be overridden when extending `AHMiddleware`.
+
+> [!IMPORTANT]  
+> Middleware execution order is something to take into consideration.
+> Let's take the example of 3 middlewares m1, m2 and m3 having all a `runBefore()` and a `runAfter()` implementation.
+> The nominal scenario is this one:
+> m1.runBefore(ev) > m2.runBefore(ev) > m3.runBefore(ev)
+> handler(ev) => resp
+> m3.runAfter(resp) > m2.runAfter(resp) > m1.runAfter(resp).
+> `runBefore()` and `runAfter()` are called as a mirror around the handler.
+
+> [!WARNING]
+> In case a middleware `runBefore()` returns an `AHHttpResponse` all following middlewares `runBefore()` won't be called and only those
+> that already have been called will see their `runAfter()` method called.
+> In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttpReponse`
+> The scenario will be this one: m1.runBefore > m2.runBefore > m2.runAfter > m1.runAfter
+
 ### Use existing ones
 ### Create your own
 ## Cache

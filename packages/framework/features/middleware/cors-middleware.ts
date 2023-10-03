@@ -5,7 +5,6 @@
 
 import { AHAwsEvent } from "../../models/aws/event/aws-event";
 import { AHHttpResponse } from "../http-response";
-import { AHPromiseHelper } from "../../helpers/promise-helper";
 import { AHMiddleware } from "./middleware";
 import { AHAwsContext } from "../../models/aws/aws-context";
 import { AHCorsMiddlewareOptions } from "../../models/middleware/cors-middleware-options";
@@ -47,7 +46,7 @@ export class AHCorsMiddleware extends AHMiddleware<AHCorsMiddlewareOptions> {
     super({ ...DEFAULT_OPTIONS, ...options });
   }
 
-  override runAfter(httpResponse: AHHttpResponse, event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
+  override runAfter(httpResponse: AHHttpResponse, event: AHAwsEvent, context?: AHAwsContext): AHHttpResponse {
     const options = this.payload;
     const existingHeaders = { ...httpResponse.headers };
 
@@ -112,6 +111,6 @@ export class AHCorsMiddleware extends AHMiddleware<AHCorsMiddlewareOptions> {
       httpResponse.headers["Cache-Control"] = options.cacheControl;
     }
 
-    return AHPromiseHelper.promisify(httpResponse);
+    return httpResponse;
   }
 }

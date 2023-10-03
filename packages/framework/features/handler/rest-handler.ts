@@ -94,10 +94,14 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       // Add anthill and controller configuration middlewares to middleware list
       const middlewares = await this.computeMiddlewares();
 
+      // Save the last used middleware index to avoid calling runAfter on middleware that diddn't run runBefore (if a runBefore returns an HttpResponse)
+      let lastMiddlewareIndex = -1;
+
       // Run all the middlewares runBefore one by one
       for (let i = 0; i < middlewares.length; i++) {
         AHLogger.getInstance().debug(`Running runBefore for middleware ${i + 1} of ${middlewares.length}`);
 
+        lastMiddlewareIndex = i;
         const middlewareResult = await middlewares[i].runBefore(_event, context);
 
         // The middleware returned an AHAwsEvent
@@ -160,8 +164,8 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
       tracker.startSegment(`middleware-runAfter`);
 
-      // Run all the middlewares runAfter one by one
-      for (let i = middlewares.length - 1; i >= 0 ; i--) {
+      // Run the middlewares runAfter one by one (avoid calling runAfter if runBefore wasn't called in case a runBefore returned an HttpResponse)
+      for (let i = lastMiddlewareIndex; i >= 0; i--) {
         AHLogger.getInstance().debug(`Running runAfter for middleware ${i + 1} of ${middlewares.length}`);
         response = await middlewares[i].runAfter(response, _event, context);
       }
