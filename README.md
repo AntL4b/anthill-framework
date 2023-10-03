@@ -26,9 +26,9 @@ There are a lot of existing frameworks to build amazing web backends.
 So, why should you use Anthill ?
 
 - It has ZERO dependency
-- This is a tailor-made framework for AWS using API Gateway and Lambda
-- It's crazy fast compared to other framework even when facing cold starts
-- It's 100% TypeScript and everything is strongly typed
+- It's tailor-made for AWS using API Gateway and Lambda
+- It's light and fast even when facing cold starts
+- It's 100% TypeScript and strongly typed
 
 ## Quick start
 
@@ -86,9 +86,37 @@ $ npm install @antl4b/anthill-framework --save
 
 ![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/request-lifecycle.drawio.png?raw=true)
 
+## Anthill
+
+Anthill class is the main entry point of an Anthill project.
+To define an Anthill app, you'll have to declare your app in the root file of your project such as:
+
+```ts
+const app = anthill();
+```
+
+Anthill app can then be configured using `configure()` method to register controllers and to set up common configuration within your project.
+
+```ts
+app.configure({
+  controllers: [MyController],
+  options: {
+    defaultLogLevel: AHLogLevelEnum.Info,
+    displayPerformanceMetrics: true,
+  }
+});
+```
+
+Finally, all registered controllers can have their handlers exposed inside an object using `exposeHandlers()` method to export and link them with the serverless configuration file.
+
+```ts
+const handlers = app.exposeHandlers();
+exports.myHandler = handlers.myHandler;
+```
+
 ## Configuration
 
-Anthill framework uses a configuration inheritance system allowing to apply some common logic within your app, controller or handler scope.
+Anthill Framework uses a configuration inheritance system allowing to apply some common logic within your app, controller or handler scope.
 
 Ex: For dealing with cors for all the REST handlers of the application, set it on Anthill app scope:
 
@@ -143,13 +171,13 @@ Here is an example of how 3 layers of configuration can work.
 
 > [!NOTE]  
 > Middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
-> From Anthill to Handler during runBefore and in reversed order during runAfter.
+> Through Anthill, Controller and Handler during runBefore and in reversed order during runAfter.
 > See more in [Middlewares](#middlewares) section.
 
 ## Routing
 
 Anthill Framework doesn't provide a proper way of routing requests to a given handler according to some path related rules.
-Traditional frameworks used to do it this way but, being in a serverless context, routing of requests to handlers benefits from being carried out by API Gateway.
+Traditional frameworks used to do it this way but, being in a serverless context, routing of requests to handlers benefits more from being carried out by API Gateway.
 
 Here is an example of how requests can be routed to handlers using Serverless YML configuration file:
 
@@ -190,12 +218,98 @@ Plus, it doesn't cost anything extra.
 If you're still not convinced and want to map an ANY method event to a single handler, then feel free to [create your own middleware](#create-your-own) to manage routing rules the way you prefer !
 
 ## Controllers & Handlers
+
+Controllers permit grouping handlers according to whatever they have in common and define a scope in which some common configuration is applied.
+When added to the Anthill app controller list with `configure()` (see [Anthill](#anthill)), all the handlers attached to it become exposeable by `exposeHandlers()` method.
+
+Handlers are methods that can be either an instance method or a static method.
+They are the main entry points for the code implementation
+
+To create controllers and handlers, Anthill Framework uses classes and decorators.
+Two types of controllers and handlers are available: `@RestController` / `@LambdaController` going in pair with `@RestHandler` / `@LambdaHandler`
+
+> :warning: All handlers within the app MUST have different names.
+> By default, the handler registration system will use the handler method name but there's a chance this name won't be unique.
+> Ex: MyController1.list() and MyController2.list() won't work.
+> If two handlers located in two controllers have the same name, you will have to declare an alternative name for at least one handler.
+> The `name` property of the configuration object of `@RestHandler` / `@LambdaHandler` decorators if here for that
+
 ### REST
-### Lambdas
+
+To create a REST controller containing a handler, decorate the controller class with `@RestController` and decorate the handler with `@RestHandler`
+
+```ts
+@RestController()
+class MyController {
+  @RestHandler({ method: AHRestMethodEnum.Get })
+  myHandler(event: AHAwsEvent): AHHttpResponse {
+    return AHHttpResponse.success({
+      status: AHHttpResponseBodyStatusEnum.Success
+    });
+  }
+}
+```
+
+`@RestController` decorator takes an optional argument to apply common configuration to all handlers inside it. See [configuration](#configuration) for more details on how it works.
+
+REST handlers have to respect this signature:
+
+```ts
+restHandlerMethod(
+  event: AHAwsEvent,
+  context?: AHAwsContext,
+  callback?: AHAwsCallback,
+): Promise<AHHttpResponse> | AHHttpResponse;
+```
+
+As for the `@RestController` decorator, `@RestHandler` decorator takes an argument to apply configuration to the handler scope.
+
+```ts
+@RestController()
+class MyController {
+  @RestHandler({
+    method: AHRestMethodEnum.Get,
+    name: "myHandlerAlternativeName",
+    middlewares: [new AHJsonBodyParserMiddleware()]
+  })
+  myHandler(event: AHAwsEvent): AHHttpResponse {
+    return AHHttpResponse.success({
+      status: AHHttpResponseBodyStatusEnum.Success
+    });
+  }
+}
+```
+
+### Lambda
+
+To create a Lambda controller containing a handler, decorate the controller class with `@LambdaController` and decorate the handler with `@LambdaHandler`
+
+```ts
+@LambdaController()
+class MyController {
+  @LambdaHandler()
+  myHandler(event: AHAwsEvent): any {
+    return null;
+  }
+}
+```
+
+Lambda controllers and handlers follow the same rules as the REST ones.
+However, the way in which requests are processed is much simpler since there is way less possible configuration and no middleware execution system
+
+Lambda handlers have to respect this signature:
+
+```ts
+lambdaHandlerMethod(
+  event: AHAwsEvent,
+  context?: AHAwsContext,
+  callback?: AHAwsCallback,
+): Promise<any> | any;
+```
+
 ## Middlewares
 ### Use existing ones
 ### Create your own
-### Example: cognito authentication
 ## Cache
 ## Logger
 ## Time tracker

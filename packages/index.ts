@@ -76,6 +76,8 @@ export { AHAwsContext } from "./framework/models/aws/aws-context";
 export { AHAwsEvent } from "./framework/models/aws/event/aws-event";
 export { AHAwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
 export { AHAwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";
+export { AHLambdaHandlerDecoratorConfig } from "./framework/models/decorators/lambda-handler-decorator-config";
+export { AHRestHandlerDecoratorConfig } from "./framework/models/decorators/rest-handler-decorator-config";
 export { AHRestHandlerCacheConfig } from "./framework/models/rest-handler-cache-config";
 export { AHEnvEnum } from "./framework/models/enums/env-enum";
 export { AHHttpResponseBodyStatusEnum } from "./framework/models/enums/http-response-body-status-enum";

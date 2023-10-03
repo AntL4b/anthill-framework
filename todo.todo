@@ -1,3 +1,4 @@
+- Technical documentation based on code comments
 - helper for extracting info from AHAwsEvent (decorator / validator / DTO in ?)
   - query param
   - path param

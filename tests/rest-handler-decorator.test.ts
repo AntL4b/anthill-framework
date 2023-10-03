@@ -52,7 +52,7 @@ describe("RestHandler decorator", () => {
     expect(() => {
       @RestController()
       class AHTest2 {
-        @RestHandler({})
+        @RestHandler({} as any)
         async listTest(event: AHAwsEvent, context: string): Promise<AHHttpResponse> {
           return AHPromiseHelper.promisify(AHHttpResponse.success(null));
         }

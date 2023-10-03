@@ -1,5 +1,6 @@
 import { Anthill } from "../features/anthill";
 import { AHLambdaHandler } from "../features/handler/lambda-handler";
+import { AHLambdaHandlerDecoratorConfig } from "../models/decorators/lambda-handler-decorator-config";
 import { AHLambdaHandlerConfig } from "../models/handler/lambda-handler-config";
 
 /**
@@ -8,7 +9,7 @@ import { AHLambdaHandlerConfig } from "../models/handler/lambda-handler-config";
  * @returns The lambda handler decorator
  */
 export function LambdaHandler<T, A extends [any, ...undefined[]], R extends Promise<any> | any>(
-  lambdaHandlerOptions: Partial<AHLambdaHandlerConfig<any, any>> = {},
+  lambdaHandlerOptions: AHLambdaHandlerDecoratorConfig = {},
 ) {
   return (target: (this: T, ...args: A) => R, context: ClassMethodDecoratorContext<T, (this: T, ...args: A) => R>) => {
     if (!lambdaHandlerOptions.name) {

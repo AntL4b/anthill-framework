@@ -4,6 +4,7 @@ import { AHException } from "../features/anthill-exception";
 import { AHRestHandlerConfig } from "../models/handler/rest-handler-config";
 import { AHAwsEvent } from "../models/aws/event/aws-event";
 import { AHHttpResponse } from "../features/http-response";
+import { AHRestHandlerDecoratorConfig } from "../models/decorators/rest-handler-decorator-config";
 
 /**
  * REST handler decorator used to decorate handler method inside controller classes
@@ -11,7 +12,7 @@ import { AHHttpResponse } from "../features/http-response";
  * @returns The REST handler decorator
  */
 export function RestHandler<T, A extends [AHAwsEvent, ...undefined[]], R extends Promise<AHHttpResponse> | AHHttpResponse>(
-  restHandlerOptions: Partial<AHRestHandlerConfig>,
+  restHandlerOptions: AHRestHandlerDecoratorConfig,
 ) {
   if (!restHandlerOptions.method) {
     throw new AHException("@RestHandler Missing rest handler method");
