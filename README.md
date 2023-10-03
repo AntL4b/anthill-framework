@@ -219,21 +219,20 @@ If you're still not convinced and want to map an ANY method event to a single ha
 
 ## Controllers & Handlers
 
-Controllers permit grouping handlers according to whatever they have in common and define a scope in which some common configuration is applied.
-When added to the Anthill app controller list with `configure()` (see [Anthill](#anthill)), all the handlers attached to it become exposeable by `exposeHandlers()` method.
+Controllers are groups of handlers. They define a scope in which some common configuration is applied.
+Registering a controller to Anthill with `configure()` (see [Anthill](#anthill)), makes its handlers exposeable by the Anthill `exposeHandlers()` method.
 
-Handlers are methods that can be either an instance method or a static method.
-They are the main entry points for the code implementation
+Handlers are methods that can be either instance methods or a static methods. They are the main entry points for the code implementation
 
 To create controllers and handlers, Anthill Framework uses classes and decorators.
-Two types of controllers and handlers are available: `@RestController` / `@LambdaController` going in pair with `@RestHandler` / `@LambdaHandler`
+Two types of controllers and handlers are available: `@RestController` and `@LambdaController` going in pair with `@RestHandler` and `@LambdaHandler`
 
 > [!WARNING]
 > All handlers within the app MUST have different names.
-> By default, the handler registration system will use the handler method name but there's a chance this name won't be unique.
+> By default, the handler registration system will use the handler method name but there's a possibility this name won't be unique.
 > Ex: MyController1.list() and MyController2.list() won't work.
 > If two handlers located in two controllers have the same name, you will have to declare an alternative name for at least one handler.
-> The `name` property of the configuration object of `@RestHandler` / `@LambdaHandler` decorators if here for that
+> The `name` property of the configuration object of `@RestHandler` and `@LambdaHandler` decorators is made for that purpose.
 
 ### REST
 
@@ -342,18 +341,25 @@ Both `runBefore()` and the `runAfter()` methods can be overridden when extending
 
 > [!IMPORTANT]  
 > Middleware execution order is something to take into consideration.
-> Let's take the example of 3 middlewares m1, m2 and m3 having all a `runBefore()` and a `runAfter()` implementation.
-> The nominal scenario is this one:
-> m1.runBefore(ev) > m2.runBefore(ev) > m3.runBefore(ev)
-> handler(ev) => resp
-> m3.runAfter(resp) > m2.runAfter(resp) > m1.runAfter(resp).
-> `runBefore()` and `runAfter()` are called as a mirror around the handler.
+
+Let's take the example of 3 middlewares m1, m2 and m3 having all a `runBefore()` and a `runAfter()` implementation.
+The nominal scenario is this one:
+
+- m1.runBefore(ev) > m2.runBefore(ev) > m3.runBefore(ev)
+- handler(ev) => resp
+- m3.runAfter(resp) > m2.runAfter(resp) > m1.runAfter(resp).
+
+`runBefore()` and `runAfter()` are called as a mirror around the handler.
 
 > [!WARNING]
 > In case a middleware `runBefore()` returns an `AHHttpResponse` all following middlewares `runBefore()` won't be called and only those
 > that already have been called will see their `runAfter()` method called.
-> In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttpReponse`
-> The scenario will be this one: m1.runBefore > m2.runBefore > m2.runAfter > m1.runAfter
+
+In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttpReponse`
+
+The scenario will be this one: 
+- m1.runBefore(ev) > m2.runBefore(ev) => resp
+- m2.runAfter(resp) > m1.runAfter(resp)
 
 ### Use existing ones
 ### Create your own
