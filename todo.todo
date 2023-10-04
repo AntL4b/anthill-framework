@@ -12,7 +12,7 @@
 - OpenApi swagger generation
 - Websocket ?
 - Add some middlewares (a good source of candidate can be found here: https://github.com/middyjs/middy/tree/main/packages)
-- New sample
+- New samples
   - authentication
   - dynamodb
   - cors

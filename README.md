@@ -14,6 +14,27 @@ A lightweight, fast and reliable dependence-less TypeScript framework for buildi
   <a href="https://packagephobia.com/result?p=@antl4b/anthill-framework" target="_blank"><img src="https://badgen.net/packagephobia/install/@antl4b/anthill-framework" alt="NPM Install Size" /></a>
 </p>
 
+## Table of contents
+
+- [Description](#description)
+- [Why Anthill Framework ?](#why-anthill-framework-)
+- [Quick start](#quick-start)
+- [Installation](#installation)
+- [Request lifecycle](#request-lifecycle)
+- [Anthill](#anthill)
+- [Configuration](#configuration)
+- [Routing](#routing)
+- [Controllers & Handlers](#controllers--handlers)
+  - [REST](#rest)
+  - [Lambda](#lambda)
+- [Middlewares](#middlewares)
+  - [Use existing ones](#use-existing-ones)
+  - [Create your own](#create-your-own)
+- [Samples](#samples)
+- [Cache](#cache)
+- [Logger](#logger)
+- [Time tracker](#time-tracker)
+
 ## Description
 
 The project aims to provide an environment and tools for developing REST API using AWS Lambda and API Gateway. Anthill Framework comes with an HTTP request handling system capable of caching, running middlewares, dealing with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration).
@@ -29,6 +50,8 @@ So, why should you use Anthill ?
 - It's tailor-made for AWS using API Gateway and Lambda
 - It's light and fast even when facing cold starts
 - It's 100% TypeScript and strongly typed
+
+
 
 ## Quick start
 
@@ -351,8 +374,8 @@ The nominal scenario is this one:
 `runBefore()` and `runAfter()` are called as a mirror around the handler.
 
 > [!WARNING]
-> In case a middleware `runBefore()` returns an `AHHttpResponse` all following middlewares `runBefore()` won't be called and only those
-> that already have been called will see their `runAfter()` method called.
+> In case a middleware `runBefore()` returns an `AHHttpResponse`, all following middlewares `runBefore()` won't be called and only those
+> that have already been called will see their `runAfter()` method called.
 
 In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttpReponse`
 
@@ -361,7 +384,83 @@ The scenario will be this one:
 ![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-2.drawio.png?raw=true)
 
 ### Use existing ones
+
+Some middlewares have already been developed and are included in Anthill Framework to cover most frequent needs such as dealing with CORS or parsing JSON body.
+Browse [middleware](https://github.com/AntL4b/anthill-framework/tree/main/packages/framework/features/middleware/impl) folder for more details.
+
+The middleware list is likely to grow over time. Don't hesitate to request or to create a pull request if you want to contribute.
+
 ### Create your own
+
+As told at the beginning of the [middlewares](#middlewares) section, middlewares are classes that extend `AHMiddleware` class.
+
+Let's imagine a ticketing service that opens on October 10, 2023 at 8 p.m. the and which rejects all incoming requests before this time.
+
+```ts
+import {
+  AHAwsContext,
+  AHAwsEvent,
+  AHHttpResponse,
+  AHHttpResponseBodyStatusEnum,
+  AHMiddleware,
+  RunBeforeReturnType
+} from "@antl4b/anthill-framework";
+
+export class BlockBeforeDateMiddleware extends AHMiddleware<Date> {
+
+  // Declare payload as a date, it will store the time before which we block the request
+  constructor(payload: Date) {
+    super(payload);
+  }
+
+  override runBefore(event: AHAwsEvent, context?: AHAwsContext): RunBeforeReturnType {
+    // If current date is less than the middleware payload (the time before which we block the request)
+    if ((new Date()) < this.payload) {
+
+      // Return an HttpResponse with an error
+      return AHHttpResponse.error({
+        status: AHHttpResponseBodyStatusEnum.Error,
+        message: "Not opened yet, retry later"
+      });
+    }
+
+    // Otherwise, forward the event
+    return event;
+  }
+}
+```
+
+Now to use it in a handler, instantiate the middleware inside the `@RestHandler` decorator:
+
+```ts
+@RestController()
+export class TicketingController {
+
+  @RestHandler({
+    method: AHRestMethodEnum.Post,
+    middlewares: [
+      new BlockBeforeTimeMiddleware(
+        new Date("2023-10-10 20:00:00") // Init the middleware with the time before which we block incoming requests
+      ),
+    ],
+  })
+  buyTicket(event: AHAwsEvent): AHHttpResponse {
+
+    // Do stuff to buy a ticket
+
+    return AHHttpResponse.success({
+      status: AHHttpResponseBodyStatusEnum.Success,
+      payload: { /* the ticket */ },
+    });
+  }
+}
+```
+
+## Samples
+
+Sample projects have been developed to serve as a source of working examples.
+Browse [samples](https://github.com/AntL4b/anthill-framework/tree/main/samples) folder for more details.
+
 ## Cache
 ## Logger
 ## Time tracker

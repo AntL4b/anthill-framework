@@ -1,9 +1,9 @@
-import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHHttpResponse } from "../http-response";
-import { AHHttpRequestHelper } from "../../helpers/http-request-helper";
-import { AHMiddleware } from "./middleware";
-import { AHAwsContext } from "../../models/aws/aws-context";
-import { RunBeforeReturnType } from "../../models/middleware/run-before-return-type";
+import { AHAwsEvent } from "../../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../../http-response";
+import { AHHttpRequestHelper } from "../../../helpers/http-request-helper";
+import { AHMiddleware } from "../middleware";
+import { AHAwsContext } from "../../../models/aws/aws-context";
+import { RunBeforeReturnType } from "../../../models/middleware/run-before-return-type";
 
 export class AHHeaderFieldMiddleware extends AHMiddleware<Array<string>> {
   constructor(payload: Array<string>) {

@@ -46,10 +46,10 @@ export { AHTimeSegment } from "./framework/features/time-segment";
  * MIDDLEWARES
  */
 export { AHMiddleware } from "./framework/features/middleware/middleware";
-export { AHCorsMiddleware } from "./framework/features/middleware/cors-middleware";
-export { AHJsonBodyParserMiddleware } from "./framework/features/middleware/json-body-parser-middleware";
-export { AHHeaderFieldMiddleware } from "./framework/features/middleware/header-field-middleware";
-export { AHQuerystringFieldMiddleware } from "./framework/features/middleware/querystring-field-middleware";
+export { AHCorsMiddleware } from "./framework/features/middleware/impl/cors-middleware";
+export { AHJsonBodyParserMiddleware } from "./framework/features/middleware/impl/json-body-parser-middleware";
+export { AHHeaderFieldMiddleware } from "./framework/features/middleware/impl/header-field-middleware";
+export { AHQuerystringFieldMiddleware } from "./framework/features/middleware/impl/querystring-field-middleware";
 
 /**
  * DECORATORS

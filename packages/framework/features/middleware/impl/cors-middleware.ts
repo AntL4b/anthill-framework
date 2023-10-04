@@ -3,12 +3,12 @@
  * https://github.com/middyjs/middy/blob/main/packages/http-cors/index.js
  */
 
-import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHHttpResponse } from "../http-response";
-import { AHMiddleware } from "./middleware";
-import { AHAwsContext } from "../../models/aws/aws-context";
-import { AHCorsMiddlewareOptions } from "../../models/middleware/cors-middleware-options";
-import { AHHttpRequestHelper } from "../../helpers/http-request-helper";
+import { AHAwsEvent } from "../../../models/aws/event/aws-event";
+import { AHHttpResponse } from "../../http-response";
+import { AHMiddleware } from "../middleware";
+import { AHAwsContext } from "../../../models/aws/aws-context";
+import { AHCorsMiddlewareOptions } from "../../../models/middleware/cors-middleware-options";
+import { AHHttpRequestHelper } from "../../../helpers/http-request-helper";
 
 const getOrigin = (incomingOrigin, options: AHCorsMiddlewareOptions) => {
   if (options.origins.length > 0) {
