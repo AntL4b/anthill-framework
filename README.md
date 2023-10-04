@@ -346,9 +346,7 @@ Both `runBefore()` and the `runAfter()` methods can be overridden when extending
 Let's take the example of 3 middlewares m1, m2 and m3 having all a `runBefore()` and a `runAfter()` implementation.
 The nominal scenario is this one:
 
-- m1.runBefore(ev) > m2.runBefore(ev) > m3.runBefore(ev)
-- handler(ev) => resp
-- m3.runAfter(resp) > m2.runAfter(resp) > m1.runAfter(resp)
+![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-1.drawio.png?raw=true)
 
 `runBefore()` and `runAfter()` are called as a mirror around the handler.
 
