@@ -14,27 +14,6 @@ A lightweight, fast and reliable dependence-less TypeScript framework for buildi
   <a href="https://packagephobia.com/result?p=@antl4b/anthill-framework" target="_blank"><img src="https://badgen.net/packagephobia/install/@antl4b/anthill-framework" alt="NPM Install Size" /></a>
 </p>
 
-## Table of contents
-
-- [Description](#description)
-- [Why Anthill Framework ?](#why-anthill-framework-)
-- [Quick start](#quick-start)
-- [Installation](#installation)
-- [Request lifecycle](#request-lifecycle)
-- [Anthill](#anthill)
-- [Configuration](#configuration)
-- [Routing](#routing)
-- [Controllers & Handlers](#controllers--handlers)
-  - [REST](#rest)
-  - [Lambda](#lambda)
-- [Middlewares](#middlewares)
-  - [Use existing ones](#use-existing-ones)
-  - [Create your own](#create-your-own)
-- [Samples](#samples)
-- [Cache](#cache)
-- [Logger](#logger)
-- [Time tracker](#time-tracker)
-
 ## Description
 
 The project aims to provide an environment and tools for developing REST API using AWS Lambda and API Gateway. Anthill Framework comes with an HTTP request handling system capable of caching, running middlewares, dealing with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration).
@@ -51,7 +30,24 @@ So, why should you use Anthill ?
 - It's light and fast even when facing cold starts
 - It's 100% TypeScript and strongly typed
 
+## Table of contents
 
+- [Quick start](#quick-start)
+- [Installation](#installation)
+- [Request lifecycle](#request-lifecycle)
+- [Anthill](#anthill)
+- [Configuration](#configuration)
+- [Routing](#routing)
+- [Controllers & Handlers](#controllers--handlers)
+  - [REST](#rest)
+  - [Lambda](#lambda)
+- [Middlewares](#middlewares)
+  - [Use existing ones](#use-existing-ones)
+  - [Create your own](#create-your-own)
+- [Samples](#samples)
+- [Cache](#cache)
+- [Logger](#logger)
+- [Time tracker](#time-tracker)
 
 ## Quick start
 
