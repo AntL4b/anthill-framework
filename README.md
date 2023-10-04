@@ -357,8 +357,8 @@ The nominal scenario is this one:
 In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttpReponse`
 
 The scenario will be this one: 
-- m1.runBefore(ev) > m2.runBefore(ev) => resp
-- m2.runAfter(resp) > m1.runAfter(resp)
+
+![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-1.drawio.png?raw=true)
 
 ### Use existing ones
 ### Create your own
