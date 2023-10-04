@@ -358,7 +358,7 @@ In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttp
 
 The scenario will be this one: 
 
-![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-1.drawio.png?raw=true)
+![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-2.drawio.png?raw=true)
 
 ### Use existing ones
 ### Create your own
