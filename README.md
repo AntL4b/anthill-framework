@@ -116,7 +116,7 @@ exports.myHandler = handlers.myHandler;
 
 ## Configuration
 
-Anthill Framework uses a configuration inheritance system allowing to apply some common logic within your app, controller or handler scope.
+Anthill Framework uses a configuration inheritance system allowing to apply common logics within your app, controller or handler scope.
 
 Ex: For dealing with cors for all the REST handlers of the application, set it on Anthill app scope:
 
@@ -130,7 +130,7 @@ app.configure({
 });
 ```
 
-Ex: The following code will enable caching and require that an "Authorization" header is provided for each of the controller handlers.
+Ex: The following code will enable caching and require that an `Authorization` header is provided for each of the controller handlers.
 The second handler configuration will override the caching configuration to apply a shorter TTL.
 
 ```ts
@@ -166,8 +166,6 @@ class MyController {
   }
 }
 ```
-
-Here is an example of how 3 layers of configuration can work.
 
 > [!NOTE]  
 > Middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
@@ -219,10 +217,12 @@ If you're still not convinced and want to map an ANY method event to a single ha
 
 ## Controllers & Handlers
 
-Controllers are groups of handlers. They define a scope in which some common configuration is applied.
+Controllers are groups of handlers defining a scope in which some common configuration is applied.
 Registering a controller to Anthill with `configure()` (see [Anthill](#anthill)), makes its handlers exposeable by the Anthill `exposeHandlers()` method.
 
-Handlers are methods that can be either instance methods or a static methods. They are the main entry points for the code implementation
+Handlers are methods that can be either instance or static methods. They are the main entry points for the code implementation
+
+![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/controllers-handlers.drawio.png?raw=true)
 
 To create controllers and handlers, Anthill Framework uses classes and decorators.
 Two types of controllers and handlers are available: `@RestController` and `@LambdaController` going in pair with `@RestHandler` and `@LambdaHandler`
@@ -231,8 +231,9 @@ Two types of controllers and handlers are available: `@RestController` and `@Lam
 > All handlers within the app MUST have different names.
 > By default, the handler registration system will use the handler method name but there's a possibility this name won't be unique.
 > Ex: MyController1.list() and MyController2.list() won't work.
-> If two handlers located in two controllers have the same name, you will have to declare an alternative name for at least one handler.
-> The `name` property of the configuration object of `@RestHandler` and `@LambdaHandler` decorators is made for that purpose.
+
+If two handlers located in two controllers have the same name, you will have to declare an alternative name for at least one handler.
+The `name` property of the configuration object of `@RestHandler` and `@LambdaHandler` decorators is made for that purpose.
 
 ### REST
 
@@ -347,7 +348,7 @@ The nominal scenario is this one:
 
 - m1.runBefore(ev) > m2.runBefore(ev) > m3.runBefore(ev)
 - handler(ev) => resp
-- m3.runAfter(resp) > m2.runAfter(resp) > m1.runAfter(resp).
+- m3.runAfter(resp) > m2.runAfter(resp) > m1.runAfter(resp)
 
 `runBefore()` and `runAfter()` are called as a mirror around the handler.
 
