@@ -44,8 +44,8 @@ So, why should you use Anthill ?
 - [Middlewares](#middlewares)
   - [Use existing ones](#use-existing-ones)
   - [Create your own](#create-your-own)
-- [Samples](#samples)
 - [Cache](#cache)
+- [Samples](#samples)
 - [Logger](#logger)
 - [Time tracker](#time-tracker)
 
@@ -452,11 +452,53 @@ export class TicketingController {
 }
 ```
 
+## Cache
+
+Cache can be activated for HTTP requests.
+It avoids calling the handler if a similar request has already been returned within a given time (TTL).
+
+Caching greatly improves the latency of requests to your API in addition to reducing (if not almost eliminating) the costs linked to the execution time of your Lambdas.
+
+> [!NOTE]  
+> Caching is natively supported by API Gateway and you may prefer using it directly.
+> However activating it via the Anthill cache feature ensures that your middleware will be executed.
+> In case there are some side effect to apply to the incoming requests than can't be handled by API Gateway, Anthill cache is a good alternative.
+
+When caching is enabled, Anthill Framework caches responses from your handler for the specified time-to-live (TTL) period, in seconds.
+Anthill Framework then responds to the request by looking for the handler's response in the cache instead of sending a request to your handler.
+Check [request lifecycle](#request-lifecycle) diagram.
+
+Cache items are identified with:
+- The request path
+- The request path parameters
+- The request query string parameters
+- [Optionally if set] Some of the request headers
+
+Cache option for HTTP requests is an object looking like this:
+
+```ts
+const cacheConfig: AHRestHandlerCacheConfig = {
+  cacheable: true,
+  ttl: 120, // 2 minutes cache
+  maxCacheSize: 1000000, // 1MB cache
+  headersToInclude: ["Origin"], // Add Origin header to cache item identifier
+}
+```
+
+This Cache configuration object will allow caching with a time-to-live of two minutes.
+The overall cache size won't be able to exceed 1MB.
+Cache items will be identified by the `Origin` header. This means that two similar requests from two different origins will result in two distinct cache items.
+
+> [!IMPORTANT]  
+> If maxCacheSize is reached, the cache will remove oldest items to free up space even if their TTL is still valid.
+
 ## Samples
 
 Sample projects have been developed to serve as a source of working examples.
 Browse [samples](https://github.com/AntL4b/anthill-framework/tree/main/samples) folder for more details.
 
-## Cache
 ## Logger
+
+
+
 ## Time tracker

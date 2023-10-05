@@ -51,6 +51,10 @@ export abstract class AHCache<T, U> {
     this.data.push(dataToAdd);
   }
 
+  /**
+   * Flush (remove) cache data that are older than the given ttl
+   * @param ttl The Time To Live of a cache item in seconds
+   */
   flushCache(ttl: number): void {
     this.data = this.data.filter((d) => {
       if (d.date.getTime() / 1000 > Date.now() / 1000 - ttl) {
