@@ -38,7 +38,7 @@ export class AHTimeSegment {
 
     if (verbose) {
       logInfo(
-        `Time segment ${this.name} ends. Start: ${this.startTime} | End: ${this.endTime} | Duration: ${
+        `Time segment ${this.name ? this.name + ' ' : ''}ends. Start: ${this.startTime} | End: ${this.endTime} | Duration: ${
           this.endTime - this.startTime
         }`,
       );

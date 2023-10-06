@@ -30,7 +30,12 @@ describe("AHTimeSegment", () => {
     const timeSegment2 = new AHTimeSegment();
     timeSegment2.start();
     timeSegment2.stop(true); // verbose mode
-    expect(handler).toHaveBeenCalledTimes(1);
+
+    const timeSegment3 = new AHTimeSegment("segment-name");
+    timeSegment3.start();
+    timeSegment3.stop(true); // verbose mode
+
+    expect(handler).toHaveBeenCalledTimes(2);
   });
 
   test("getDuration", () => {

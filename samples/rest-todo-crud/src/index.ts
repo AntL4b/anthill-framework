@@ -5,6 +5,9 @@ const app = anthill();
 
 app.configure({
   controllers: [TodoController],
+  options: {
+    displayPerformanceMetrics: true
+  }
 });
 
 const handlers = app.exposeHandlers();

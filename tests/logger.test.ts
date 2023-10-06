@@ -1,4 +1,4 @@
-import { AHLogger, logDebug, logError, logInfo, logWarn, AHEnvEnum, AHLogLevelEnum } from "../packages";
+import { AHLogger, logDebug, logError, logInfo, logWarn, AHEnvEnum, AHLogLevelEnum, logTrace } from "../packages";
 
 describe("AHLogger", () => {
   beforeEach(() => {
@@ -23,7 +23,9 @@ describe("AHLogger", () => {
 
   test("Log all level", () => {
     const logger = AHLogger.getInstance();
+    logger.setLogLevel(AHLogLevelEnum.Trace);
 
+    expect(logger.trace("trace test")).toBeUndefined();
     expect(logger.debug("debug test")).toBeUndefined();
     expect(logger.info("info test")).toBeUndefined();
     expect(logger.warn("warn test")).toBeUndefined();
@@ -31,6 +33,7 @@ describe("AHLogger", () => {
   });
 
   test("Log all level alias method", () => {
+    expect(logTrace("trace test")).toBeUndefined();
     expect(logDebug("debug test")).toBeUndefined();
     expect(logInfo("info test")).toBeUndefined();
     expect(logWarn("warn test")).toBeUndefined();
@@ -64,12 +67,28 @@ describe("AHLogger", () => {
     expect(handler).toHaveBeenCalledTimes(2);
   });
 
+  test("removeAllHandlers", () => {
+    const logger = AHLogger.getInstance();
+    const handler = jest.fn(() => {});
+    logger.addHandler(handler);
+
+    logger.removeAllHandlers();
+
+    expect(handler).toHaveBeenCalledTimes(0);
+    logger.info("info test");
+    expect(handler).toHaveBeenCalledTimes(0);
+
+    logger.info("info test", { obj: true });
+    expect(handler).toHaveBeenCalledTimes(0);
+  });
+
   test("setLogLevel", () => {
     const logger = AHLogger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
     logger.setLogLevel(AHLogLevelEnum.Error);
 
+    logger.trace("trace test");
     logger.debug("debug test");
     logger.info("info test");
     logger.warn("warn test");

@@ -17,6 +17,7 @@ export { AHHttpResponse } from "./framework/features/http-response";
  * LOGGER
  */
 export { AHLogger } from "./framework/features/logger";
+export { logTrace } from "./framework/features/logger";
 export { logDebug } from "./framework/features/logger";
 export { logInfo } from "./framework/features/logger";
 export { logWarn } from "./framework/features/logger";

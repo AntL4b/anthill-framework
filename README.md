@@ -47,6 +47,8 @@ So, why should you use Anthill ?
 - [Cache](#cache)
 - [Samples](#samples)
 - [Logger](#logger)
+  - [Changing logs format](#changing-logs-format)
+  - [Adding logs handler](#adding-logs-handler)
 - [Time tracker](#time-tracker)
 
 ## Quick start
@@ -96,7 +98,9 @@ $ curl --request GET 'http://localhost:3000/dev/my-handler'
 ```
 
 ## Installation
+
 This is a [Node.js](https://nodejs.org/en/) module available through the npm registry. Installation is done using the npm install command:
+
 ```bash
 $ npm install @antl4b/anthill-framework --save
 ```
@@ -122,7 +126,7 @@ app.configure({
   options: {
     defaultLogLevel: AHLogLevelEnum.Info,
     displayPerformanceMetrics: true,
-  }
+  },
 });
 ```
 
@@ -144,8 +148,8 @@ const app = anthill();
 app.configure({
   controllers: [MyController],
   restHandlerConfig: {
-    middlewares: [new AHCorsMiddleware()]
-  }
+    middlewares: [new AHCorsMiddleware()],
+  },
 });
 ```
 
@@ -157,7 +161,7 @@ The second handler configuration will override the caching configuration to appl
   cacheConfig: {
     cacheable: true,
     ttl: 120,
-    },
+  },
   middlewares: [new AHHeaderFieldMiddleware(["Authorization"])],
 })
 class MyController {
@@ -167,7 +171,7 @@ class MyController {
   @RestHandler({ method: AHRestMethodEnum.Get })
   myHandler1(event: AHAwsEvent): AHHttpResponse {
     return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success
+      status: AHHttpResponseBodyStatusEnum.Success,
     });
   }
 
@@ -186,7 +190,7 @@ class MyController {
 }
 ```
 
-> [!NOTE]  
+> [!NOTE]
 > Middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
 > Through Anthill, Controller and Handler during runBefore and in reversed order during runAfter.
 > See more in [Middlewares](#middlewares) section.
@@ -264,7 +268,7 @@ class MyController {
   @RestHandler({ method: AHRestMethodEnum.Get })
   myHandler(event: AHAwsEvent): AHHttpResponse {
     return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success
+      status: AHHttpResponseBodyStatusEnum.Success,
     });
   }
 }
@@ -290,11 +294,11 @@ class MyController {
   @RestHandler({
     method: AHRestMethodEnum.Get,
     name: "myHandlerAlternativeName",
-    middlewares: [new AHJsonBodyParserMiddleware()]
+    middlewares: [new AHJsonBodyParserMiddleware()],
   })
   myHandler(event: AHAwsEvent): AHHttpResponse {
     return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success
+      status: AHHttpResponseBodyStatusEnum.Success,
     });
   }
 }
@@ -332,6 +336,7 @@ lambdaHandlerMethod(
 Middlewares are classes that extend `AHMiddleware` containing methods executed before and after the handler is called (or the cache is retrieved).
 
 The `runBefore()` method executed before calling the handler has the capability of:
+
 - Executing any code
 - Making changes to the incoming request event
 - End the request lifecycle by returning an `AHHttpResponse`
@@ -346,6 +351,7 @@ runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<RunBeforeReturnType
 It must return the event even if not altering it or an `AHHttpReponse` to end the request lifecycle.
 
 The `runAfter()` method executed after a response has been emitted (either by the handler, the cache or a middleware `runBefore()`) has the capability of:
+
 - Executing any code
 - Making changes to the request response
 
@@ -375,7 +381,7 @@ The nominal scenario is this one:
 
 In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttpReponse`
 
-The scenario will be this one: 
+The scenario will be this one:
 
 ![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-2.drawio.png?raw=true)
 
@@ -399,11 +405,10 @@ import {
   AHHttpResponse,
   AHHttpResponseBodyStatusEnum,
   AHMiddleware,
-  RunBeforeReturnType
+  RunBeforeReturnType,
 } from "@antl4b/anthill-framework";
 
 export class BlockBeforeDateMiddleware extends AHMiddleware<Date> {
-
   // Declare payload as a date, it will store the time before which we block the request
   constructor(payload: Date) {
     super(payload);
@@ -411,12 +416,11 @@ export class BlockBeforeDateMiddleware extends AHMiddleware<Date> {
 
   override runBefore(event: AHAwsEvent, context?: AHAwsContext): RunBeforeReturnType {
     // If current date is less than the middleware payload (the time before which we block the request)
-    if ((new Date()) < this.payload) {
-
+    if (new Date() < this.payload) {
       // Return an HttpResponse with an error
       return AHHttpResponse.error({
         status: AHHttpResponseBodyStatusEnum.Error,
-        message: "Not opened yet, retry later"
+        message: "Not opened yet, retry later",
       });
     }
 
@@ -431,22 +435,22 @@ Now to use it in a handler, instantiate the middleware inside the `@RestHandler`
 ```ts
 @RestController()
 export class TicketingController {
-
   @RestHandler({
     method: AHRestMethodEnum.Post,
     middlewares: [
       new BlockBeforeTimeMiddleware(
-        new Date("2023-10-10 20:00:00") // Init the middleware with the time before which we block incoming requests
+        new Date("2023-10-10 20:00:00"), // Init the middleware with the time before which we block incoming requests
       ),
     ],
   })
   buyTicket(event: AHAwsEvent): AHHttpResponse {
-
     // Do stuff to buy a ticket
 
     return AHHttpResponse.success({
       status: AHHttpResponseBodyStatusEnum.Success,
-      payload: { /* the ticket */ },
+      payload: {
+        /* the ticket */
+      },
     });
   }
 }
@@ -459,7 +463,7 @@ It avoids calling the handler if a similar request has already been returned wit
 
 Caching greatly improves the latency of requests to your API in addition to reducing (if not almost eliminating) the costs linked to the execution time of your Lambdas.
 
-> [!NOTE]  
+> [!NOTE]
 > Caching is natively supported by API Gateway and you may prefer using it directly.
 > However activating it via the Anthill cache feature ensures that your middleware will be executed.
 > In case there are some side effect to apply to the incoming requests than can't be handled by API Gateway, Anthill cache is a good alternative.
@@ -469,6 +473,7 @@ Anthill Framework then responds to the request by looking for the handler's resp
 Check [request lifecycle](#request-lifecycle) diagram.
 
 Cache items are identified with:
+
 - The request path
 - The request path parameters
 - The request query string parameters
@@ -482,7 +487,7 @@ const cacheConfig: AHRestHandlerCacheConfig = {
   ttl: 120, // 2 minutes cache
   maxCacheSize: 1000000, // 1MB cache
   headersToInclude: ["Origin"], // Add Origin header to cache item identifier
-}
+};
 ```
 
 This Cache configuration object will allow caching with a time-to-live of two minutes.
@@ -495,10 +500,136 @@ Cache items will be identified by the `Origin` header. This means that two simil
 ## Samples
 
 Sample projects have been developed to serve as a source of working examples.
-Browse [samples](https://github.com/AntL4b/anthill-framework/tree/main/samples) folder for more details.
+Browse [samples](https://github.com/AntL4b/anthill-framework/tree/main/samples) to see dummy project's anatomy.
 
 ## Logger
 
+Anthill Framework comes with some common logging features:
 
+- Set the application log level from `TRACE` to `ERROR`
+- Override the default log formatter to customize the way your logs look like
+- Add logging handlers to emit logs elsewhere than inside the console (API, Message Queuing, write inside files...)
+- Logging multiple values
+
+Default log level is `INFO` but can be changed configuring Anthill app (See [Anthill](#anthill)) or manually using `AHLogger.getInstance().setLogLevel(AHLogLevelEnum.Error);` for example.
+
+Here is an example of how to use it:
+
+```ts
+AHLogger.getInstance().setLogLevel(AHLogLevelEnum.Trace);
+
+logTrace("My object", { isTrue: true });
+logDebug("Connected to DB with host and user", dbHost, dbUser);
+logInfo("Initializing application");
+logWarn("Negative index might leads to errors");
+logError("Err: something went wrong :/", e.message);
+```
+
+### Changing logs format
+
+Setting a new formatter allows you to change logs format.
+A formatter is a function with the following signature:
+
+```ts
+type AHLoggerFormatter = (payload: any) => string;
+```
+
+It takes one argument that could be absolutely anything and returns a string which is the stringified version of the `payload` argument.
+The resulting string will then be transmitted forward to the log handler list.
+
+Let's make a new formatter to stringify the log payload using `JSON.stringify()`:
+
+```ts
+AHLogger.getInstance().setformatter((payload: any) => {
+  return JSON.stringify(payload, null, 2);
+});
+```
+
+This formatter will now be replacing the default one.
+
+### Adding logs handler
+
+Log handlers are functions that will be called each time something is logged.
+Anthill Framework provide a default handler that will forward the logs to the console logging using console.(trace | debug | info | warn | error).
+
+A log handler must respect this signature:
+
+```ts
+type AHLoggerHandler = (messages: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void;
+```
+
+It receives an array of messages to process. Messages have been formatted beforehand and are, at this point, strings.
+Here is how to add a handler to the log handler list:
+
+```ts
+AHLogger.getInstance().addHandler(
+  (messages: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => {
+    for (let message of messages) {
+      console[logLevel](`[${logLevel}][${new Date().toISOString()}] - ${message}`);
+    }
+  }
+);
+```
+
+Creating a new log handler will push it at the end of the log handler list.
+To empty the list, call `AHLogger.getInstance().removeAllHandlers()`.
 
 ## Time tracker
+
+Anthill Framework provides utility classes to measure execution time of some blocks of code.
+It can be used to measure different segments of code regrouped in a time tracking session.
+
+It basically uses two classes: `AHTimeSegment` and `AHTimeTracker`.
+
+`AHTimeSegment` is a time measurement tool allowing to start measuring, stop measuring and retrieve the time elapsed between start and stop.
+
+```ts
+const timeSegment = new AHTimeSegment("my-segment");
+timeSegment.start();
+
+// Do some stuff ...
+
+timeSegment.stop(true); // set verbose option to true to for auto logging segment duration
+
+logInfo(`Time segment ${timeSegment.name} started at ${timeSegment.startTime}, ended at ${timeSegment.endTime}. Total duration: ${timeSegment..getDuration()}`);
+```
+
+`AHTimeTracker` is a more advanced tool that regroups and manages time segments to display the detailed log tracking session afterwards.
+Let's create our own time tracking session:
+
+```ts
+const tracker = new AHTimeTracker();
+
+// Start recording time
+tracker.startTrackingSession();
+
+tracker.startSegment("my-segment1"); // +1
+// Do some stuff 1
+tracker.startSegment("my-segment-2"); // +2
+// Do some stuff 2
+tracker.stopSegment("my-segment-2"); // -2
+tracker.startSegment("my-segment-3"); // +3
+// Do some stuff 3
+tracker.stopSegment("my-segment-3"); // -3
+// Finish doing some stuff 1
+tracker.stopSegment("my-segment1"); // -1
+
+// Stop recording
+tracker.stopTrackingSession(); // Will auto stop unstopped segments
+
+// Display the result
+tracker.logTrackingSession();
+```
+
+Adding some code between segment start and stop will permit a precise measurement of the time it takes to perform each segment.
+
+> [!NOTE]  
+> During the REST handling process, a time tracking session is automatically launched.
+> If the `displayPerformanceMetrics` option is set to true, the session will be logged at the end.
+
+```text
+2023-10-06T16:38:09.332Z :: info :: "myHandler-tracking-session: [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx](1.882 ms)"
+2023-10-06T16:38:09.332Z :: info :: "middleware-runBefore      : .....[xxxx].........................................(0.148 ms)"
+2023-10-06T16:38:09.332Z :: info :: "callable-run              : ..........[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx].(1.486 ms)"
+2023-10-06T16:38:09.332Z :: info :: "middleware-runAfter       : ..................................................[](0.002 ms)"
+```
