@@ -1,10 +1,10 @@
-import { AHAwsEventRequestContextIdentity } from "./aws-event-request-context-identity";
-import { AHRestMethodEnum } from "../../enums/rest-method-enum";
+import { AwsEventRequestContextIdentity } from "./aws-event-request-context-identity";
+import { RestMethodEnum } from "../../enums/rest-method-enum";
 
-export interface AHAwsEventRequestContext {
+export interface AwsEventRequestContext {
   ressourceId: string;
   resourcePath: string;
-  httpMethod: AHRestMethodEnum;
+  httpMethod: RestMethodEnum;
   requestTime: string;
   path: string;
   accountId: string;
@@ -13,6 +13,6 @@ export interface AHAwsEventRequestContext {
   domainPrefix: string;
   domainName: string;
   apiId: string;
-  identity: AHAwsEventRequestContextIdentity;
+  identity: AwsEventRequestContextIdentity;
   authorizer?: { [key: string]: any };
 }

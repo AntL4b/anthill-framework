@@ -1,6 +1,6 @@
-import { AHCallable } from "../../framework/models/handler/callable";
+import { Callable } from "../../framework/models/handler/callable";
 
-export interface AHAbstractHandlerConfig<T, U> {
+export interface AbstractHandlerConfig<T, U> {
   name: string;
-  callable: AHCallable<T, U>;
+  callable: Callable<T, U>;
 }

@@ -1,7 +1,7 @@
-import { AHMiddleware } from "../../features/middleware/middleware";
-import { AHRestHandlerCacheConfig } from "../rest-handler-cache-config";
+import { Middleware } from "../../features/middleware/middleware";
+import { RestHandlerCacheConfig } from "../rest-handler-cache-config";
 
-export interface AHRestHandlerOverridableConfig {
-  middlewares?: Array<AHMiddleware<any>>;
-  cacheConfig?: AHRestHandlerCacheConfig;
+export interface RestHandlerOverridableConfig {
+  middlewares?: Array<Middleware<any>>;
+  cacheConfig?: RestHandlerCacheConfig;
 }

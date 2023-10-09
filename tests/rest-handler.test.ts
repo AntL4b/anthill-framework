@@ -1,93 +1,93 @@
 import {
-  AHAwsContext,
-  AHException,
-  AHMiddleware,
-  AHObjectHelper,
-  AHRestHandlerCacheConfig,
+  AwsContext,
+  AnthillException,
+  Middleware,
+  ObjectHelper,
+  RestHandlerCacheConfig,
   Anthill,
   RestController,
-  RestHandler,
+  RestRequestHandler,
   anthill,
-  AHPromiseHelper,
-  AHQuerystringFieldMiddleware,
-  AHAwsEvent,
-  AHRestMethodEnum,
-  AHHttpResponse,
-  AHRestHandler,
+  PromiseHelper,
+  QuerystringFieldMiddleware,
+  AwsEvent,
+  RestMethodEnum,
+  HttpResponse,
+  RestHandler,
 } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { TestResource } from "./resources/test-resource";
 
-describe("AHRestHandler", () => {
+describe("RestHandler", () => {
   beforeEach(() => {
     Anthill["instance"] = null;
     Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
   });
 
   test("constructor", () => {
-    let handler = AHTestResource.getDefaultRestHandler();
-    expect(handler).toBeInstanceOf(AHRestHandler);
+    let handler = TestResource.getDefaultRestHandler();
+    expect(handler).toBeInstanceOf(RestRequestHandler);
   });
 
   test("setCacheConfig", () => {
-    const newCacheConfig: AHRestHandlerCacheConfig = {
+    const newCacheConfig: RestHandlerCacheConfig = {
       cacheable: true,
       ttl: 111,
       maxCacheSize: 654321,
       headersToInclude: ["test-header"],
     };
 
-    const handler = AHTestResource.getDefaultRestHandler();
+    const handler = TestResource.getDefaultRestHandler();
     handler.setCacheConfig(newCacheConfig);
 
-    expect(AHObjectHelper.isEquivalentObj(handler["cacheConfig"], newCacheConfig)).toBe(true);
+    expect(ObjectHelper.isEquivalentObj(handler["cacheConfig"], newCacheConfig)).toBe(true);
   });
 
   test("addMiddleware", () => {
-    const handler = AHTestResource.getDefaultRestHandler();
+    const handler = TestResource.getDefaultRestHandler();
 
     expect(handler["middlewares"].length).toEqual(0);
-    handler.addMiddleware(new AHQuerystringFieldMiddleware(["test"]));
+    handler.addMiddleware(new QuerystringFieldMiddleware(["test"]));
     expect(handler["middlewares"].length).toEqual(1);
   });
 
   test("handleRequest without middleware", async () => {
-    const handler = AHTestResource.getDefaultRestHandler();
-    const response = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
+    const handler = TestResource.getDefaultRestHandler();
+    const response = await handler.handleRequest(TestResource.getBaseEvent(), TestResource.getBaseContext());
 
-    expect(response).toBeInstanceOf(AHHttpResponse);
+    expect(response).toBeInstanceOf(HttpResponse);
     expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual("null");
   });
 
   test("handleRequest with middleware", async () => {
-    const handler = AHTestResource.getDefaultRestHandler();
-    handler.addMiddleware(new AHQuerystringFieldMiddleware(["test"]));
+    const handler = TestResource.getDefaultRestHandler();
+    handler.addMiddleware(new QuerystringFieldMiddleware(["test"]));
 
-    const event = AHTestResource.getBaseEvent();
+    const event = TestResource.getBaseEvent();
 
-    let response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    let response = await handler.handleRequest(event, TestResource.getBaseContext());
     expect(response.statusCode).toEqual(400);
 
     event.queryStringParameters = { test: "test" };
 
-    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    response = await handler.handleRequest(event, TestResource.getBaseContext());
     expect(response.statusCode).toEqual(200);
   });
 
   test("handleRequest with middleware throwing an error", async () => {
-    const handler = AHTestResource.getDefaultRestHandler();
+    const handler = TestResource.getDefaultRestHandler();
 
-    class MyDummyMiddleware extends AHMiddleware<void> {
-      override runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
-        throw new AHException("error happened");
+    class MyDummyMiddleware extends Middleware<void> {
+      override runBefore(event: AwsEvent, context: AwsContext): Promise<AwsEvent | HttpResponse> {
+        throw new AnthillException("error happened");
       }
     }
 
     handler.addMiddleware(new MyDummyMiddleware());
 
-    const event = AHTestResource.getBaseEvent();
+    const event = TestResource.getBaseEvent();
 
-    let response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    let response = await handler.handleRequest(event, TestResource.getBaseContext());
     expect(response.statusCode).toEqual(400);
   });
 
@@ -99,23 +99,23 @@ describe("AHRestHandler", () => {
         headersToInclude: ["test-header-controller"],
       },
     })
-    class AHTest {
+    class Test {
       @RestHandler({
-        method: AHRestMethodEnum.Get,
+        method: RestMethodEnum.Get,
         cacheConfig: {
           cacheable: true,
           maxCacheSize: 12345678,
           headersToInclude: ["test-header-handler"],
         },
       })
-      async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
-        return AHPromiseHelper.promisify(AHHttpResponse.success(null));
+      async listTest(event: AwsEvent, context?: AwsContext): Promise<HttpResponse> {
+        return PromiseHelper.promisify(HttpResponse.success(null));
       }
     }
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest],
+      controllers: [Test],
       restHandlerConfig: {
         cacheConfig: {
           cacheable: true,
@@ -128,13 +128,13 @@ describe("AHRestHandler", () => {
     const handlers = app.exposeHandlers();
     expect(Object.keys(handlers).includes("listTest")).toBe(true);
 
-    const res = await handlers.listTest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
-    expect(res).toBeInstanceOf(AHHttpResponse);
+    const res = await handlers.listTest(TestResource.getBaseEvent(), TestResource.getBaseContext());
+    expect(res).toBeInstanceOf(HttpResponse);
 
     const handler = app["handlers"].find((h) => h.getName() === "listTest");
 
     expect(
-      AHObjectHelper.isEquivalentObj(handler["computeCacheConfig"](), {
+      ObjectHelper.isEquivalentObj(handler["computeCacheConfig"](), {
         cacheable: true,
         ttl: 123456,
         maxCacheSize: 12345678,
@@ -144,19 +144,19 @@ describe("AHRestHandler", () => {
   });
 
   test("multi level middlewares", async () => {
-    class AnthillMiddleware extends AHMiddleware<void> {
-      override runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
-        return AHPromiseHelper.promisify(event);
+    class AnthillMiddleware extends Middleware<void> {
+      override runBefore(event: AwsEvent, context: AwsContext): Promise<AwsEvent | HttpResponse> {
+        return PromiseHelper.promisify(event);
       }
     }
-    class ControllerMiddleware extends AHMiddleware<void> {
-      override runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
-        return AHPromiseHelper.promisify(event);
+    class ControllerMiddleware extends Middleware<void> {
+      override runBefore(event: AwsEvent, context: AwsContext): Promise<AwsEvent | HttpResponse> {
+        return PromiseHelper.promisify(event);
       }
     }
-    class HandlerMiddleware extends AHMiddleware<void> {
-      override runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
-        return AHPromiseHelper.promisify(event);
+    class HandlerMiddleware extends Middleware<void> {
+      override runBefore(event: AwsEvent, context: AwsContext): Promise<AwsEvent | HttpResponse> {
+        return PromiseHelper.promisify(event);
       }
     }
 
@@ -167,19 +167,19 @@ describe("AHRestHandler", () => {
     @RestController({
       middlewares: [controllerMiddleware],
     })
-    class AHTest {
+    class Test {
       @RestHandler({
-        method: AHRestMethodEnum.Get,
+        method: RestMethodEnum.Get,
         middlewares: [handlerMiddleware],
       })
-      async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
-        return AHPromiseHelper.promisify(AHHttpResponse.success(null));
+      async listTest(event: AwsEvent, context?: AwsContext): Promise<HttpResponse> {
+        return PromiseHelper.promisify(HttpResponse.success(null));
       }
     }
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest],
+      controllers: [Test],
       restHandlerConfig: {
         middlewares: [anthillMiddleware],
       },
@@ -188,22 +188,22 @@ describe("AHRestHandler", () => {
     const handlers = app.exposeHandlers();
     expect(Object.keys(handlers).includes("listTest")).toBe(true);
 
-    const res = await handlers.listTest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
-    expect(res).toBeInstanceOf(AHHttpResponse);
+    const res = await handlers.listTest(TestResource.getBaseEvent(), TestResource.getBaseContext());
+    expect(res).toBeInstanceOf(HttpResponse);
 
     const handler = app["handlers"].find((h) => h.getName() === "listTest");
     const middlewares = await handler["computeMiddlewares"]();
 
     expect(
-      AHObjectHelper.isEquivalentObj(middlewares, [anthillMiddleware, controllerMiddleware, handlerMiddleware]),
+      ObjectHelper.isEquivalentObj(middlewares, [anthillMiddleware, controllerMiddleware, handlerMiddleware]),
     ).toBe(true);
   });
 
   test("handleRequest hit cache", async () => {
-    const _callable = jest.fn((event: AHAwsEvent) => AHPromiseHelper.promisify(AHHttpResponse.success(null)));
-    const handler = AHTestResource.getDefaultRestHandler({
+    const _callable = jest.fn((event: AwsEvent) => PromiseHelper.promisify(HttpResponse.success(null)));
+    const handler = TestResource.getDefaultRestHandler({
       name: "handler",
-      method: AHRestMethodEnum.Get,
+      method: RestMethodEnum.Get,
       middlewares: [],
       callable: _callable,
       cacheConfig: {
@@ -213,14 +213,14 @@ describe("AHRestHandler", () => {
       },
     });
 
-    const event = AHTestResource.getBaseEvent();
+    const event = TestResource.getBaseEvent();
     event.path = "/handle-request-hit-cache";
 
-    let response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    let response = await handler.handleRequest(event, TestResource.getBaseContext());
     expect(response.statusCode).toEqual(200);
     expect(_callable).toHaveBeenCalledTimes(1);
 
-    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    response = await handler.handleRequest(event, TestResource.getBaseContext());
     expect(response.statusCode).toEqual(200);
     expect(_callable).toHaveBeenCalledTimes(1);
 
@@ -230,23 +230,23 @@ describe("AHRestHandler", () => {
     });
 
     // Check that the callable is called
-    response = await handler.handleRequest(event, AHTestResource.getBaseContext());
+    response = await handler.handleRequest(event, TestResource.getBaseContext());
     expect(response.statusCode).toEqual(200);
     expect(_callable).toHaveBeenCalledTimes(2);
   });
 
   test("handleRequest callable throws exception", async () => {
     const errMess = "Error message";
-    const handler = AHTestResource.getDefaultRestHandler({
+    const handler = TestResource.getDefaultRestHandler({
       name: "handler",
-      method: AHRestMethodEnum.Get,
+      method: RestMethodEnum.Get,
       middlewares: [],
-      callable: (event: AHAwsEvent) => {
-        throw new AHException(errMess);
+      callable: (event: AwsEvent) => {
+        throw new AnthillException(errMess);
       },
     });
 
-    const response = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
+    const response = await handler.handleRequest(TestResource.getBaseEvent(), TestResource.getBaseContext());
     expect(response.statusCode).toEqual(400);
     expect(JSON.parse(response.body).message).toEqual(errMess);
   });

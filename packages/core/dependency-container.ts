@@ -1,9 +1,9 @@
-import { AHException } from "../framework/features/anthill-exception";
-import { AHConstructible } from "./models/constructible";
-import { AHDependencyContainerMap } from "./models/dependency-container-map";
+import { AnthillException } from "../framework/features/anthill-exception";
+import { Constructible } from "./models/constructible";
+import { DependencyContainerMap } from "./models/dependency-container-map";
 
-export class AHDependencyContainer {
-  private container: AHDependencyContainerMap = {};
+export class DependencyContainer {
+  private container: DependencyContainerMap = {};
 
   /**
    * Register a contructor in order to be able to instanciate it on demand later if no instance are given
@@ -11,7 +11,7 @@ export class AHDependencyContainer {
    * @param constructor The constructor function
    * @param instance The instance to use as initial value
    */
-  register<T>(identifier: string, constructor: AHConstructible<T>, instance: T = null): void {
+  register<T>(identifier: string, constructor: Constructible<T>, instance: T = null): void {
     if (!Object.keys(this.container).includes(identifier)) {
       this.container[identifier] = {
         constructor: constructor,
@@ -27,7 +27,7 @@ export class AHDependencyContainer {
    */
   resolve<T>(identifier: string): T {
     if (!Object.keys(this.container).includes(identifier)) {
-      throw new AHException(`Dependency ${identifier} has never been registered`);
+      throw new AnthillException(`Dependency ${identifier} has never been registered`);
     }
 
     if (!this.container[identifier].instance) {

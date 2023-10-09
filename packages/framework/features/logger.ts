@@ -1,29 +1,29 @@
-import { AHEnvEnum } from "../models/enums/env-enum";
-import { AHLogLevelEnum } from "../models/enums/log-level-enum";
-import { AHLoggerContext } from "../models/logger/logger-context";
-import { AHEnvironmentHelper } from "../helpers/environment-helper";
-import { AHLoggerFormatter } from "../models/logger/logger-formatter";
-import { AHLoggerHandler } from "../models/logger/logger-handler";
+import { EnvEnum } from "../models/enums/env-enum";
+import { LogLevelEnum } from "../models/enums/log-level-enum";
+import { LoggerContext } from "../models/logger/logger-context";
+import { EnvironmentHelper } from "../helpers/environment-helper";
+import { LoggerFormatter } from "../models/logger/logger-formatter";
+import { LoggerHandler } from "../models/logger/logger-handler";
 
-export class AHLogger {
-  private static instance: AHLogger;
+export class Logger {
+  private static instance: Logger;
 
-  private logLevel: AHLogLevelEnum;
-  private formatter: AHLoggerFormatter;
-  private handlers: Array<AHLoggerHandler>;
+  private logLevel: LogLevelEnum;
+  private formatter: LoggerFormatter;
+  private handlers: Array<LoggerHandler>;
 
   private constructor() {
     this.formatter = (payload: any) => {
       return JSON.stringify(payload, null, 2);
     };
 
-    const env = AHEnvironmentHelper.getEnv();
+    const env = EnvironmentHelper.getEnv();
 
     // Set default logs to debug if dev environment, info otherwise
-    this.logLevel = AHEnvEnum.Dev === env ? AHLogLevelEnum.Debug : AHLogLevelEnum.Info;
+    this.logLevel = EnvEnum.Dev === env ? LogLevelEnum.Debug : LogLevelEnum.Info;
 
     this.handlers = [
-      (messages: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => {
+      (messages: Array<string>, logLevel: LogLevelEnum, context: LoggerContext) => {
         for (let message of messages) {
           console[logLevel](`${new Date().toISOString()} :: ${logLevel} :: ${message}`);
         }
@@ -35,12 +35,12 @@ export class AHLogger {
    * Singleton getInstance method
    * @returns The singleton instance
    */
-  static getInstance(): AHLogger {
-    if (!AHLogger.instance) {
-      AHLogger.instance = new AHLogger();
+  static getInstance(): Logger {
+    if (!Logger.instance) {
+      Logger.instance = new Logger();
     }
 
-    return AHLogger.instance;
+    return Logger.instance;
   }
 
   /**
@@ -55,7 +55,7 @@ export class AHLogger {
    * Add a log handler
    * @param handler: the handler to be added
    */
-  addHandler(handler: (message: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void): void {
+  addHandler(handler: (message: Array<string>, logLevel: LogLevelEnum, context: LoggerContext) => void): void {
     this.handlers.push(handler);
   }
 
@@ -71,7 +71,7 @@ export class AHLogger {
    * Incoming logs with lower importance than the log level will be ignored
    * @param logLevel: log level to be defined
    */
-  setLogLevel(logLevel: AHLogLevelEnum): void {
+  setLogLevel(logLevel: LogLevelEnum): void {
     this.logLevel = logLevel;
   }
 
@@ -80,8 +80,8 @@ export class AHLogger {
    * @param payload payload to be logged
    */
   trace(...payload: Array<any>): void {
-    if ([AHLogLevelEnum.Trace].includes(this.logLevel)) {
-      this.performLog(payload, AHLogLevelEnum.Debug, this.buildContext());
+    if ([LogLevelEnum.Trace].includes(this.logLevel)) {
+      this.performLog(payload, LogLevelEnum.Debug, this.buildContext());
     }
   }
 
@@ -90,8 +90,8 @@ export class AHLogger {
    * @param payload payload to be logged
    */
   debug(...payload: Array<any>): void {
-    if ([AHLogLevelEnum.Trace, AHLogLevelEnum.Debug].includes(this.logLevel)) {
-      this.performLog(payload, AHLogLevelEnum.Debug, this.buildContext());
+    if ([LogLevelEnum.Trace, LogLevelEnum.Debug].includes(this.logLevel)) {
+      this.performLog(payload, LogLevelEnum.Debug, this.buildContext());
     }
   }
 
@@ -100,8 +100,8 @@ export class AHLogger {
    * @param payload payload to be logged
    */
   info(...payload: Array<any>): void {
-    if ([AHLogLevelEnum.Trace, AHLogLevelEnum.Debug, AHLogLevelEnum.Info].includes(this.logLevel)) {
-      this.performLog(payload, AHLogLevelEnum.Info, this.buildContext());
+    if ([LogLevelEnum.Trace, LogLevelEnum.Debug, LogLevelEnum.Info].includes(this.logLevel)) {
+      this.performLog(payload, LogLevelEnum.Info, this.buildContext());
     }
   }
 
@@ -110,8 +110,8 @@ export class AHLogger {
    * @param payload payload to be logged
    */
   warn(...payload: Array<any>): void {
-    if (this.logLevel !== AHLogLevelEnum.Error) {
-      this.performLog(payload, AHLogLevelEnum.Warn, this.buildContext());
+    if (this.logLevel !== LogLevelEnum.Error) {
+      this.performLog(payload, LogLevelEnum.Warn, this.buildContext());
     }
   }
 
@@ -120,10 +120,10 @@ export class AHLogger {
    * @param payload payload to be logged
    */
   error(...payload: Array<any>): void {
-    this.performLog(payload, AHLogLevelEnum.Error, this.buildContext());
+    this.performLog(payload, LogLevelEnum.Error, this.buildContext());
   }
 
-  private performLog(payload: Array<any>, logLevel: AHLogLevelEnum, context: AHLoggerContext): void {
+  private performLog(payload: Array<any>, logLevel: LogLevelEnum, context: LoggerContext): void {
     payload = payload.map((p) => this.formatter(p));
     for (let index = 0; index < this.handlers.length; index++) {
       const handler = this.handlers[index];
@@ -131,30 +131,30 @@ export class AHLogger {
     }
   }
 
-  private buildContext(): AHLoggerContext {
+  private buildContext(): LoggerContext {
     return {
       logLevel: this.logLevel,
-      environment: AHEnvironmentHelper.getEnv(),
+      environment: EnvironmentHelper.getEnv(),
     };
   }
 }
 
 export function logTrace(...payload: Array<any>): void {
-  return AHLogger.getInstance().trace(...payload);
+  return Logger.getInstance().trace(...payload);
 }
 
 export function logDebug(...payload: Array<any>): void {
-  return AHLogger.getInstance().debug(...payload);
+  return Logger.getInstance().debug(...payload);
 }
 
 export function logInfo(...payload: Array<any>): void {
-  return AHLogger.getInstance().info(...payload);
+  return Logger.getInstance().info(...payload);
 }
 
 export function logWarn(...payload: Array<any>): void {
-  return AHLogger.getInstance().info(...payload);
+  return Logger.getInstance().info(...payload);
 }
 
 export function logError(...payload: Array<any>): void {
-  return AHLogger.getInstance().error(...payload);
+  return Logger.getInstance().error(...payload);
 }

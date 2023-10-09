@@ -1,5 +1,5 @@
-import { AHCacheConfig } from "../../core/models/cache/cache-config";
+import { CacheConfig } from "../../core/models/cache/cache-config";
 
-export interface AHRestHandlerCacheConfig extends AHCacheConfig {
+export interface RestHandlerCacheConfig extends CacheConfig {
   headersToInclude?: Array<string>;
 }

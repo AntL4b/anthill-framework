@@ -1,29 +1,29 @@
-import { AHLogger, logDebug, logError, logInfo, logWarn, AHEnvEnum, AHLogLevelEnum, logTrace } from "../packages";
+import { Logger, logDebug, logError, logInfo, logWarn, EnvEnum, LogLevelEnum, logTrace } from "../packages";
 
-describe("AHLogger", () => {
+describe("Logger", () => {
   beforeEach(() => {
-    AHLogger["instance"] = null;
+    Logger["instance"] = null;
   });
 
   test("constructor / getInstance", () => {
-    process.env.ENV = AHEnvEnum.Dev;
+    process.env.ENV = EnvEnum.Dev;
 
     // Use object property notation to affect private member instance
-    AHLogger["instance"] = null;
+    Logger["instance"] = null;
 
     // Instanciate in dev env
-    expect(AHLogger.getInstance()).toBeInstanceOf(AHLogger);
+    expect(Logger.getInstance()).toBeInstanceOf(Logger);
 
-    process.env.ENV = AHEnvEnum.Prod;
-    AHLogger["instance"] = null;
+    process.env.ENV = EnvEnum.Prod;
+    Logger["instance"] = null;
 
     // Re-instanciate in prod env
-    expect(AHLogger.getInstance()).toBeInstanceOf(AHLogger);
+    expect(Logger.getInstance()).toBeInstanceOf(Logger);
   });
 
   test("Log all level", () => {
-    const logger = AHLogger.getInstance();
-    logger.setLogLevel(AHLogLevelEnum.Trace);
+    const logger = Logger.getInstance();
+    logger.setLogLevel(LogLevelEnum.Trace);
 
     expect(logger.trace("trace test")).toBeUndefined();
     expect(logger.debug("debug test")).toBeUndefined();
@@ -41,10 +41,10 @@ describe("AHLogger", () => {
   });
 
   test("setformatter", () => {
-    const logger = AHLogger.getInstance();
+    const logger = Logger.getInstance();
     const formatter = jest.fn(() => "string");
     logger.setformatter(formatter);
-    logger.setLogLevel(AHLogLevelEnum.Debug);
+    logger.setLogLevel(LogLevelEnum.Debug);
 
     expect(formatter).toHaveBeenCalledTimes(0);
     logger.info("info test");
@@ -55,7 +55,7 @@ describe("AHLogger", () => {
   });
 
   test("addHandler", () => {
-    const logger = AHLogger.getInstance();
+    const logger = Logger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
 
@@ -68,7 +68,7 @@ describe("AHLogger", () => {
   });
 
   test("removeAllHandlers", () => {
-    const logger = AHLogger.getInstance();
+    const logger = Logger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
 
@@ -83,10 +83,10 @@ describe("AHLogger", () => {
   });
 
   test("setLogLevel", () => {
-    const logger = AHLogger.getInstance();
+    const logger = Logger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
-    logger.setLogLevel(AHLogLevelEnum.Error);
+    logger.setLogLevel(LogLevelEnum.Error);
 
     logger.trace("trace test");
     logger.debug("debug test");

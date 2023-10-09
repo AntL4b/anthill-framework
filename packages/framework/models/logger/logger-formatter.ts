@@ -1,1 +1,1 @@
-export type AHLoggerFormatter = (payload: any) => string;
+export type LoggerFormatter = (payload: any) => string;

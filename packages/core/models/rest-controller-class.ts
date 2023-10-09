@@ -1,6 +1,6 @@
-import { AHRestHandlerOverridableConfig } from "../../framework/models/handler/rest-handler-overridable-config";
-import { AHConstructible } from "./constructible";
+import { RestHandlerOverridableConfig } from "../../framework/models/handler/rest-handler-overridable-config";
+import { Constructible } from "./constructible";
 
-export type AHRestControllerClass = AHConstructible<any> & {
-  _restHandlerConfig: AHRestHandlerOverridableConfig;
+export type RestControllerClass = Constructible<any> & {
+  _restHandlerConfig: RestHandlerOverridableConfig;
 }

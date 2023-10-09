@@ -1,13 +1,13 @@
-import { AHException } from "../features/anthill-exception";
-import { AHEnvEnum } from "../models/enums/env-enum";
+import { AnthillException } from "../features/anthill-exception";
+import { EnvEnum } from "../models/enums/env-enum";
 
-export class AHEnvironmentHelper {
+export class EnvironmentHelper {
   /**
    * Get the current environment
    * @returns The current environment
    */
-  static getEnv(): AHEnvEnum {
-    return process.env.ENV === AHEnvEnum.Prod ? AHEnvEnum.Prod : AHEnvEnum.Dev;
+  static getEnv(): EnvEnum {
+    return process.env.ENV === EnvEnum.Prod ? EnvEnum.Prod : EnvEnum.Dev;
   }
 
   /**
@@ -17,7 +17,7 @@ export class AHEnvironmentHelper {
    */
   static getEnvValue(envKey: string): string {
     if (!Object.keys(process.env).includes(envKey)) {
-      throw new AHException("Error trying to access undefined environment key: " + envKey);
+      throw new AnthillException("Error trying to access undefined environment key: " + envKey);
     }
 
     return process.env[envKey] as string;

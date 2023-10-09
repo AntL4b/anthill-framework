@@ -1,18 +1,18 @@
-import { AHException, AHPromiseHelper } from "../packages";
+import { AnthillException, PromiseHelper } from "../packages";
 
-describe("AHPromiseHelper", () => {
+describe("PromiseHelper", () => {
   test("promisify", async () => {
-    const res = await AHPromiseHelper.promisify(true);
+    const res = await PromiseHelper.promisify(true);
     expect(res).toEqual(true);
   });
 
   test("timeout success", async () => {
-    const res = await AHPromiseHelper.timeout(
+    const res = await PromiseHelper.timeout(
       new Promise((resolve) => {
         return resolve(null);
       }),
       100,
-      new AHException("timed out"),
+      new AnthillException("timed out"),
     );
 
     expect(res).toEqual(null);
@@ -20,7 +20,7 @@ describe("AHPromiseHelper", () => {
 
   test("timeout failed", () => {
     expect(async () => {
-      await AHPromiseHelper.timeout(new Promise((resolve) => {}), 1, new AHException("timed out"));
-    }).rejects.toThrow(AHException);
+      await PromiseHelper.timeout(new Promise((resolve) => {}), 1, new AnthillException("timed out"));
+    }).rejects.toThrow(AnthillException);
   });
 });

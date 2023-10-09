@@ -1,9 +1,9 @@
-import { AHException } from "../packages";
-import { AHDependencyContainer } from "../packages/core/dependency-container";
+import { AnthillException } from "../packages";
+import { DependencyContainer } from "../packages/core/dependency-container";
 
-describe("AHDependencyContainer", () => {
+describe("DependencyContainer", () => {
   test("register", () => {
-    const dependencyContainer = new AHDependencyContainer();
+    const dependencyContainer = new DependencyContainer();
     class Test {};
     dependencyContainer.register("Test", Test);
 
@@ -12,7 +12,7 @@ describe("AHDependencyContainer", () => {
   });
 
   test("resolve", () => {
-    const dependencyContainer = new AHDependencyContainer();
+    const dependencyContainer = new DependencyContainer();
     class Test {};
     dependencyContainer.register("Test", Test);
 
@@ -25,7 +25,7 @@ describe("AHDependencyContainer", () => {
   });
 
   test("resolve fails", () => {
-    const dependencyContainer = new AHDependencyContainer();    
-    expect(() => { dependencyContainer.resolve<any>("Test") }).toThrow(AHException);
+    const dependencyContainer = new DependencyContainer();    
+    expect(() => { dependencyContainer.resolve<any>("Test") }).toThrow(AnthillException);
   });
 });

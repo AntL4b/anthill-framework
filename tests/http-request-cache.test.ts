@@ -1,12 +1,12 @@
-import { AHHttpRequestCache } from "../packages/core/cache/http-request-cache";
-import { AHHttpResponseBodyStatusEnum, AHObjectHelper, AHHttpResponse } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { HttpRequestCache } from "../packages/core/cache/http-request-cache";
+import { HttpResponseBodyStatusEnum, ObjectHelper, HttpResponse } from "../packages";
+import { TestResource } from "./resources/test-resource";
 
-describe("AHHttpRequestCache", () => {
-  const requestCache = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: "/test" }));
-  const requestCache2 = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent({ path: "/test2" }));
-  const response = new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success });
-  const httpRequestCache = new AHHttpRequestCache();
+describe("HttpRequestCache", () => {
+  const requestCache = HttpRequestCache.buildCacheRequestParameters(TestResource.getBaseEvent({ path: "/test" }));
+  const requestCache2 = HttpRequestCache.buildCacheRequestParameters(TestResource.getBaseEvent({ path: "/test2" }));
+  const response = new HttpResponse(200, { status: HttpResponseBodyStatusEnum.Success });
+  const httpRequestCache = new HttpRequestCache();
 
   // Set default cache config
   httpRequestCache.setConfig({
@@ -34,7 +34,7 @@ describe("AHHttpRequestCache", () => {
 
     expect(httpRequestCache.data.length).toEqual(1);
     const cacheItem = httpRequestCache.getCacheItem(requestCache);
-    expect(cacheItem).toBeInstanceOf(AHHttpResponse);
+    expect(cacheItem).toBeInstanceOf(HttpResponse);
   });
 
   test("getCacheItem never received yet", () => {
@@ -56,7 +56,7 @@ describe("AHHttpRequestCache", () => {
 
   test("Cache override when going over maxCacheSize", () => {
     const sizeOfResponse =
-      AHObjectHelper.getSizeOf({
+      ObjectHelper.getSizeOf({
         id: requestCache,
         data: response,
         date: new Date(),
@@ -93,7 +93,7 @@ describe("AHHttpRequestCache", () => {
 
   test("Cache size not sufficient to store item", () => {
     const sizeOfResponse =
-      AHObjectHelper.getSizeOf({
+      ObjectHelper.getSizeOf({
         id: requestCache,
         data: response,
         date: new Date(),
@@ -117,33 +117,33 @@ describe("AHHttpRequestCache", () => {
       maxCacheSize: 120000,
     });
 
-    let request = AHHttpRequestCache.buildCacheRequestParameters(
-      AHTestResource.getBaseEvent({ headers: { "test-header": "test-header-value" } }),
+    let request = HttpRequestCache.buildCacheRequestParameters(
+      TestResource.getBaseEvent({ headers: { "test-header": "test-header-value" } }),
       ["test-header", "test-header-2"],
     );
 
-    let request2 = AHHttpRequestCache.buildCacheRequestParameters(
-      AHTestResource.getBaseEvent({ headers: { "test-header": "test-header-2-value" } }),
+    let request2 = HttpRequestCache.buildCacheRequestParameters(
+      TestResource.getBaseEvent({ headers: { "test-header": "test-header-2-value" } }),
       ["test-header", "test-header-2"],
     );
 
-    let request3 = AHHttpRequestCache.buildCacheRequestParameters(
-      AHTestResource.getBaseEvent({ headers: { "test-header": "test-header-value" } }),
+    let request3 = HttpRequestCache.buildCacheRequestParameters(
+      TestResource.getBaseEvent({ headers: { "test-header": "test-header-value" } }),
       ["test-header", "test-header-2"],
     );
 
-    let request4 = AHHttpRequestCache.buildCacheRequestParameters(
-      AHTestResource.getBaseEvent({ headers: { "test-header-3": "test-header-value" } }),
+    let request4 = HttpRequestCache.buildCacheRequestParameters(
+      TestResource.getBaseEvent({ headers: { "test-header-3": "test-header-value" } }),
       ["test-header", "test-header-2"],
     );
 
-    let request5 = AHHttpRequestCache.buildCacheRequestParameters(AHTestResource.getBaseEvent(), [
+    let request5 = HttpRequestCache.buildCacheRequestParameters(TestResource.getBaseEvent(), [
       "test-header",
       "test-header-2",
     ]);
 
-    let request6 = AHHttpRequestCache.buildCacheRequestParameters(
-      AHTestResource.getBaseEvent({
+    let request6 = HttpRequestCache.buildCacheRequestParameters(
+      TestResource.getBaseEvent({
         headers: {
           "test-header": "test-header-value",
           "test-header-2": "test-header-value-2",
@@ -155,17 +155,17 @@ describe("AHHttpRequestCache", () => {
     let cacheResponse = httpRequestCache.getCacheItem(request);
     expect(cacheResponse).toBe(null);
 
-    httpRequestCache.addDataInCache(request, new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success }));
+    httpRequestCache.addDataInCache(request, new HttpResponse(200, { status: HttpResponseBodyStatusEnum.Success }));
     expect(httpRequestCache.data.length).toBe(1);
 
     cacheResponse = httpRequestCache.getCacheItem(request);
-    expect(cacheResponse).toBeInstanceOf(AHHttpResponse);
+    expect(cacheResponse).toBeInstanceOf(HttpResponse);
 
     cacheResponse = httpRequestCache.getCacheItem(request2);
     expect(cacheResponse).toBe(null);
 
     cacheResponse = httpRequestCache.getCacheItem(request3);
-    expect(cacheResponse).toBeInstanceOf(AHHttpResponse);
+    expect(cacheResponse).toBeInstanceOf(HttpResponse);
 
     cacheResponse = httpRequestCache.getCacheItem(request4);
     expect(cacheResponse).toBe(null);
@@ -175,12 +175,12 @@ describe("AHHttpRequestCache", () => {
 
     httpRequestCache.addDataInCache(
       request4,
-      new AHHttpResponse(200, { status: AHHttpResponseBodyStatusEnum.Success }),
+      new HttpResponse(200, { status: HttpResponseBodyStatusEnum.Success }),
     );
     expect(httpRequestCache.data.length).toBe(2);
 
     cacheResponse = httpRequestCache.getCacheItem(request5);
-    expect(cacheResponse).toBeInstanceOf(AHHttpResponse);
+    expect(cacheResponse).toBeInstanceOf(HttpResponse);
 
     cacheResponse = httpRequestCache.getCacheItem(request6);
     expect(cacheResponse).toBe(null);

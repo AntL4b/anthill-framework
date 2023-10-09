@@ -1,4 +1,4 @@
-export enum AHRestMethodEnum {
+export enum RestMethodEnum {
   Get = "get",
   Post = "post",
   Put = "put",

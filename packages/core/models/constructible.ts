@@ -1,1 +1,1 @@
-export type AHConstructible<T> = { new (...args: any[]): T };
+export type Constructible<T> = { new (...args: any[]): T };

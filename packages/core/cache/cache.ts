@@ -1,18 +1,18 @@
-import { AHObjectHelper } from "../../framework/helpers/object-helper";
-import { AHLogger } from "../../framework/features/logger";
-import { AHCacheConfig } from "../models/cache/cache-config";
-import { AHCacheData } from "../models/cache/cache-data";
+import { ObjectHelper } from "../../framework/helpers/object-helper";
+import { Logger } from "../../framework/features/logger";
+import { CacheConfig } from "../models/cache/cache-config";
+import { CacheData } from "../models/cache/cache-data";
 
-export abstract class AHCache<T, U> {
-  data: Array<AHCacheData<T, U>> = [];
+export abstract class Cache<T, U> {
+  data: Array<CacheData<T, U>> = [];
   currentCacheSize: number = 0;
-  cacheConfig: AHCacheConfig;
+  cacheConfig: CacheConfig;
 
   /**
    * Set the cache config
    * @param cacheConfig The cache config to set
    */
-  setConfig(cacheConfig: AHCacheConfig): void {
+  setConfig(cacheConfig: CacheConfig): void {
     this.cacheConfig = cacheConfig;
   }
 
@@ -28,11 +28,11 @@ export abstract class AHCache<T, U> {
       date: new Date(),
     };
 
-    const dataToAddSize = AHObjectHelper.getSizeOf(dataToAdd);
+    const dataToAddSize = ObjectHelper.getSizeOf(dataToAdd);
 
     // Pass condition if this.cacheConfig.maxCacheSize is undefined
     if (dataToAddSize > this.cacheConfig.maxCacheSize) {
-      AHLogger.getInstance().debug(
+      Logger.getInstance().debug(
         `Data to add in cache is bigger than max cache size: ${dataToAddSize} > ${this.cacheConfig.maxCacheSize}`,
       );
       return;
@@ -40,10 +40,10 @@ export abstract class AHCache<T, U> {
 
     // Delete data to free up space
     while (this.currentCacheSize + dataToAddSize > this.cacheConfig.maxCacheSize) {
-      AHLogger.getInstance().debug(
+      Logger.getInstance().debug(
         "Current cache size will exceed max cache size: older data in cache deleted to free up space",
       );
-      this.currentCacheSize = this.currentCacheSize - AHObjectHelper.getSizeOf(this.data[0]);
+      this.currentCacheSize = this.currentCacheSize - ObjectHelper.getSizeOf(this.data[0]);
       this.data.splice(0, 1);
     }
 
@@ -60,7 +60,7 @@ export abstract class AHCache<T, U> {
       if (d.date.getTime() / 1000 > Date.now() / 1000 - ttl) {
         return true;
       } else {
-        this.currentCacheSize = this.currentCacheSize - AHObjectHelper.getSizeOf(d);
+        this.currentCacheSize = this.currentCacheSize - ObjectHelper.getSizeOf(d);
         return false;
       }
     });
@@ -68,7 +68,7 @@ export abstract class AHCache<T, U> {
 
   abstract getCacheItem(id: T): U;
 
-  protected _getCacheItem(findCallable: (data: AHCacheData<T, U>) => boolean): U {
+  protected _getCacheItem(findCallable: (data: CacheData<T, U>) => boolean): U {
     const cacheItem = this.data.find(findCallable);
 
     return cacheItem ? cacheItem.data : null;

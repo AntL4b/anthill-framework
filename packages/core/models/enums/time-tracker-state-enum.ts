@@ -1,4 +1,4 @@
-export enum AHTimeTrackerStateEnum {
+export enum TimeTrackerStateEnum {
   Started,
   Stopped,
 }

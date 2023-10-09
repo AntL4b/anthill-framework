@@ -1,7 +1,7 @@
-import { AHException } from "./anthill-exception";
+import { AnthillException } from "./anthill-exception";
 import { logInfo } from "./logger";
 
-export class AHTimeSegment {
+export class TimeSegment {
   name?: string;
   startTime: number;
   endTime?: number;
@@ -19,7 +19,7 @@ export class AHTimeSegment {
    */
   start(): void {
     if (this.startTime) {
-      throw new AHException(`Segment was already started (${this.name})`);
+      throw new AnthillException(`Segment was already started (${this.name})`);
     }
 
     this.startTime = performance.now();
@@ -31,7 +31,7 @@ export class AHTimeSegment {
    */
   stop(verbose: boolean = false): number {
     if (this.endTime) {
-      throw new AHException(`Segment was already stopped (${this.name})`);
+      throw new AnthillException(`Segment was already stopped (${this.name})`);
     }
 
     this.endTime = performance.now();

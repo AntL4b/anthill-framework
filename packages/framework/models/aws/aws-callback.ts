@@ -1,1 +1,1 @@
-export type AHAwsCallback = (...args: Array<any>) => any;
+export type AwsCallback = (...args: Array<any>) => any;

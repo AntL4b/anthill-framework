@@ -1,4 +1,4 @@
-export interface AHCorsMiddlewareOptions {
+export interface CorsMiddlewareOptions {
   getOrigin?: Function;
   credentials?: boolean;
   headers?: string; // List of comma-separated header name or a wildcard for allowing all

@@ -1,26 +1,26 @@
-import { AHHttpRequestCache } from "../../../core/cache/http-request-cache";
-import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHHttpResponseBodyStatusEnum } from "../../models/enums/http-response-body-status-enum";
-import { AHRestMethodEnum } from "../../models/enums/rest-method-enum";
-import { AHHttpResponse } from "../http-response";
-import { AHLogger } from "../logger";
-import { AHMiddleware } from "../middleware/middleware";
-import { AHRestHandlerConfig } from "../../models/handler/rest-handler-config";
-import { AHTimeTracker } from "../time-tracker";
-import { AHAbstractHandler } from "../../../core/abstract-handler";
-import { AHAwsContext } from "../../models/aws/aws-context";
+import { HttpRequestCache } from "../../../core/cache/http-request-cache";
+import { AwsEvent } from "../../models/aws/event/aws-event";
+import { HttpResponseBodyStatusEnum } from "../../models/enums/http-response-body-status-enum";
+import { RestMethodEnum } from "../../models/enums/rest-method-enum";
+import { HttpResponse } from "../http-response";
+import { Logger } from "../logger";
+import { Middleware } from "../middleware/middleware";
+import { RestHandlerConfig } from "../../models/handler/rest-handler-config";
+import { TimeTracker } from "../time-tracker";
+import { AbstractRequestHandler } from "../../../core/abstract-request-handler";
+import { AwsContext } from "../../models/aws/aws-context";
 import { Anthill } from "../anthill";
-import { AHRestHandlerCacheConfig } from "../../models/rest-handler-cache-config";
-import { AHAwsCallback } from "../../models/aws/aws-callback";
-import { AHRestControllerClass } from "../../../core/models/rest-controller-class";
+import { RestHandlerCacheConfig } from "../../models/rest-handler-cache-config";
+import { AwsCallback } from "../../models/aws/aws-callback";
+import { RestControllerClass } from "../../../core/models/rest-controller-class";
 
-export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse> {
-  private cacheConfig: AHRestHandlerCacheConfig = {};
-  private httpCache: AHHttpRequestCache = new AHHttpRequestCache();
-  private method: AHRestMethodEnum;
-  private middlewares: Array<AHMiddleware<any>> = [];
+export class RestRequestHandler extends AbstractRequestHandler<AwsEvent, HttpResponse> {
+  private cacheConfig: RestHandlerCacheConfig = {};
+  private httpCache: HttpRequestCache = new HttpRequestCache();
+  private method: RestMethodEnum;
+  private middlewares: Array<Middleware<any>> = [];
 
-  constructor(params: AHRestHandlerConfig) {
+  constructor(params: RestHandlerConfig) {
     // Apply restHandlerConfig options
     super(params);
 
@@ -39,7 +39,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * Set a new cache config
    * @param cacheConfig The cache config to be set
    */
-  setCacheConfig(cacheConfig: AHRestHandlerCacheConfig): void {
+  setCacheConfig(cacheConfig: RestHandlerCacheConfig): void {
     this.cacheConfig = { ...this.cacheConfig, ...cacheConfig };
   }
 
@@ -47,7 +47,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * Add a middleware to the middleware pipeline execution
    * @param middleware
    */
-  addMiddleware(middleware: AHMiddleware<any>): void {
+  addMiddleware(middleware: Middleware<any>): void {
     this.middlewares.push(middleware);
   }
 
@@ -59,22 +59,22 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
    * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns An http response
    */
-  async handleRequest(event: AHAwsEvent, context?: AHAwsContext, callback?: AHAwsCallback): Promise<AHHttpResponse> {
-    const tracker: AHTimeTracker = new AHTimeTracker();
+  async handleRequest(event: AwsEvent, context?: AwsContext, callback?: AwsCallback): Promise<HttpResponse> {
+    const tracker: TimeTracker = new TimeTracker();
 
     try {
       tracker.startTrackingSession(this.name + "-tracking-session");
 
       // Compute the multi level config into the one to be applied
-      const cacheConfig: AHRestHandlerCacheConfig = this.computeCacheConfig();
+      const cacheConfig: RestHandlerCacheConfig = this.computeCacheConfig();
 
-      // Make event an instance of AHAwsEvent
-      let _event: AHAwsEvent = new AHAwsEvent();
+      // Make event an instance of AwsEvent
+      let _event: AwsEvent = new AwsEvent();
       Object.assign(_event, event);
 
-      AHLogger.getInstance().debug("Handling request");
-      AHLogger.getInstance().debug(`Method: ${this.method}`);
-      AHLogger.getInstance().debug(`Name: ${this.name}`);
+      Logger.getInstance().debug("Handling request");
+      Logger.getInstance().debug(`Method: ${this.method}`);
+      Logger.getInstance().debug(`Name: ${this.name}`);
 
       if (cacheConfig.cacheable) {
         tracker.startSegment("cache-configuration");
@@ -84,7 +84,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       }
 
       // Set default response
-      let response: AHHttpResponse = null;
+      let response: HttpResponse = null;
 
       // Init middleware data with an empty object
       _event.middlewareData = {};
@@ -99,17 +99,17 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
       // Run all the middlewares runBefore one by one
       for (let i = 0; i < middlewares.length; i++) {
-        AHLogger.getInstance().debug(`Running runBefore for middleware ${i + 1} of ${middlewares.length}`);
+        Logger.getInstance().debug(`Running runBefore for middleware ${i + 1} of ${middlewares.length}`);
 
         lastMiddlewareIndex = i;
         const middlewareResult = await middlewares[i].runBefore(_event, context);
 
-        // The middleware returned an AHAwsEvent
-        if (middlewareResult instanceof AHAwsEvent) {
+        // The middleware returned an AwsEvent
+        if (middlewareResult instanceof AwsEvent) {
           _event = middlewareResult;
         } else {
           // The middleware returned an HttpResponse
-          AHLogger.getInstance().debug("Middleware returned an HTTP response");
+          Logger.getInstance().debug("Middleware returned an HTTP response");
 
           // Save the middleware result inside the response and end the middleware loop
           response = middlewareResult;
@@ -123,13 +123,13 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
       if (response === null && cacheConfig.cacheable) {
         tracker.startSegment("cache-retrieving");
 
-        AHLogger.getInstance().debug("Try to get last http response from cache");
+        Logger.getInstance().debug("Try to get last http response from cache");
         response = this.httpCache.getCacheItem(
-          AHHttpRequestCache.buildCacheRequestParameters(_event, cacheConfig.headersToInclude),
+          HttpRequestCache.buildCacheRequestParameters(_event, cacheConfig.headersToInclude),
         );
 
         if (response !== null) {
-          AHLogger.getInstance().debug("Last http response successfully retrieved from cache");
+          Logger.getInstance().debug("Last http response successfully retrieved from cache");
         }
 
         tracker.stopSegment("cache-retrieving");
@@ -137,7 +137,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
       if (response === null) {
         // Now run the handler callable function
-        AHLogger.getInstance().debug("Running handler callable");
+        Logger.getInstance().debug("Running handler callable");
 
         tracker.startSegment("callable-run");
 
@@ -145,9 +145,9 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
           const controllerInstance = await this.getControllerInstance();
           response = await this.callable.call(controllerInstance, ...[_event, context, callback]);
         } catch (e) {
-          AHLogger.getInstance().error((e as { message: string }).message);
-          response = AHHttpResponse.error({
-            status: AHHttpResponseBodyStatusEnum.Error,
+          Logger.getInstance().error((e as { message: string }).message);
+          response = HttpResponse.error({
+            status: HttpResponseBodyStatusEnum.Error,
             message: (e as { message: string }).message,
           });
         }
@@ -156,7 +156,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
         if (cacheConfig.cacheable) {
           this.httpCache.addDataInCache(
-            AHHttpRequestCache.buildCacheRequestParameters(_event, cacheConfig.headersToInclude),
+            HttpRequestCache.buildCacheRequestParameters(_event, cacheConfig.headersToInclude),
             response,
           );
         }
@@ -166,7 +166,7 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
       // Run the middlewares runAfter one by one (avoid calling runAfter if runBefore wasn't called in case a runBefore returned an HttpResponse)
       for (let i = lastMiddlewareIndex; i >= 0; i--) {
-        AHLogger.getInstance().debug(`Running runAfter for middleware ${i + 1} of ${middlewares.length}`);
+        Logger.getInstance().debug(`Running runAfter for middleware ${i + 1} of ${middlewares.length}`);
         response = await middlewares[i].runAfter(response, _event, context);
       }
 
@@ -176,19 +176,19 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
 
       return response;
     } catch (e) {
-      AHLogger.getInstance().error((e as { message: string }).message);
+      Logger.getInstance().error((e as { message: string }).message);
 
       tracker.stopTrackingSession();
       this.displayPerformanceMetrics(tracker);
 
-      return AHHttpResponse.error({
-        status: AHHttpResponseBodyStatusEnum.Error,
+      return HttpResponse.error({
+        status: HttpResponseBodyStatusEnum.Error,
         message: (e as { message: string }).message,
       });
     }
   }
 
-  private computeCacheConfig(): AHRestHandlerCacheConfig {
+  private computeCacheConfig(): RestHandlerCacheConfig {
     const headersToInclude = [];
 
     if (
@@ -219,9 +219,9 @@ export class AHRestHandler extends AHAbstractHandler<AHAwsEvent, AHHttpResponse>
     };
   }
 
-  private async computeMiddlewares(): Promise<Array<AHMiddleware<any>>> {
+  private async computeMiddlewares(): Promise<Array<Middleware<any>>> {
     // Retrieve the controller instance
-    const controllerInstance: InstanceType<AHRestControllerClass> = await this.getControllerInstance();
+    const controllerInstance: InstanceType<RestControllerClass> = await this.getControllerInstance();
 
     const middlewares = [];
 

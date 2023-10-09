@@ -1,5 +1,5 @@
 - Technical documentation based on code comments
-- helper for extracting info from AHAwsEvent (decorator / validator / DTO in ?)
+- helper for extracting info from AwsEvent (decorator / validator / DTO in ?)
   - query param
   - path param
   - body param (prio parsed from middleware json body)

@@ -1,44 +1,44 @@
-import { AHHttpResponseBodyStatusEnum, AHHttpResponse } from "../packages";
+import { HttpResponseBodyStatusEnum, HttpResponse } from "../packages";
 
-describe("AHHttpResponse", () => {
+describe("HttpResponse", () => {
   test("constructor", () => {
-    const response = new AHHttpResponse(200, {});
-    expect(response).toBeInstanceOf(AHHttpResponse);
+    const response = new HttpResponse(200, {});
+    expect(response).toBeInstanceOf(HttpResponse);
   });
 
   test("response", () => {
-    const response = new AHHttpResponse(250, { status: AHHttpResponseBodyStatusEnum.Success });
+    const response = new HttpResponse(250, { status: HttpResponseBodyStatusEnum.Success });
     expect(response.statusCode).toEqual(250);
-    expect(response.body).toEqual(JSON.stringify({ status: AHHttpResponseBodyStatusEnum.Success }));
+    expect(response.body).toEqual(JSON.stringify({ status: HttpResponseBodyStatusEnum.Success }));
   });
 
   test("success", () => {
-    const response = AHHttpResponse.success({});
+    const response = HttpResponse.success({});
     expect(response.statusCode).toEqual(200);
   });
 
   test("error", () => {
-    const response = AHHttpResponse.error({});
+    const response = HttpResponse.error({});
     expect(response.statusCode).toEqual(400);
   });
 
   test("forbidden", () => {
-    const response = AHHttpResponse.forbidden({});
+    const response = HttpResponse.forbidden({});
     expect(response.statusCode).toEqual(403);
   });
 
   test("not found", () => {
-    const response = AHHttpResponse.notFound({});
+    const response = HttpResponse.notFound({});
     expect(response.statusCode).toEqual(404);
   });
 
   test("failure", () => {
-    const response = AHHttpResponse.failure({});
+    const response = HttpResponse.failure({});
     expect(response.statusCode).toEqual(500);
   });
 
   test("headers", () => {
-    const response = AHHttpResponse.response(
+    const response = HttpResponse.response(
       200,
       { payload: "<p>html paragraphe<p>" },
       { "Content-Type": "text/html" },

@@ -1,13 +1,13 @@
-import { AHHttpRequestHelper, AHAwsEvent } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { HttpRequestHelper, AwsEvent } from "../packages";
+import { TestResource } from "./resources/test-resource";
 
-describe("AHHttpRequestHelper", () => {
+describe("HttpRequestHelper", () => {
   test("getHeaderValue", () => {
-    const event: AHAwsEvent = AHTestResource.getBaseEvent();
+    const event: AwsEvent = TestResource.getBaseEvent();
     event.headers = { "test-header": "test" };
 
-    expect(AHHttpRequestHelper.getHeaderValue("test-header", event.headers)).toEqual("test");
+    expect(HttpRequestHelper.getHeaderValue("test-header", event.headers)).toEqual("test");
     event.headers = null;
-    expect(AHHttpRequestHelper.getHeaderValue("test-header", event.headers)).toBeNull();
+    expect(HttpRequestHelper.getHeaderValue("test-header", event.headers)).toBeNull();
   });
 });

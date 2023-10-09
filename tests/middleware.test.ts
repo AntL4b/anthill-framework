@@ -1,20 +1,20 @@
-import { AHMiddleware, AHAwsEvent, AHHttpResponse } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { Middleware, AwsEvent, HttpResponse } from "../packages";
+import { TestResource } from "./resources/test-resource";
 
-describe("AHMiddleware", () => {
+describe("Middleware", () => {
   test("runBefore", async () => {
-    const middleware = new AHMiddleware();
-    const res = await middleware.runBefore(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
-    expect(res).toBeInstanceOf(AHAwsEvent);
+    const middleware = new Middleware();
+    const res = await middleware.runBefore(TestResource.getBaseEvent(), TestResource.getBaseContext());
+    expect(res).toBeInstanceOf(AwsEvent);
   });
 
   test("runAfter", async () => {
-    const middleware = new AHMiddleware();
+    const middleware = new Middleware();
     const res = await middleware.runAfter(
-      AHHttpResponse.success(null),
-      AHTestResource.getBaseEvent(),
-      AHTestResource.getBaseContext(),
+      HttpResponse.success(null),
+      TestResource.getBaseEvent(),
+      TestResource.getBaseContext(),
     );
-    expect(res).toBeInstanceOf(AHHttpResponse);
+    expect(res).toBeInstanceOf(HttpResponse);
   });
 });

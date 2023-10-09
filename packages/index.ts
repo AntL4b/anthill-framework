@@ -6,17 +6,17 @@ export { Anthill, anthill } from "./framework/features/anthill";
 /**
  * EXCEPTION
  */
-export { AHException } from "./framework/features/anthill-exception";
+export { AnthillException } from "./framework/features/anthill-exception";
 
 /**
  * HTTP RESPONSE
  */
-export { AHHttpResponse } from "./framework/features/http-response";
+export { HttpResponse } from "./framework/features/http-response";
 
 /**
  * LOGGER
  */
-export { AHLogger } from "./framework/features/logger";
+export { Logger } from "./framework/features/logger";
 export { logTrace } from "./framework/features/logger";
 export { logDebug } from "./framework/features/logger";
 export { logInfo } from "./framework/features/logger";
@@ -26,31 +26,31 @@ export { logError } from "./framework/features/logger";
 /**
  * LAMBDA HANDLER
  */
-export { AHLambdaHandler } from "./framework/features/handler/lambda-handler";
+export { LambdaRequestHandler } from "./framework/features/handler/lambda-request-handler";
 
 /**
  * REST HANDLER
  */
-export { AHRestHandler } from "./framework/features/handler/rest-handler";
+export { RestRequestHandler } from "./framework/features/handler/rest-request-handler";
 
 /**
  * TIME TRACKER
  */
-export { AHTimeTracker } from "./framework/features/time-tracker";
+export { TimeTracker } from "./framework/features/time-tracker";
 
 /**
  * TIME SEGMENT
  */
-export { AHTimeSegment } from "./framework/features/time-segment";
+export { TimeSegment } from "./framework/features/time-segment";
 
 /**
  * MIDDLEWARES
  */
-export { AHMiddleware } from "./framework/features/middleware/middleware";
-export { AHCorsMiddleware } from "./framework/features/middleware/impl/cors-middleware";
-export { AHJsonBodyParserMiddleware } from "./framework/features/middleware/impl/json-body-parser-middleware";
-export { AHHeaderFieldMiddleware } from "./framework/features/middleware/impl/header-field-middleware";
-export { AHQuerystringFieldMiddleware } from "./framework/features/middleware/impl/querystring-field-middleware";
+export { Middleware } from "./framework/features/middleware/middleware";
+export { CorsMiddleware } from "./framework/features/middleware/impl/cors-middleware";
+export { JsonBodyParserMiddleware } from "./framework/features/middleware/impl/json-body-parser-middleware";
+export { HeaderFieldMiddleware } from "./framework/features/middleware/impl/header-field-middleware";
+export { QuerystringFieldMiddleware } from "./framework/features/middleware/impl/querystring-field-middleware";
 
 /**
  * DECORATORS
@@ -64,37 +64,37 @@ export { LambdaHandler } from "./framework/decorators/lambda-handler-decorator";
 /**
  * HELPERS
  */
-export { AHEnvironmentHelper } from "./framework/helpers/environment-helper";
-export { AHHttpRequestHelper } from "./framework/helpers/http-request-helper";
-export { AHObjectHelper } from "./framework/helpers/object-helper";
-export { AHPromiseHelper } from "./framework/helpers/promise-helper";
+export { EnvironmentHelper } from "./framework/helpers/environment-helper";
+export { HttpRequestHelper } from "./framework/helpers/http-request-helper";
+export { ObjectHelper } from "./framework/helpers/object-helper";
+export { PromiseHelper } from "./framework/helpers/promise-helper";
 
 /**
  * MODELS
  */
-export { AHAwsCallback } from "./framework/models/aws/aws-callback"
-export { AHAwsContext } from "./framework/models/aws/aws-context";
-export { AHAwsEvent } from "./framework/models/aws/event/aws-event";
-export { AHAwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
-export { AHAwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";
-export { AHLambdaHandlerDecoratorConfig } from "./framework/models/decorators/lambda-handler-decorator-config";
-export { AHRestHandlerDecoratorConfig } from "./framework/models/decorators/rest-handler-decorator-config";
-export { AHRestHandlerCacheConfig } from "./framework/models/rest-handler-cache-config";
-export { AHEnvEnum } from "./framework/models/enums/env-enum";
-export { AHHttpResponseBodyStatusEnum } from "./framework/models/enums/http-response-body-status-enum";
-export { AHLogLevelEnum } from "./framework/models/enums/log-level-enum";
-export { AHRestMethodEnum } from "./framework/models/enums/rest-method-enum";
-export { AHHttpResponseBody } from "./framework/models/http-response-body";
-export { AHLoggerContext } from "./framework/models/logger/logger-context";
-export { AHLoggerFormatter } from "./framework/models/logger/logger-formatter";
-export { AHLoggerHandler } from "./framework/models/logger/logger-handler";
-export { AHCorsMiddlewareOptions } from "./framework/models/middleware/cors-middleware-options";
-export { AHJsonBodyParserMiddlewareOptions } from "./framework/models/middleware/json-body-parser-middleware-options";
+export { AwsCallback } from "./framework/models/aws/aws-callback"
+export { AwsContext } from "./framework/models/aws/aws-context";
+export { AwsEvent } from "./framework/models/aws/event/aws-event";
+export { AwsEventRequestContext } from "./framework/models/aws/event/aws-event-request-context";
+export { AwsEventRequestContextIdentity } from "./framework/models/aws/event/aws-event-request-context-identity";
+export { LambdaHandlerDecoratorConfig } from "./framework/models/decorators/lambda-handler-decorator-config";
+export { RestHandlerDecoratorConfig } from "./framework/models/decorators/rest-handler-decorator-config";
+export { RestHandlerCacheConfig } from "./framework/models/rest-handler-cache-config";
+export { EnvEnum } from "./framework/models/enums/env-enum";
+export { HttpResponseBodyStatusEnum } from "./framework/models/enums/http-response-body-status-enum";
+export { LogLevelEnum } from "./framework/models/enums/log-level-enum";
+export { RestMethodEnum } from "./framework/models/enums/rest-method-enum";
+export { HttpResponseBody } from "./framework/models/http-response-body";
+export { LoggerContext } from "./framework/models/logger/logger-context";
+export { LoggerFormatter } from "./framework/models/logger/logger-formatter";
+export { LoggerHandler } from "./framework/models/logger/logger-handler";
+export { CorsMiddlewareOptions } from "./framework/models/middleware/cors-middleware-options";
+export { JsonBodyParserMiddlewareOptions } from "./framework/models/middleware/json-body-parser-middleware-options";
 export { RunBeforeReturnType } from "./framework/models/middleware/run-before-return-type";
-export { AHAnthillConfig } from "./framework/models/anthill/anthill-config";
-export { AHRestHandlerOverridableConfig } from "./framework/models/handler/rest-handler-overridable-config";
-export { AHLambdaHandlerOverridableConfig } from "./framework/models/handler/lambda-handler-overridable-config";
-export { AHRestHandlerConfig } from "./framework/models/handler/rest-handler-config";
-export { AHLambdaHandlerConfig } from "./framework/models/handler/lambda-handler-config";
-export { AHAnthillOptions } from "./framework/models/anthill/anthill-options";
-export { AHCallable } from "./framework/models/handler/callable";
+export { AnthillConfig } from "./framework/models/anthill/anthill-config";
+export { RestHandlerOverridableConfig } from "./framework/models/handler/rest-handler-overridable-config";
+export { LambdaHandlerOverridableConfig } from "./framework/models/handler/lambda-handler-overridable-config";
+export { RestHandlerConfig } from "./framework/models/handler/rest-handler-config";
+export { LambdaHandlerConfig } from "./framework/models/handler/lambda-handler-config";
+export { AnthillOptions } from "./framework/models/anthill/anthill-options";
+export { Callable } from "./framework/models/handler/callable";

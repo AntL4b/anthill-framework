@@ -1,31 +1,31 @@
-import { AHAwsContext, AHException, Anthill, AHLambdaHandler } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { AwsContext, AnthillException, Anthill, LambdaRequestHandler } from "../packages";
+import { TestResource } from "./resources/test-resource";
 
-describe("AHLambdaHandler", () => {
+describe("LambdaHandler", () => {
   beforeEach(() => {
     Anthill["instance"] = null;
     Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
   });
 
   test("constructor", () => {
-    let handler = AHTestResource.getDefaultLambdaHandler();
-    expect(handler).toBeInstanceOf(AHLambdaHandler);
+    let handler = TestResource.getDefaultLambdaHandler();
+    expect(handler).toBeInstanceOf(LambdaRequestHandler);
   });
 
   test("handleRequest", async () => {
-    const handler = AHTestResource.getDefaultLambdaHandler();
-    const response = await handler.handleRequest(null, AHTestResource.getBaseContext());
+    const handler = TestResource.getDefaultLambdaHandler();
+    const response = await handler.handleRequest(null, TestResource.getBaseContext());
 
     expect(response).toBeNull();
   });
 
   test("handleRequest with exception", async () => {
-    const handler = AHTestResource.getDefaultLambdaHandler({
-      callable: (event: any, context: AHAwsContext) => {
-        throw new AHException("error");
+    const handler = TestResource.getDefaultLambdaHandler({
+      callable: (event: any, context: AwsContext) => {
+        throw new AnthillException("error");
       },
     });
 
-    expect(handler.handleRequest(null, AHTestResource.getBaseContext())).rejects.toThrow(AHException);
+    expect(handler.handleRequest(null, TestResource.getBaseContext())).rejects.toThrow(AnthillException);
   });
 });

@@ -1,10 +1,10 @@
 import {
-  AHAwsEvent,
-  AHException,
-  AHHttpResponse,
-  AHHttpResponseBodyStatusEnum,
-  AHJsonBodyParserMiddleware,
-  AHRestMethodEnum,
+  AwsEvent,
+  AnthillException,
+  HttpResponse,
+  HttpResponseBodyStatusEnum,
+  JsonBodyParserMiddleware,
+  RestMethodEnum,
   RestController,
   RestHandler,
 } from "@antl4b/anthill-framework";
@@ -18,15 +18,15 @@ export class TodoController {
    * @returns The created todo
    */
   @RestHandler({
-    method: AHRestMethodEnum.Post,
-    middlewares: [new AHJsonBodyParserMiddleware()],
+    method: RestMethodEnum.Post,
+    middlewares: [new JsonBodyParserMiddleware()],
   })
-  createTodo(event: AHAwsEvent): AHHttpResponse {
+  createTodo(event: AwsEvent): HttpResponse {
     // Get parsed body data
     const body = event.body;
 
     if (!body.value) {
-      throw new AHException("Todo value not found in body");
+      throw new AnthillException("Todo value not found in body");
     }
 
     const todos = TodoService.readTodos();
@@ -39,8 +39,8 @@ export class TodoController {
     todos.push(todo);
     TodoService.writeTodos(todos);
 
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
       payload: todo,
     });
   }
@@ -50,12 +50,12 @@ export class TodoController {
    * @param event AWS event
    * @returns The list of todo
    */
-  @RestHandler({ method: AHRestMethodEnum.Get })
-  listTodos(event: AHAwsEvent): AHHttpResponse {
+  @RestHandler({ method: RestMethodEnum.Get })
+  listTodos(event: AwsEvent): HttpResponse {
     const todos = TodoService.readTodos();
 
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
       payload: todos,
     });
   }
@@ -65,20 +65,20 @@ export class TodoController {
    * @param event AWS event
    * @returns The requested todo
    */
-  @RestHandler({ method: AHRestMethodEnum.Get })
-  getTodo(event: AHAwsEvent): AHHttpResponse {
+  @RestHandler({ method: RestMethodEnum.Get })
+  getTodo(event: AwsEvent): HttpResponse {
     const id = parseInt(event.pathParameters.id);
     const todos = TodoService.readTodos();
     const todo = todos.find((t) => t.id === id);
 
     if (todo) {
-      return AHHttpResponse.success({
-        status: AHHttpResponseBodyStatusEnum.Success,
+      return HttpResponse.success({
+        status: HttpResponseBodyStatusEnum.Success,
         payload: todo,
       });
     } else {
-      return AHHttpResponse.notFound({
-        status: AHHttpResponseBodyStatusEnum.NotFound,
+      return HttpResponse.notFound({
+        status: HttpResponseBodyStatusEnum.NotFound,
         message: `Todo with id ${id} not found :/`,
       });
     }
@@ -89,8 +89,8 @@ export class TodoController {
    * @param event AWS event
    * @returns The deleted todo
    */
-  @RestHandler({ method: AHRestMethodEnum.Delete })
-  deleteTodo(event: AHAwsEvent): AHHttpResponse {
+  @RestHandler({ method: RestMethodEnum.Delete })
+  deleteTodo(event: AwsEvent): HttpResponse {
     const id = parseInt(event.pathParameters.id);
     const todos = TodoService.readTodos();
     const todoIndex = todos.findIndex((t) => t.id === id);
@@ -99,13 +99,13 @@ export class TodoController {
       const todo = todos.splice(todoIndex, 1);
       TodoService.writeTodos(todos);
 
-      return AHHttpResponse.success({
-        status: AHHttpResponseBodyStatusEnum.Success,
+      return HttpResponse.success({
+        status: HttpResponseBodyStatusEnum.Success,
         payload: todo,
       });
     } else {
-      return AHHttpResponse.notFound({
-        status: AHHttpResponseBodyStatusEnum.NotFound,
+      return HttpResponse.notFound({
+        status: HttpResponseBodyStatusEnum.NotFound,
         message: `Todo with id ${id} not found :/`,
       });
     }

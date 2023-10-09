@@ -1,4 +1,4 @@
-export class AHAwsContext {
+export class AwsContext {
   getRemainingTimeInMillis: () => number;
   functionName: string;
   functionVersion: string;

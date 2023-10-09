@@ -4,7 +4,7 @@ const ECMA_SIZES = {
   NUMBER: 4,
 };
 
-export class AHObjectHelper {
+export class ObjectHelper {
   /**
    * Compare an object with another and returns if the objects are equivalent
    * @param obj1 First object to compare
@@ -26,9 +26,9 @@ export class AHObjectHelper {
     for (let i = 0; i < props1.length; i++) {
       let val1 = obj1[props1[i]];
       let val2 = obj2[props1[i]];
-      let isObjects = AHObjectHelper.isObject(val1) && AHObjectHelper.isObject(val2);
+      let isObjects = ObjectHelper.isObject(val1) && ObjectHelper.isObject(val2);
 
-      if ((isObjects && !AHObjectHelper.isEquivalentObj(val1, val2)) || (!isObjects && val1 !== val2)) {
+      if ((isObjects && !ObjectHelper.isEquivalentObj(val1, val2)) || (!isObjects && val1 !== val2)) {
         return false;
       }
     }
@@ -50,7 +50,7 @@ export class AHObjectHelper {
    * @returns Number of bytes of the given object
    */
   static getSizeOf(object: any) {
-    return AHObjectHelper.getCalculator(new WeakSet())(object);
+    return ObjectHelper.getCalculator(new WeakSet())(object);
   }
 
   private static allProperties(obj: any) {
@@ -71,7 +71,7 @@ export class AHObjectHelper {
     }
 
     let bytes = 0;
-    const properties = AHObjectHelper.allProperties(object);
+    const properties = ObjectHelper.allProperties(object);
     for (let i = 0; i < properties.length; i++) {
       const key = properties[i];
       // Do not recalculate circular references
@@ -82,8 +82,8 @@ export class AHObjectHelper {
         seen.add(object[key]);
       }
 
-      bytes += AHObjectHelper.getCalculator(seen)(key);
-      bytes += AHObjectHelper.getCalculator(seen)(object[key]);
+      bytes += ObjectHelper.getCalculator(seen)(key);
+      bytes += ObjectHelper.getCalculator(seen)(object[key]);
     }
 
     return bytes;
@@ -110,11 +110,11 @@ export class AHObjectHelper {
             : (object.toString().length - 8) * ECMA_SIZES.STRING;
         case "object":
           if (Array.isArray(object)) {
-            return object.map(AHObjectHelper.getCalculator(seen)).reduce(function (acc, curr) {
+            return object.map(ObjectHelper.getCalculator(seen)).reduce(function (acc, curr) {
               return acc + curr;
             }, 0);
           } else {
-            return AHObjectHelper.sizeOfObject(seen, object);
+            return ObjectHelper.sizeOfObject(seen, object);
           }
         default:
           return 0;

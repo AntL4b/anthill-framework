@@ -1,17 +1,17 @@
-import { AHException, AHLogger, AHTimeTracker } from "../packages";
-import { AHTimeTrackerStateEnum } from "../packages/core/models/enums/time-tracker-state-enum";
+import { AnthillException, Logger, TimeTracker } from "../packages";
+import { TimeTrackerStateEnum } from "../packages/core/models/enums/time-tracker-state-enum";
 
-describe("AHTimeTracker", () => {
+describe("TimeTracker", () => {
   test("startTrackingSession", () => {
-    const tracker = new AHTimeTracker();
-    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
+    const tracker = new TimeTracker();
+    expect(tracker["state"]).toEqual(TimeTrackerStateEnum.Stopped);
     tracker.startTrackingSession();
-    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Started);
+    expect(tracker["state"]).toEqual(TimeTrackerStateEnum.Started);
     expect(tracker["timeSegments"].length).toEqual(1);
   });
 
   test("re startTrackingSession", () => {
-    const tracker = new AHTimeTracker();
+    const tracker = new TimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
     expect(tracker["timeSegments"].length).toEqual(2);
@@ -20,10 +20,10 @@ describe("AHTimeTracker", () => {
   });
 
   test("startSegment", () => {
-    const tracker = new AHTimeTracker();
+    const tracker = new TimeTracker();
 
     // Tracking stopped
-    expect(() => tracker.startSegment("test-segment")).toThrow(AHException);
+    expect(() => tracker.startSegment("test-segment")).toThrow(AnthillException);
 
     tracker.startTrackingSession();
     const timeSegmentNumber = tracker["timeSegments"].length;
@@ -32,11 +32,11 @@ describe("AHTimeTracker", () => {
     expect(tracker["timeSegments"].length).toBeGreaterThan(timeSegmentNumber);
 
     // Re start existing segment
-    expect(() => tracker.startSegment("test-segment")).toThrow(AHException);
+    expect(() => tracker.startSegment("test-segment")).toThrow(AnthillException);
   });
 
   test("stopSegment", () => {
-    const tracker = new AHTimeTracker();
+    const tracker = new TimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
 
@@ -46,38 +46,38 @@ describe("AHTimeTracker", () => {
     tracker.stopSegment("test-segment");
     expect(segment.endTime).toBeTruthy();
 
-    expect(() => tracker.stopSegment("inexistant-segment")).toThrow(AHException);
+    expect(() => tracker.stopSegment("inexistant-segment")).toThrow(AnthillException);
   });
 
   test("stopSegment when tracking is stopped", () => {
-    const tracker = new AHTimeTracker();
+    const tracker = new TimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
     tracker.stopTrackingSession();
-    expect(() => tracker.stopSegment("test-segment")).toThrow(AHException);
+    expect(() => tracker.stopSegment("test-segment")).toThrow(AnthillException);
   });
 
   test("getSegment", () => {
-    const tracker = new AHTimeTracker();
+    const tracker = new TimeTracker();
     tracker.startTrackingSession();
     tracker.startSegment("test-segment");
     expect(tracker.getSegment("test-segment")).toBeTruthy();
-    expect(() => tracker.getSegment("inexistant-segment")).toThrow(AHException);
+    expect(() => tracker.getSegment("inexistant-segment")).toThrow(AnthillException);
   });
 
   test("stopTrackingSession", () => {
-    const tracker = new AHTimeTracker();
+    const tracker = new TimeTracker();
     tracker.startTrackingSession();
-    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Started);
+    expect(tracker["state"]).toEqual(TimeTrackerStateEnum.Started);
     tracker.stopTrackingSession();
-    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
+    expect(tracker["state"]).toEqual(TimeTrackerStateEnum.Stopped);
     tracker.stopTrackingSession();
-    expect(tracker["state"]).toEqual(AHTimeTrackerStateEnum.Stopped);
+    expect(tracker["state"]).toEqual(TimeTrackerStateEnum.Stopped);
   });
 
   test("logTrackingSession", () => {
-    const tracker = new AHTimeTracker();
-    const logger = AHLogger.getInstance();
+    const tracker = new TimeTracker();
+    const logger = Logger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
 

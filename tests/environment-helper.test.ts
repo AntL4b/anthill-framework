@@ -1,22 +1,22 @@
-import { AHException, AHEnvironmentHelper, AHEnvEnum } from "../packages";
+import { AnthillException, EnvironmentHelper, EnvEnum } from "../packages";
 
-describe("AHEnvironmentHelper", () => {
+describe("EnvironmentHelper", () => {
   test("Get dev environment", () => {
     process.env.ENV = "dev";
-    expect(AHEnvironmentHelper.getEnv()).toEqual(AHEnvEnum.Dev);
+    expect(EnvironmentHelper.getEnv()).toEqual(EnvEnum.Dev);
   });
 
   test("Get prod environment", () => {
     process.env.ENV = "prod";
-    expect(AHEnvironmentHelper.getEnv()).toEqual(AHEnvEnum.Prod);
+    expect(EnvironmentHelper.getEnv()).toEqual(EnvEnum.Prod);
   });
 
   test("Get env value exists", () => {
     process.env.TEST = "test";
-    expect(AHEnvironmentHelper.getEnvValue("TEST")).toEqual("test");
+    expect(EnvironmentHelper.getEnvValue("TEST")).toEqual("test");
   });
 
   test("Get env value doesn't exist", () => {
-    expect(() => AHEnvironmentHelper.getEnvValue("TEST_DOESNT_EXIST")).toThrow(AHException);
+    expect(() => EnvironmentHelper.getEnvValue("TEST_DOESNT_EXIST")).toThrow(AnthillException);
   });
 });

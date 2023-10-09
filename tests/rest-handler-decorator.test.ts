@@ -1,16 +1,16 @@
 import {
-  AHAwsContext,
-  AHAwsEvent,
-  AHException,
-  AHHttpResponse,
-  AHPromiseHelper,
-  AHRestMethodEnum,
+  AwsContext,
+  AwsEvent,
+  AnthillException,
+  HttpResponse,
+  PromiseHelper,
+  RestMethodEnum,
   Anthill,
   RestController,
   RestHandler,
   anthill,
 } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { TestResource } from "./resources/test-resource";
 
 describe("RestHandler decorator", () => {
   beforeEach(() => {
@@ -19,21 +19,21 @@ describe("RestHandler decorator", () => {
 
   test("decorator add handler to anthill", async () => {
     @RestController()
-    class AHTest {
-      @RestHandler({ method: AHRestMethodEnum.Get })
-      async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
-        return AHPromiseHelper.promisify(AHHttpResponse.success(null));
+    class Test {
+      @RestHandler({ method: RestMethodEnum.Get })
+      async listTest(event: AwsEvent, context?: AwsContext): Promise<HttpResponse> {
+        return PromiseHelper.promisify(HttpResponse.success(null));
       }
 
-      @RestHandler({ method: AHRestMethodEnum.Get })
-      static async listTest2(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
-        return AHPromiseHelper.promisify(AHHttpResponse.success(null));
+      @RestHandler({ method: RestMethodEnum.Get })
+      static async listTest2(event: AwsEvent, context?: AwsContext): Promise<HttpResponse> {
+        return PromiseHelper.promisify(HttpResponse.success(null));
       }
     }
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest],
+      controllers: [Test],
     });
 
     const handlers = app.exposeHandlers();
@@ -41,36 +41,36 @@ describe("RestHandler decorator", () => {
     expect(Object.keys(handlers).includes("listTest")).toBe(true);
     expect(Object.keys(handlers).includes("listTest2")).toBe(true);
 
-    const res = await handlers.listTest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
-    const res2 = await handlers.listTest2(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
+    const res = await handlers.listTest(TestResource.getBaseEvent(), TestResource.getBaseContext());
+    const res2 = await handlers.listTest2(TestResource.getBaseEvent(), TestResource.getBaseContext());
 
-    expect(res).toBeInstanceOf(AHHttpResponse);
-    expect(res2).toBeInstanceOf(AHHttpResponse);
+    expect(res).toBeInstanceOf(HttpResponse);
+    expect(res2).toBeInstanceOf(HttpResponse);
   });
 
   test("decorator missing mandatory param", () => {
     expect(() => {
       @RestController()
-      class AHTest2 {
+      class Test2 {
         @RestHandler({} as any)
-        async listTest(event: AHAwsEvent, context: string): Promise<AHHttpResponse> {
-          return AHPromiseHelper.promisify(AHHttpResponse.success(null));
+        async listTest(event: AwsEvent, context: string): Promise<HttpResponse> {
+          return PromiseHelper.promisify(HttpResponse.success(null));
         }
       }
-    }).toThrow(AHException);
+    }).toThrow(AnthillException);
   });
 
   test("decorator without contoller", async () => {
-    class AHTest {
-      @RestHandler({ method: AHRestMethodEnum.Get })
-      async listTest(event: AHAwsEvent, context?: AHAwsContext): Promise<AHHttpResponse> {
-        return AHPromiseHelper.promisify(AHHttpResponse.success(null));
+    class Test {
+      @RestHandler({ method: RestMethodEnum.Get })
+      async listTest(event: AwsEvent, context?: AwsContext): Promise<HttpResponse> {
+        return PromiseHelper.promisify(HttpResponse.success(null));
       }
     }
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest],
+      controllers: [Test],
     });
 
     const handlers = app.exposeHandlers();
@@ -79,8 +79,8 @@ describe("RestHandler decorator", () => {
     const handler = Anthill.getInstance()["handlers"].find(h => h.getName() === "listTest");
 
     // Should throw a managed error (i.e. 400 response code)
-    const res = await handler.handleRequest(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext());
-    expect(res).toBeInstanceOf(AHHttpResponse);
+    const res = await handler.handleRequest(TestResource.getBaseEvent(), TestResource.getBaseContext());
+    expect(res).toBeInstanceOf(HttpResponse);
     expect(res.statusCode).toEqual(400);
   });
 });

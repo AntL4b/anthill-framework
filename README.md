@@ -57,10 +57,10 @@ Here is the code for an "Hello world" example:
 
 ```ts
 import {
-  AHAwsEvent,
-  AHHttpResponse,
-  AHHttpResponseBodyStatusEnum,
-  AHRestMethodEnum,
+  AwsEvent,
+  HttpResponse,
+  HttpResponseBodyStatusEnum,
+  RestMethodEnum,
   RestController,
   RestHandler,
   anthill,
@@ -73,10 +73,10 @@ class MyController {
    * @param event AWS event
    * @returns My handler response
    */
-  @RestHandler({ method: AHRestMethodEnum.Get })
-  myHandler(event: AHAwsEvent): AHHttpResponse {
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+  @RestHandler({ method: RestMethodEnum.Get })
+  myHandler(event: AwsEvent): HttpResponse {
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
       payload: "Hello World",
     });
   }
@@ -124,7 +124,7 @@ Anthill app can then be configured using `configure()` method to register contro
 app.configure({
   controllers: [MyController],
   options: {
-    defaultLogLevel: AHLogLevelEnum.Info,
+    defaultLogLevel: LogLevelEnum.Info,
     displayPerformanceMetrics: true,
   },
 });
@@ -148,7 +148,7 @@ const app = anthill();
 app.configure({
   controllers: [MyController],
   restHandlerConfig: {
-    middlewares: [new AHCorsMiddleware()],
+    middlewares: [new CorsMiddleware()],
   },
 });
 ```
@@ -162,16 +162,16 @@ The second handler configuration will override the caching configuration to appl
     cacheable: true,
     ttl: 120,
   },
-  middlewares: [new AHHeaderFieldMiddleware(["Authorization"])],
+  middlewares: [new HeaderFieldMiddleware(["Authorization"])],
 })
 class MyController {
   /**
    * My First handler
    */
-  @RestHandler({ method: AHRestMethodEnum.Get })
-  myHandler1(event: AHAwsEvent): AHHttpResponse {
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+  @RestHandler({ method: RestMethodEnum.Get })
+  myHandler1(event: AwsEvent): HttpResponse {
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
     });
   }
 
@@ -179,12 +179,12 @@ class MyController {
    * My second handler
    */
   @RestHandler({
-    method: AHRestMethodEnum.Get,
+    method: RestMethodEnum.Get,
     cacheConfig: { ttl: 60 },
   })
-  myHandler2(event: AHAwsEvent): AHHttpResponse {
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+  myHandler2(event: AwsEvent): HttpResponse {
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
     });
   }
 }
@@ -265,10 +265,10 @@ To create a REST controller containing a handler, decorate the controller class 
 ```ts
 @RestController()
 class MyController {
-  @RestHandler({ method: AHRestMethodEnum.Get })
-  myHandler(event: AHAwsEvent): AHHttpResponse {
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+  @RestHandler({ method: RestMethodEnum.Get })
+  myHandler(event: AwsEvent): HttpResponse {
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
     });
   }
 }
@@ -280,10 +280,10 @@ REST handlers have to respect this signature:
 
 ```ts
 restHandlerMethod(
-  event: AHAwsEvent,
-  context?: AHAwsContext,
-  callback?: AHAwsCallback,
-): Promise<AHHttpResponse> | AHHttpResponse;
+  event: AwsEvent,
+  context?: AwsContext,
+  callback?: AwsCallback,
+): Promise<HttpResponse> | HttpResponse;
 ```
 
 As for the `@RestController` decorator, `@RestHandler` decorator takes an argument to apply configuration to the handler scope.
@@ -292,13 +292,13 @@ As for the `@RestController` decorator, `@RestHandler` decorator takes an argume
 @RestController()
 class MyController {
   @RestHandler({
-    method: AHRestMethodEnum.Get,
+    method: RestMethodEnum.Get,
     name: "myHandlerAlternativeName",
-    middlewares: [new AHJsonBodyParserMiddleware()],
+    middlewares: [new JsonBodyParserMiddleware()],
   })
-  myHandler(event: AHAwsEvent): AHHttpResponse {
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+  myHandler(event: AwsEvent): HttpResponse {
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
     });
   }
 }
@@ -312,7 +312,7 @@ To create a Lambda controller containing a handler, decorate the controller clas
 @LambdaController()
 class MyController {
   @LambdaHandler()
-  myHandler(event: AHAwsEvent): any {
+  myHandler(event: AwsEvent): any {
     return null;
   }
 }
@@ -325,30 +325,30 @@ Lambda handlers have to respect this signature:
 
 ```ts
 lambdaHandlerMethod(
-  event: AHAwsEvent,
-  context?: AHAwsContext,
-  callback?: AHAwsCallback,
+  event: AwsEvent,
+  context?: AwsContext,
+  callback?: AwsCallback,
 ): Promise<any> | any;
 ```
 
 ## Middlewares
 
-Middlewares are classes that extend `AHMiddleware` containing methods executed before and after the handler is called (or the cache is retrieved).
+Middlewares are classes that extend `Middleware` containing methods executed before and after the handler is called (or the cache is retrieved).
 
 The `runBefore()` method executed before calling the handler has the capability of:
 
 - Executing any code
 - Making changes to the incoming request event
-- End the request lifecycle by returning an `AHHttpResponse`
+- End the request lifecycle by returning an `HttpResponse`
 
 Its signature is as follow:
 
 ```ts
-type RunBeforeReturnType = AHAwsEvent | AHHttpResponse;
-runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<RunBeforeReturnType> | RunBeforeReturnType;
+type RunBeforeReturnType = AwsEvent | HttpResponse;
+runBefore(event: AwsEvent, context: AwsContext): Promise<RunBeforeReturnType> | RunBeforeReturnType;
 ```
 
-It must return the event even if not altering it or an `AHHttpReponse` to end the request lifecycle.
+It must return the event even if not altering it or an `HttpReponse` to end the request lifecycle.
 
 The `runAfter()` method executed after a response has been emitted (either by the handler, the cache or a middleware `runBefore()`) has the capability of:
 
@@ -358,12 +358,12 @@ The `runAfter()` method executed after a response has been emitted (either by th
 Its signature is as follow:
 
 ```ts
-runAfter(httpResponse: AHHttpResponse, event: AHAwsEvent, context: AHAwsContext): Promise<AHHttpResponse> | AHHttpResponse
+runAfter(httpResponse: HttpResponse, event: AwsEvent, context: AwsContext): Promise<HttpResponse> | HttpResponse
 ```
 
 It must return the httpResponse even if not altering it.
 
-Both `runBefore()` and the `runAfter()` methods can be overridden when extending `AHMiddleware`.
+Both `runBefore()` and the `runAfter()` methods can be overridden when extending `Middleware`.
 
 > [!IMPORTANT]  
 > Middleware execution order is something to take into consideration.
@@ -376,10 +376,10 @@ The nominal scenario is this one:
 `runBefore()` and `runAfter()` are called as a mirror around the handler.
 
 > [!WARNING]
-> In case a middleware `runBefore()` returns an `AHHttpResponse`, all following middlewares `runBefore()` won't be called and only those
+> In case a middleware `runBefore()` returns an `HttpResponse`, all following middlewares `runBefore()` won't be called and only those
 > that have already been called will see their `runAfter()` method called.
 
-In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `AHHttpReponse`
+In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `HttpReponse`
 
 The scenario will be this one:
 
@@ -394,32 +394,32 @@ The middleware list is likely to grow over time. Don't hesitate to request or to
 
 ### Create your own
 
-As told at the beginning of the [middlewares](#middlewares) section, middlewares are classes that extend `AHMiddleware` class.
+As told at the beginning of the [middlewares](#middlewares) section, middlewares are classes that extend `Middleware` class.
 
 Let's imagine a ticketing service that opens on October 10, 2023 at 8 p.m. the and which rejects all incoming requests before this time.
 
 ```ts
 import {
-  AHAwsContext,
-  AHAwsEvent,
-  AHHttpResponse,
-  AHHttpResponseBodyStatusEnum,
-  AHMiddleware,
+  AwsContext,
+  AwsEvent,
+  HttpResponse,
+  HttpResponseBodyStatusEnum,
+  Middleware,
   RunBeforeReturnType,
 } from "@antl4b/anthill-framework";
 
-export class BlockBeforeDateMiddleware extends AHMiddleware<Date> {
+export class BlockBeforeDateMiddleware extends Middleware<Date> {
   // Declare payload as a date, it will store the time before which we block the request
   constructor(payload: Date) {
     super(payload);
   }
 
-  override runBefore(event: AHAwsEvent, context?: AHAwsContext): RunBeforeReturnType {
+  override runBefore(event: AwsEvent, context?: AwsContext): RunBeforeReturnType {
     // If current date is less than the middleware payload (the time before which we block the request)
     if (new Date() < this.payload) {
       // Return an HttpResponse with an error
-      return AHHttpResponse.error({
-        status: AHHttpResponseBodyStatusEnum.Error,
+      return HttpResponse.error({
+        status: HttpResponseBodyStatusEnum.Error,
         message: "Not opened yet, retry later",
       });
     }
@@ -436,18 +436,18 @@ Now to use it in a handler, instantiate the middleware inside the `@RestHandler`
 @RestController()
 export class TicketingController {
   @RestHandler({
-    method: AHRestMethodEnum.Post,
+    method: RestMethodEnum.Post,
     middlewares: [
       new BlockBeforeTimeMiddleware(
         new Date("2023-10-10 20:00:00"), // Init the middleware with the time before which we block incoming requests
       ),
     ],
   })
-  buyTicket(event: AHAwsEvent): AHHttpResponse {
+  buyTicket(event: AwsEvent): HttpResponse {
     // Do stuff to buy a ticket
 
-    return AHHttpResponse.success({
-      status: AHHttpResponseBodyStatusEnum.Success,
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
       payload: {
         /* the ticket */
       },
@@ -482,7 +482,7 @@ Cache items are identified with:
 Cache option for HTTP requests is an object looking like this:
 
 ```ts
-const cacheConfig: AHRestHandlerCacheConfig = {
+const cacheConfig: RestHandlerCacheConfig = {
   cacheable: true,
   ttl: 120, // 2 minutes cache
   maxCacheSize: 1000000, // 1MB cache
@@ -511,12 +511,12 @@ Anthill Framework comes with some common logging features:
 - Add logging handlers to emit logs elsewhere than inside the console (API, Message Queuing, write inside files...)
 - Logging multiple values
 
-Default log level is `INFO` but can be changed configuring Anthill app (See [Anthill](#anthill)) or manually using `AHLogger.getInstance().setLogLevel(AHLogLevelEnum.Error);` for example.
+Default log level is `INFO` but can be changed configuring Anthill app (See [Anthill](#anthill)) or manually using `Logger.getInstance().setLogLevel(LogLevelEnum.Error);` for example.
 
 Here is an example of how to use it:
 
 ```ts
-AHLogger.getInstance().setLogLevel(AHLogLevelEnum.Trace);
+Logger.getInstance().setLogLevel(LogLevelEnum.Trace);
 
 logTrace("My object", { isTrue: true });
 logDebug("Connected to DB with host and user", dbHost, dbUser);
@@ -531,7 +531,7 @@ Setting a new formatter allows you to change logs format.
 A formatter is a function with the following signature:
 
 ```ts
-type AHLoggerFormatter = (payload: any) => string;
+type LoggerFormatter = (payload: any) => string;
 ```
 
 It takes one argument that could be absolutely anything and returns a string which is the stringified version of the `payload` argument.
@@ -540,7 +540,7 @@ The resulting string will then be transmitted forward to the log handler list.
 Let's make a new formatter to stringify the log payload using `JSON.stringify()`:
 
 ```ts
-AHLogger.getInstance().setformatter((payload: any) => {
+Logger.getInstance().setformatter((payload: any) => {
   return JSON.stringify(payload, null, 2);
 });
 ```
@@ -555,15 +555,15 @@ Anthill Framework provide a default handler that will forward the logs to the co
 A log handler must respect this signature:
 
 ```ts
-type AHLoggerHandler = (messages: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void;
+type LoggerHandler = (messages: Array<string>, logLevel: LogLevelEnum, context: LoggerContext) => void;
 ```
 
 It receives an array of messages to process. Messages have been formatted beforehand and are, at this point, strings.
 Here is how to add a handler to the log handler list:
 
 ```ts
-AHLogger.getInstance().addHandler(
-  (messages: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => {
+Logger.getInstance().addHandler(
+  (messages: Array<string>, logLevel: LogLevelEnum, context: LoggerContext) => {
     for (let message of messages) {
       console[logLevel](`[${logLevel}][${new Date().toISOString()}] - ${message}`);
     }
@@ -572,19 +572,19 @@ AHLogger.getInstance().addHandler(
 ```
 
 Creating a new log handler will push it at the end of the log handler list.
-To empty the list, call `AHLogger.getInstance().removeAllHandlers()`.
+To empty the list, call `Logger.getInstance().removeAllHandlers()`.
 
 ## Time tracker
 
 Anthill Framework provides utility classes to measure execution time of some blocks of code.
 It can be used to measure different segments of code regrouped in a time tracking session.
 
-It basically uses two classes: `AHTimeSegment` and `AHTimeTracker`.
+It basically uses two classes: `TimeSegment` and `TimeTracker`.
 
-`AHTimeSegment` is a time measurement tool allowing to start measuring, stop measuring and retrieve the time elapsed between start and stop.
+`TimeSegment` is a time measurement tool allowing to start measuring, stop measuring and retrieve the time elapsed between start and stop.
 
 ```ts
-const timeSegment = new AHTimeSegment("my-segment");
+const timeSegment = new TimeSegment("my-segment");
 timeSegment.start();
 
 // Do some stuff ...
@@ -594,11 +594,11 @@ timeSegment.stop(true); // set verbose option to true to for auto logging segmen
 logInfo(`Time segment ${timeSegment.name} started at ${timeSegment.startTime}, ended at ${timeSegment.endTime}. Total duration: ${timeSegment..getDuration()}`);
 ```
 
-`AHTimeTracker` is a more advanced tool that regroups and manages time segments to display the detailed log tracking session afterwards.
+`TimeTracker` is a more advanced tool that regroups and manages time segments to display the detailed log tracking session afterwards.
 Let's create our own time tracking session:
 
 ```ts
-const tracker = new AHTimeTracker();
+const tracker = new TimeTracker();
 
 // Start recording time
 tracker.startTrackingSession();

@@ -1,4 +1,4 @@
-export class AHHttpRequestHelper {
+export class HttpRequestHelper {
   /**
    * Find a header with its name ignoring case
    * @param header Header name

@@ -1,15 +1,15 @@
-import { AHMiddleware } from "../../features/middleware/middleware";
-import { AHRestMethodEnum } from "../enums/rest-method-enum";
-import { AHRestHandlerCacheConfig } from "../rest-handler-cache-config";
+import { Middleware } from "../../features/middleware/middleware";
+import { RestMethodEnum } from "../enums/rest-method-enum";
+import { RestHandlerCacheConfig } from "../rest-handler-cache-config";
 
-export interface AHRestHandlerDecoratorConfig {
-  method: AHRestMethodEnum;
+export interface RestHandlerDecoratorConfig {
+  method: RestMethodEnum;
 
   /**
    * Override handler name inside handler registry
    */
   name?: string;
 
-  middlewares?: Array<AHMiddleware<any>>;
-  cacheConfig?: AHRestHandlerCacheConfig;
+  middlewares?: Array<Middleware<any>>;
+  cacheConfig?: RestHandlerCacheConfig;
 }

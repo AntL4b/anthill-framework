@@ -1,28 +1,29 @@
 import {
-  AHHttpResponse,
-  AHPromiseHelper,
-  AHRestHandler,
-  AHRestHandlerConfig,
-  AHAwsEvent,
-  AHRestMethodEnum,
-  AHAwsContext,
-  AHLambdaHandler,
-  AHLambdaHandlerConfig,
+  HttpResponse,
+  PromiseHelper,
+  RestHandlerConfig,
+  AwsEvent,
+  RestMethodEnum,
+  AwsContext,
+  LambdaHandler,
+  LambdaHandlerConfig,
+  RestRequestHandler,
+  LambdaRequestHandler,
 } from "../../packages";
 
-export class AHTestResource {
-  static getBaseEvent(eventOverride?: Partial<AHAwsEvent>): AHAwsEvent {
-    const baseEvent: AHAwsEvent = new AHAwsEvent();
+export class TestResource {
+  static getBaseEvent(eventOverride?: Partial<AwsEvent>): AwsEvent {
+    const baseEvent: AwsEvent = new AwsEvent();
 
     Object.assign(baseEvent, {
       ressource: "",
       path: "/",
-      httpMethod: AHRestMethodEnum.Post,
+      httpMethod: RestMethodEnum.Post,
       headers: { "Content-Type": "application/json" },
       requestContext: {
         ressourceId: "",
         resourcePath: "",
-        httpMethod: AHRestMethodEnum.Post,
+        httpMethod: RestMethodEnum.Post,
         requestTime: "",
         path: "",
         accountId: "",
@@ -42,8 +43,8 @@ export class AHTestResource {
     return baseEvent;
   }
 
-  static getBaseContext(contextOverride?: Partial<AHAwsContext>): AHAwsContext {
-    const baseContext: AHAwsContext = new AHAwsContext();
+  static getBaseContext(contextOverride?: Partial<AwsContext>): AwsContext {
+    const baseContext: AwsContext = new AwsContext();
 
     Object.assign(baseContext, {
       awsRequestId: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
@@ -63,13 +64,13 @@ export class AHTestResource {
     return baseContext;
   }
 
-  static getDefaultRestHandler(paramOverride?: Partial<AHRestHandlerConfig>): AHRestHandler {
-    const restHandler = new AHRestHandler({
+  static getDefaultRestHandler(paramOverride?: Partial<RestHandlerConfig>): RestRequestHandler {
+    const restHandler = new RestRequestHandler({
       ...{
         name: "handler",
-        method: AHRestMethodEnum.Get,
+        method: RestMethodEnum.Get,
         middlewares: [],
-        callable: (event: AHAwsEvent, context: AHAwsContext) => AHPromiseHelper.promisify(AHHttpResponse.success(null)),
+        callable: (event: AwsEvent, context: AwsContext) => PromiseHelper.promisify(HttpResponse.success(null)),
         cacheConfig: {
           cacheable: false,
         },
@@ -82,11 +83,11 @@ export class AHTestResource {
     return restHandler;
   }
 
-  static getDefaultLambdaHandler(paramOverride?: Partial<AHLambdaHandlerConfig<any, any>>): AHLambdaHandler<any, any> {
-    const lambdaHandler =  new AHLambdaHandler<any, any>({
+  static getDefaultLambdaHandler(paramOverride?: Partial<LambdaHandlerConfig<any, any>>): LambdaRequestHandler<any, any> {
+    const lambdaHandler =  new LambdaRequestHandler<any, any>({
       ...{
         name: "handler",
-        callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
+        callable: (event: any, context: AwsContext) => PromiseHelper.promisify(null),
       },
       ...paramOverride,
     });

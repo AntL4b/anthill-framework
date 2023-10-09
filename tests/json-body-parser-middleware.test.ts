@@ -1,40 +1,40 @@
-import { AHJsonBodyParserMiddleware, AHAwsEvent, AHHttpResponse } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { JsonBodyParserMiddleware, AwsEvent, HttpResponse } from "../packages";
+import { TestResource } from "./resources/test-resource";
 
-describe("AHJsonBodyParserMiddleware", () => {
+describe("JsonBodyParserMiddleware", () => {
   test("No body specified", async () => {
-    const middleware = new AHJsonBodyParserMiddleware();
-    expect(await middleware.runBefore(AHTestResource.getBaseEvent(), AHTestResource.getBaseContext())).toBeInstanceOf(
-      AHAwsEvent,
+    const middleware = new JsonBodyParserMiddleware();
+    expect(await middleware.runBefore(TestResource.getBaseEvent(), TestResource.getBaseContext())).toBeInstanceOf(
+      AwsEvent,
     );
   });
 
   test("Body specified JSON", async () => {
-    const middleware = new AHJsonBodyParserMiddleware();
-    const event: AHAwsEvent = AHTestResource.getBaseEvent({ body: '{ "key": "test1" }' });
-    const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
+    const middleware = new JsonBodyParserMiddleware();
+    const event: AwsEvent = TestResource.getBaseEvent({ body: '{ "key": "test1" }' });
+    const result: AwsEvent | HttpResponse = await middleware.runBefore(event, TestResource.getBaseContext());
 
-    expect(result).toBeInstanceOf(AHAwsEvent);
-    expect(JSON.stringify((result as AHAwsEvent).body)).toEqual(JSON.stringify({ key: "test1" }));
+    expect(result).toBeInstanceOf(AwsEvent);
+    expect(JSON.stringify((result as AwsEvent).body)).toEqual(JSON.stringify({ key: "test1" }));
   });
 
   test("Body specified Base64", async () => {
-    const middleware = new AHJsonBodyParserMiddleware();
-    const event: AHAwsEvent = AHTestResource.getBaseEvent({ isBase64Encoded: true, body: "eyAia2V5IjogInRlc3QxIiB9" });
-    const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
+    const middleware = new JsonBodyParserMiddleware();
+    const event: AwsEvent = TestResource.getBaseEvent({ isBase64Encoded: true, body: "eyAia2V5IjogInRlc3QxIiB9" });
+    const result: AwsEvent | HttpResponse = await middleware.runBefore(event, TestResource.getBaseContext());
 
-    expect(result).toBeInstanceOf(AHAwsEvent);
-    expect(JSON.stringify((result as AHAwsEvent).body)).toEqual(JSON.stringify({ key: "test1" }));
+    expect(result).toBeInstanceOf(AwsEvent);
+    expect(JSON.stringify((result as AwsEvent).body)).toEqual(JSON.stringify({ key: "test1" }));
   });
 
   test("Unsupported media type", async () => {
-    const middleware = new AHJsonBodyParserMiddleware();
-    const event: AHAwsEvent = AHTestResource.getBaseEvent({
+    const middleware = new JsonBodyParserMiddleware();
+    const event: AwsEvent = TestResource.getBaseEvent({
       headers: { "Content-Type": "application/xml" },
       body: "xml",
     });
-    const result: AHAwsEvent | AHHttpResponse = await middleware.runBefore(event, AHTestResource.getBaseContext());
+    const result: AwsEvent | HttpResponse = await middleware.runBefore(event, TestResource.getBaseContext());
 
-    expect(result).toBeInstanceOf(AHHttpResponse);
+    expect(result).toBeInstanceOf(HttpResponse);
   });
 });

@@ -1,11 +1,11 @@
-import { AHHttpResponseBody } from "../models/http-response-body";
+import { HttpResponseBody } from "../models/http-response-body";
 
-export class AHHttpResponse {
+export class HttpResponse {
   statusCode: number;
   headers: { [key: string]: any };
-  body: AHHttpResponseBody | any;
+  body: HttpResponseBody | any;
 
-  constructor(statusCode: number, body?: AHHttpResponseBody | any, headers?: { [key: string]: any }) {
+  constructor(statusCode: number, body?: HttpResponseBody | any, headers?: { [key: string]: any }) {
     this.headers = { ...headers };
 
     if (
@@ -34,10 +34,10 @@ export class AHHttpResponse {
    */
   static response(
     statusCode: number,
-    body: AHHttpResponseBody | any,
+    body: HttpResponseBody | any,
     headers?: { [key: string]: any },
-  ): AHHttpResponse {
-    return new AHHttpResponse(statusCode, body, headers);
+  ): HttpResponse {
+    return new HttpResponse(statusCode, body, headers);
   }
 
   /**
@@ -46,8 +46,8 @@ export class AHHttpResponse {
    * @param headers the http response headers
    * @returns a success http response
    */
-  static success(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
-    return new AHHttpResponse(200, body, headers);
+  static success(body: HttpResponseBody | any, headers?: { [key: string]: any }): HttpResponse {
+    return new HttpResponse(200, body, headers);
   }
 
   /**
@@ -56,8 +56,8 @@ export class AHHttpResponse {
    * @param headers the http response headers
    * @returns an error http response
    */
-  static error(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
-    return new AHHttpResponse(400, body, headers);
+  static error(body: HttpResponseBody | any, headers?: { [key: string]: any }): HttpResponse {
+    return new HttpResponse(400, body, headers);
   }
 
   /**
@@ -66,8 +66,8 @@ export class AHHttpResponse {
    * @param headers the http response headers
    * @returns a forbidden http response
    */
-  static forbidden(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
-    return new AHHttpResponse(403, body, headers);
+  static forbidden(body: HttpResponseBody | any, headers?: { [key: string]: any }): HttpResponse {
+    return new HttpResponse(403, body, headers);
   }
 
   /**
@@ -76,8 +76,8 @@ export class AHHttpResponse {
    * @param headers the http response headers
    * @returns a not found http response
    */
-  static notFound(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
-    return new AHHttpResponse(404, body, headers);
+  static notFound(body: HttpResponseBody | any, headers?: { [key: string]: any }): HttpResponse {
+    return new HttpResponse(404, body, headers);
   }
 
   /**
@@ -86,7 +86,7 @@ export class AHHttpResponse {
    * @param headers the http response headers
    * @returns a failure http response
    */
-  static failure(body: AHHttpResponseBody | any, headers?: { [key: string]: any }): AHHttpResponse {
-    return new AHHttpResponse(500, body, headers);
+  static failure(body: HttpResponseBody | any, headers?: { [key: string]: any }): HttpResponse {
+    return new HttpResponse(500, body, headers);
   }
 }

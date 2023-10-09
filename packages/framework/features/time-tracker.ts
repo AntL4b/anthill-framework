@@ -1,13 +1,13 @@
-import { AHException } from "./anthill-exception";
+import { AnthillException } from "./anthill-exception";
 import { logInfo } from "./logger";
-import { AHTimeTrackerStateEnum } from "../../core/models/enums/time-tracker-state-enum";
-import { AHTimeSegment } from "./time-segment";
+import { TimeTrackerStateEnum } from "../../core/models/enums/time-tracker-state-enum";
+import { TimeSegment } from "./time-segment";
 
 const LOG_SESSION_LINE_LENGTH = 50;
 
-export class AHTimeTracker {
-  private state: AHTimeTrackerStateEnum = AHTimeTrackerStateEnum.Stopped;
-  private timeSegments: Array<AHTimeSegment> = [];
+export class TimeTracker {
+  private state: TimeTrackerStateEnum = TimeTrackerStateEnum.Stopped;
+  private timeSegments: Array<TimeSegment> = [];
   private trackingSessionSegmentName: string;
 
   /**
@@ -15,14 +15,14 @@ export class AHTimeTracker {
    * @param trackingSessionSegmentName The tracking session segment name
    */
   startTrackingSession(trackingSessionSegmentName: string = "time-tracking-session"): void {
-    if (this.state === AHTimeTrackerStateEnum.Started) {
+    if (this.state === TimeTrackerStateEnum.Started) {
       logInfo("startTrackingSession has no effect when a time tracking session is running");
       return;
     }
 
     this.timeSegments = [];
     this.trackingSessionSegmentName = trackingSessionSegmentName;
-    this.state = AHTimeTrackerStateEnum.Started;
+    this.state = TimeTrackerStateEnum.Started;
 
     this.startSegment(trackingSessionSegmentName);
   }
@@ -32,15 +32,15 @@ export class AHTimeTracker {
    * @param segmentName The name of the segment
    */
   startSegment(segmentName: string): void {
-    if (this.state === AHTimeTrackerStateEnum.Stopped) {
-      throw new AHException("Start segment failed: Time tracker session is stopped");
+    if (this.state === TimeTrackerStateEnum.Stopped) {
+      throw new AnthillException("Start segment failed: Time tracker session is stopped");
     }
 
     if (this.timeSegments.find((s) => s.name === segmentName)) {
-      throw new AHException(`Time segment ${segmentName} already exists`);
+      throw new AnthillException(`Time segment ${segmentName} already exists`);
     }
 
-    const segment = new AHTimeSegment(segmentName);
+    const segment = new TimeSegment(segmentName);
     segment.start();
 
     this.timeSegments.push(segment);
@@ -52,8 +52,8 @@ export class AHTimeTracker {
    * @returns The segment duration (ms)
    */
   stopSegment(segmentName: string): number {
-    if (this.state === AHTimeTrackerStateEnum.Stopped) {
-      throw new AHException("Stop segment failed: Time tracker session is stopped");
+    if (this.state === TimeTrackerStateEnum.Stopped) {
+      throw new AnthillException("Stop segment failed: Time tracker session is stopped");
     }
 
     const segment = this.getSegment(segmentName);
@@ -67,11 +67,11 @@ export class AHTimeTracker {
    * @param segmentName The segment name
    * @returns The segment named by segmentName
    */
-  getSegment(segmentName: string): AHTimeSegment {
+  getSegment(segmentName: string): TimeSegment {
     const segmentIndex = this.timeSegments.findIndex((s) => s.name === segmentName);
 
     if (segmentIndex === -1) {
-      throw new AHException(`Time segment ${segmentName} doesn't exist`);
+      throw new AnthillException(`Time segment ${segmentName} doesn't exist`);
     }
 
     return this.timeSegments[segmentIndex];
@@ -82,7 +82,7 @@ export class AHTimeTracker {
    * @returns The tracking session overall duration
    */
   stopTrackingSession(): number {
-    if (this.state === AHTimeTrackerStateEnum.Stopped) {
+    if (this.state === TimeTrackerStateEnum.Stopped) {
       logInfo("stopTrackingSession has no effect when no time tracking session is running");
       return 0;
     }
@@ -96,7 +96,7 @@ export class AHTimeTracker {
       }
     }
 
-    this.state = AHTimeTrackerStateEnum.Stopped;
+    this.state = TimeTrackerStateEnum.Stopped;
 
     return sessionDuration;
   }

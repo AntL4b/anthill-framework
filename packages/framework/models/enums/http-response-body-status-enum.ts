@@ -1,4 +1,4 @@
-export enum AHHttpResponseBodyStatusEnum {
+export enum HttpResponseBodyStatusEnum {
   Success = "success",
   Error = "error",
   Failure = "failure",

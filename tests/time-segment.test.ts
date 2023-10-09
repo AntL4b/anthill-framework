@@ -1,37 +1,37 @@
-import { AHException, AHLogger, AHTimeSegment } from "../packages";
+import { AnthillException, Logger, TimeSegment } from "../packages";
 
-describe("AHTimeSegment", () => {
+describe("TimeSegment", () => {
   test("constructor", () => {
-    const timeSegment = new AHTimeSegment("test-segment");
+    const timeSegment = new TimeSegment("test-segment");
     expect(timeSegment).toBeTruthy();
     expect(timeSegment.name).toEqual("test-segment");
   });
 
   test("start", () => {
-    const timeSegment = new AHTimeSegment();
+    const timeSegment = new TimeSegment();
     expect(timeSegment.startTime).toBeFalsy();
     timeSegment.start();
     expect(timeSegment.startTime).toBeTruthy();
-    expect(() => timeSegment.start()).toThrow(AHException);
+    expect(() => timeSegment.start()).toThrow(AnthillException);
   });
 
   test("stop", () => {
-    const timeSegment = new AHTimeSegment();
+    const timeSegment = new TimeSegment();
     timeSegment.start();
     expect(timeSegment.endTime).toBeFalsy();
     timeSegment.stop();
     expect(timeSegment.endTime).toBeTruthy();
-    expect(() => timeSegment.stop()).toThrow(AHException);
+    expect(() => timeSegment.stop()).toThrow(AnthillException);
 
-    const logger = AHLogger.getInstance();
+    const logger = Logger.getInstance();
     const handler = jest.fn(() => {});
     logger.addHandler(handler);
 
-    const timeSegment2 = new AHTimeSegment();
+    const timeSegment2 = new TimeSegment();
     timeSegment2.start();
     timeSegment2.stop(true); // verbose mode
 
-    const timeSegment3 = new AHTimeSegment("segment-name");
+    const timeSegment3 = new TimeSegment("segment-name");
     timeSegment3.start();
     timeSegment3.stop(true); // verbose mode
 
@@ -39,7 +39,7 @@ describe("AHTimeSegment", () => {
   });
 
   test("getDuration", () => {
-    const timeSegment = new AHTimeSegment();
+    const timeSegment = new TimeSegment();
     timeSegment.start();
     const d1 = timeSegment.getDuration();
     expect(d1).toBeTruthy();

@@ -1,7 +1,7 @@
-import { AHLogLevelEnum } from "../enums/log-level-enum";
+import { LogLevelEnum } from "../enums/log-level-enum";
 
 /* Used by all handlers */
-export interface AHAnthillOptions {
+export interface AnthillOptions {
   displayPerformanceMetrics?: boolean;
-  defaultLogLevel?: AHLogLevelEnum;
+  defaultLogLevel?: LogLevelEnum;
 }

@@ -1,4 +1,4 @@
-import { AHAwsEvent } from "../aws/event/aws-event";
-import { AHHttpResponse } from "../../features/http-response";
+import { AwsEvent } from "../aws/event/aws-event";
+import { HttpResponse } from "../../features/http-response";
 
-export type RunBeforeReturnType = AHAwsEvent | AHHttpResponse;
+export type RunBeforeReturnType = AwsEvent | HttpResponse;

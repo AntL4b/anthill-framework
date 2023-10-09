@@ -1,4 +1,4 @@
-export interface AHAwsEventRequestContextIdentity {
+export interface AwsEventRequestContextIdentity {
   cognitoIdentityPoolId?: string;
   accountId?: string;
   cognitoIdentityId?: string;

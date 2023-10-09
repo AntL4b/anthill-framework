@@ -3,14 +3,14 @@
  * https://github.com/middyjs/middy/blob/main/packages/http-cors/index.js
  */
 
-import { AHAwsEvent } from "../../../models/aws/event/aws-event";
-import { AHHttpResponse } from "../../http-response";
-import { AHMiddleware } from "../middleware";
-import { AHAwsContext } from "../../../models/aws/aws-context";
-import { AHCorsMiddlewareOptions } from "../../../models/middleware/cors-middleware-options";
-import { AHHttpRequestHelper } from "../../../helpers/http-request-helper";
+import { AwsEvent } from "../../../models/aws/event/aws-event";
+import { HttpResponse } from "../../http-response";
+import { Middleware } from "../middleware";
+import { AwsContext } from "../../../models/aws/aws-context";
+import { CorsMiddlewareOptions } from "../../../models/middleware/cors-middleware-options";
+import { HttpRequestHelper } from "../../../helpers/http-request-helper";
 
-const getOrigin = (incomingOrigin, options: AHCorsMiddlewareOptions) => {
+const getOrigin = (incomingOrigin, options: CorsMiddlewareOptions) => {
   if (options.origins.length > 0) {
     if (incomingOrigin && options.origins.includes(incomingOrigin)) {
       return incomingOrigin;
@@ -25,7 +25,7 @@ const getOrigin = (incomingOrigin, options: AHCorsMiddlewareOptions) => {
   }
 };
 
-const DEFAULT_OPTIONS: AHCorsMiddlewareOptions = {
+const DEFAULT_OPTIONS: CorsMiddlewareOptions = {
   getOrigin: getOrigin,
   credentials: undefined,
   headers: undefined,
@@ -41,16 +41,16 @@ const DEFAULT_OPTIONS: AHCorsMiddlewareOptions = {
 };
 
 /** Parse JSON body to js / ts object */
-export class AHCorsMiddleware extends AHMiddleware<AHCorsMiddlewareOptions> {
-  constructor(options?: AHCorsMiddlewareOptions) {
+export class CorsMiddleware extends Middleware<CorsMiddlewareOptions> {
+  constructor(options?: CorsMiddlewareOptions) {
     super({ ...DEFAULT_OPTIONS, ...options });
   }
 
-  override runAfter(httpResponse: AHHttpResponse, event: AHAwsEvent, context?: AHAwsContext): AHHttpResponse {
+  override runAfter(httpResponse: HttpResponse, event: AwsEvent, context?: AwsContext): HttpResponse {
     const options = this.payload;
     const existingHeaders = { ...httpResponse.headers };
 
-    if (AHHttpRequestHelper.getHeaderValue("Access-Control-Allow-Credentials", existingHeaders)) {
+    if (HttpRequestHelper.getHeaderValue("Access-Control-Allow-Credentials", existingHeaders)) {
       options.credentials = httpResponse["Access-Control-Allow-Credentials"] === "true";
     }
 
@@ -58,17 +58,17 @@ export class AHCorsMiddleware extends AHMiddleware<AHCorsMiddlewareOptions> {
       httpResponse.headers["Access-Control-Allow-Credentials"] = String(options.credentials);
     }
 
-    if (options.headers && !AHHttpRequestHelper.getHeaderValue("Access-Control-Allow-Headers", existingHeaders)) {
+    if (options.headers && !HttpRequestHelper.getHeaderValue("Access-Control-Allow-Headers", existingHeaders)) {
       httpResponse.headers["Access-Control-Allow-Headers"] = options.headers;
     }
 
-    if (options.methods && !AHHttpRequestHelper.getHeaderValue("Access-Control-Allow-Methods", existingHeaders)) {
+    if (options.methods && !HttpRequestHelper.getHeaderValue("Access-Control-Allow-Methods", existingHeaders)) {
       httpResponse.headers["Access-Control-Allow-Methods"] = options.methods;
     }
 
-    if (!AHHttpRequestHelper.getHeaderValue("Access-Control-Allow-Origin", existingHeaders)) {
+    if (!HttpRequestHelper.getHeaderValue("Access-Control-Allow-Origin", existingHeaders)) {
       httpResponse.headers["Access-Control-Allow-Origin"] = options.getOrigin(
-        AHHttpRequestHelper.getHeaderValue("Origin", event.headers),
+        HttpRequestHelper.getHeaderValue("Origin", event.headers),
         options,
       );
     }
@@ -78,36 +78,36 @@ export class AHCorsMiddleware extends AHMiddleware<AHCorsMiddlewareOptions> {
       vary = "Origin";
     }
 
-    if (vary && !AHHttpRequestHelper.getHeaderValue("Vary", existingHeaders)) {
+    if (vary && !HttpRequestHelper.getHeaderValue("Vary", existingHeaders)) {
       httpResponse.headers.Vary = vary;
     }
 
     if (
       options.exposeHeaders &&
-      !AHHttpRequestHelper.getHeaderValue("Access-Control-Expose-Headers", existingHeaders)
+      !HttpRequestHelper.getHeaderValue("Access-Control-Expose-Headers", existingHeaders)
     ) {
       httpResponse.headers["Access-Control-Expose-Headers"] = options.exposeHeaders;
     }
 
-    if (options.maxAge && !AHHttpRequestHelper.getHeaderValue("Access-Control-Max-Age", existingHeaders)) {
+    if (options.maxAge && !HttpRequestHelper.getHeaderValue("Access-Control-Max-Age", existingHeaders)) {
       httpResponse.headers["Access-Control-Max-Age"] = String(options.maxAge);
     }
 
     if (
       options.requestHeaders &&
-      !AHHttpRequestHelper.getHeaderValue("Access-Control-Request-Headers", existingHeaders)
+      !HttpRequestHelper.getHeaderValue("Access-Control-Request-Headers", existingHeaders)
     ) {
       httpResponse.headers["Access-Control-Request-Headers"] = options.requestHeaders;
     }
 
     if (
       options.requestMethods &&
-      !AHHttpRequestHelper.getHeaderValue("Access-Control-Request-Methods", existingHeaders)
+      !HttpRequestHelper.getHeaderValue("Access-Control-Request-Methods", existingHeaders)
     ) {
       httpResponse.headers["Access-Control-Request-Methods"] = options.requestMethods;
     }
 
-    if (options.cacheControl && !AHHttpRequestHelper.getHeaderValue("Cache-Control", existingHeaders)) {
+    if (options.cacheControl && !HttpRequestHelper.getHeaderValue("Cache-Control", existingHeaders)) {
       httpResponse.headers["Cache-Control"] = options.cacheControl;
     }
 

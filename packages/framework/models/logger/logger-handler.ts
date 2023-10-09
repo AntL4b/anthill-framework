@@ -1,4 +1,4 @@
-import { AHLogLevelEnum } from "../enums/log-level-enum";
-import { AHLoggerContext } from "./logger-context";
+import { LogLevelEnum } from "../enums/log-level-enum";
+import { LoggerContext } from "./logger-context";
 
-export type AHLoggerHandler = (messages: Array<string>, logLevel: AHLogLevelEnum, context: AHLoggerContext) => void;
+export type LoggerHandler = (messages: Array<string>, logLevel: LogLevelEnum, context: LoggerContext) => void;

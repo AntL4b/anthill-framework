@@ -1,12 +1,12 @@
-import { AHLogger } from "../logger";
-import { AHTimeTracker } from "../time-tracker";
-import { AHAbstractHandler } from "../../../core/abstract-handler";
-import { AHAwsContext } from "../../models/aws/aws-context";
-import { AHLambdaHandlerConfig } from "../../models/handler/lambda-handler-config";
-import { AHAwsCallback } from "../../models/aws/aws-callback";
+import { Logger } from "../logger";
+import { TimeTracker } from "../time-tracker";
+import { AbstractRequestHandler } from "../../../core/abstract-request-handler";
+import { AwsContext } from "../../models/aws/aws-context";
+import { LambdaHandlerConfig } from "../../models/handler/lambda-handler-config";
+import { AwsCallback } from "../../models/aws/aws-callback";
 
-export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
-  constructor(params: AHLambdaHandlerConfig<T, U>) {
+export class LambdaRequestHandler<T, U> extends AbstractRequestHandler<T, U> {
+  constructor(params: LambdaHandlerConfig<T, U>) {
     // Apply lambdaHandlerConfig options
     super(params);
   }
@@ -19,17 +19,17 @@ export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
    * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns A response
    */
-  async handleRequest(event: T, context?: AHAwsContext, callback?: AHAwsCallback): Promise<U> {
-    const tracker: AHTimeTracker = new AHTimeTracker();
+  async handleRequest(event: T, context?: AwsContext, callback?: AwsCallback): Promise<U> {
+    const tracker: TimeTracker = new TimeTracker();
 
     try {
       tracker.startTrackingSession(this.name + "-tracking-session");
 
-      AHLogger.getInstance().debug("Handling request");
-      AHLogger.getInstance().debug(`Name: ${this.name}`);
+      Logger.getInstance().debug("Handling request");
+      Logger.getInstance().debug(`Name: ${this.name}`);
 
       // Now run the handler callable function
-      AHLogger.getInstance().debug("Running handler callable");
+      Logger.getInstance().debug("Running handler callable");
 
       tracker.startSegment("callable-run");
       const controllerInstance = await this.getControllerInstance();
@@ -40,7 +40,7 @@ export class AHLambdaHandler<T, U> extends AHAbstractHandler<T, U> {
       this.displayPerformanceMetrics(tracker);
       return callableReponse;
     } catch (e) {
-      AHLogger.getInstance().error((e as { message: string }).message);
+      Logger.getInstance().error((e as { message: string }).message);
 
       tracker.stopTrackingSession();
       this.displayPerformanceMetrics(tracker);

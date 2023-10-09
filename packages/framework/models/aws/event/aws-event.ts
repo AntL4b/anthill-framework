@@ -1,16 +1,16 @@
-import { AHAwsEventRequestContext } from "./aws-event-request-context";
-import { AHRestMethodEnum } from "../../enums/rest-method-enum";
+import { AwsEventRequestContext } from "./aws-event-request-context";
+import { RestMethodEnum } from "../../enums/rest-method-enum";
 
-export class AHAwsEvent {
+export class AwsEvent {
   ressource: string;
   path: string;
   methodArn: string;
-  httpMethod: AHRestMethodEnum;
+  httpMethod: RestMethodEnum;
   headers: { [key: string]: string };
   queryStringParameters?: { [key: string]: string };
   pathParameters?: { [key: string]: string };
   stageVariables?: { [key: string]: string };
-  requestContext: AHAwsEventRequestContext;
+  requestContext: AwsEventRequestContext;
   body?: string | any; // Might be altered by middlewares
   isBase64Encoded: boolean;
   middlewareData?: any;

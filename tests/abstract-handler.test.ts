@@ -1,15 +1,15 @@
 import {
-  AHAwsContext,
-  AHException,
-  AHLogger,
+  AwsContext,
+  AnthillException,
+  Logger,
   Anthill,
-  AHPromiseHelper,
-  AHLambdaHandler,
+  PromiseHelper,
   anthill,
+  LambdaRequestHandler,
 } from "../packages";
-import { AHTestResource } from "./resources/test-resource";
+import { TestResource } from "./resources/test-resource";
 
-describe("AHAbstractHandler", () => {
+describe("AbstractHandler", () => {
   beforeEach(() => {
     Anthill["instance"] = null;
     Anthill.getInstance()._dependencyContainer.register("controller", class Controller {});
@@ -17,15 +17,15 @@ describe("AHAbstractHandler", () => {
 
   test("constructor", () => {
     expect(() => {
-      new AHLambdaHandler<any, any>({
+      new LambdaRequestHandler<any, any>({
         name: "invalid-name",
-        callable: (event: any, context: AHAwsContext) => AHPromiseHelper.promisify(null),
+        callable: (event: any, context: AwsContext) => PromiseHelper.promisify(null),
       });
-    }).toThrow(AHException);
+    }).toThrow(AnthillException);
   });
 
   test("getName", () => {
-    const handler = AHTestResource.getDefaultRestHandler();
+    const handler = TestResource.getDefaultRestHandler();
     expect(handler.getName()).toEqual("handler");
   });
 
@@ -37,12 +37,12 @@ describe("AHAbstractHandler", () => {
         displayPerformanceMetrics: true,
       }
     });
-    const logger = AHLogger.getInstance();
+    const logger = Logger.getInstance();
     const logHandler = jest.fn(() => {});
     logger.addHandler(logHandler);
 
-    const handler = AHTestResource.getDefaultLambdaHandler({});
-    await handler.handleRequest(null, AHTestResource.getBaseContext());
+    const handler = TestResource.getDefaultLambdaHandler({});
+    await handler.handleRequest(null, TestResource.getBaseContext());
     expect(logHandler).toHaveBeenCalled();
   });
 });

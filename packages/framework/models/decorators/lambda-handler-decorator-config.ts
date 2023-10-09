@@ -1,4 +1,4 @@
-export interface AHLambdaHandlerDecoratorConfig {
+export interface LambdaHandlerDecoratorConfig {
   /**
    * Override handler name inside handler registry
    */

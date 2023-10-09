@@ -1,15 +1,15 @@
-import { AHAwsEvent } from "../../../models/aws/event/aws-event";
-import { AHHttpResponse } from "../../http-response";
-import { AHPromiseHelper } from "../../../helpers/promise-helper";
-import { AHMiddleware } from "../middleware";
-import { AHAwsContext } from "../../../models/aws/aws-context";
+import { AwsEvent } from "../../../models/aws/event/aws-event";
+import { HttpResponse } from "../../http-response";
+import { PromiseHelper } from "../../../helpers/promise-helper";
+import { Middleware } from "../middleware";
+import { AwsContext } from "../../../models/aws/aws-context";
 
-export class AHQuerystringFieldMiddleware extends AHMiddleware<Array<string>> {
+export class QuerystringFieldMiddleware extends Middleware<Array<string>> {
   constructor(payload: Array<string>) {
     super(payload);
   }
 
-  override runBefore(event: AHAwsEvent, context?: AHAwsContext): Promise<AHAwsEvent | AHHttpResponse> {
+  override runBefore(event: AwsEvent, context?: AwsContext): Promise<AwsEvent | HttpResponse> {
     if (event.queryStringParameters) {
       const queryStringParametersKeys = Object.keys(event.queryStringParameters);
 
@@ -24,21 +24,21 @@ export class AHQuerystringFieldMiddleware extends AHMiddleware<Array<string>> {
       }
 
       if (notIncludedKeys.length > 0) {
-        return AHPromiseHelper.promisify(
-          AHHttpResponse.error({ message: `[${notIncludedKeys.join(", ")}] not found in querystring` }),
+        return PromiseHelper.promisify(
+          HttpResponse.error({ message: `[${notIncludedKeys.join(", ")}] not found in querystring` }),
         );
       } else {
-        return AHPromiseHelper.promisify(event);
+        return PromiseHelper.promisify(event);
       }
     } else if (this.payload.length) {
       // No query string parameters and required parameter(s)
 
-      return AHPromiseHelper.promisify(
-        AHHttpResponse.error({ message: `[${this.payload.join(", ")}] not found in querystring` }),
+      return PromiseHelper.promisify(
+        HttpResponse.error({ message: `[${this.payload.join(", ")}] not found in querystring` }),
       );
     } else {
       // No query string parameters and no required parameter
-      return AHPromiseHelper.promisify(event);
+      return PromiseHelper.promisify(event);
     }
   }
 }

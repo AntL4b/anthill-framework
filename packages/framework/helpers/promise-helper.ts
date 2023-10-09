@@ -1,4 +1,4 @@
-export class AHPromiseHelper {
+export class PromiseHelper {
   /**
    * Promisify anything
    * @param result The result to resolve within the promise

@@ -1,4 +1,4 @@
-export enum AHLogLevelEnum {
+export enum LogLevelEnum {
   Trace = "trace",
   Debug = "debug",
   Info = "info",

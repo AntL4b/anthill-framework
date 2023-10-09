@@ -1,19 +1,19 @@
-import { AHCallable } from "../framework/models/handler/callable";
-import { AHException } from "../framework/features/anthill-exception";
-import { AHAbstractHandlerConfig } from "./models/abstract-handler-config";
-import { AHAwsContext } from "../framework/models/aws/aws-context";
-import { AHTimeTracker } from "../framework/features/time-tracker";
-import { AHAwsCallback } from "../framework/models/aws/aws-callback";
+import { Callable } from "../framework/models/handler/callable";
+import { AnthillException } from "../framework/features/anthill-exception";
+import { AbstractHandlerConfig } from "./models/abstract-handler-config";
+import { AwsContext } from "../framework/models/aws/aws-context";
+import { TimeTracker } from "../framework/features/time-tracker";
+import { AwsCallback } from "../framework/models/aws/aws-callback";
 import { Anthill } from "../framework/features/anthill";
 
-export abstract class AHAbstractHandler<T, U> {
+export abstract class AbstractRequestHandler<T, U> {
   public controllerName: string;
   protected name: string;
-  protected callable: AHCallable<T, U>;
+  protected callable: Callable<T, U>;
 
-  constructor(params: AHAbstractHandlerConfig<T, U>) {
+  constructor(params: AbstractHandlerConfig<T, U>) {
     if (!/^[a-zA-z_]+[a-zA-z0-9]*$/.test(params.name)) {
-      throw new AHException(
+      throw new AnthillException(
         `Invalid handler name: ${params.name}. Handler name must respect typescript var naming convention`,
       );
     }
@@ -35,7 +35,7 @@ export abstract class AHAbstractHandler<T, U> {
    * Display performance metrics for given tracker
    * @param tracker Tracker to print metrics for
    */
-  displayPerformanceMetrics(tracker: AHTimeTracker) {
+  displayPerformanceMetrics(tracker: TimeTracker) {
     if (Anthill.getInstance()._configuration.options.displayPerformanceMetrics) {
       tracker.logTrackingSession();
     }
@@ -43,7 +43,7 @@ export abstract class AHAbstractHandler<T, U> {
 
   protected getControllerInstance<T>(): T {
     if (!this.controllerName) {
-      throw new AHException(
+      throw new AnthillException(
         `Can't resolve controller name for handler ${this.name}. A handler method must be inside a class decorated with a controller decorator`,
       );
     }
@@ -58,5 +58,5 @@ export abstract class AHAbstractHandler<T, U> {
    * @param callback Callback method to respond the lambda call (pref not to use it)
    * @returns The request response
    */
-  abstract handleRequest(event: T, context?: AHAwsContext, callback?: AHAwsCallback): Promise<U>;
+  abstract handleRequest(event: T, context?: AwsContext, callback?: AwsCallback): Promise<U>;
 }

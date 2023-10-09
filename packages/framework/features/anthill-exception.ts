@@ -1,4 +1,4 @@
-export class AHException extends Error {
+export class AnthillException extends Error {
   constructor(message?: string) {
     super(message);
   }

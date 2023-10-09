@@ -1,5 +1,5 @@
-import { AHObjectHelper, Anthill, RestController, anthill } from "../packages";
-import { AHRestControllerClass } from "../packages/core/models/rest-controller-class";
+import { ObjectHelper, Anthill, RestController, anthill } from "../packages";
+import { RestControllerClass } from "../packages/core/models/rest-controller-class";
 
 describe("RestController decorator", () => {
   beforeEach(() => {
@@ -8,14 +8,14 @@ describe("RestController decorator", () => {
 
   test("RestController decorator without params", async () => {
     @RestController()
-    class AHTest {}
+    class Test {}
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest]
+      controllers: [Test]
     });
 
-    expect(Object.keys(app["_dependencyContainer"]["container"]).includes("AHTest")).toEqual(true);
+    expect(Object.keys(app["_dependencyContainer"]["container"]).includes("Test")).toEqual(true);
   });
 
   test("RestController decorator with params", async () => {
@@ -25,16 +25,16 @@ describe("RestController decorator", () => {
         cacheable: true,
       },
     })
-    class AHTest {}
+    class Test {}
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest]
+      controllers: [Test]
     });
 
-    const controllerInstance = app["_dependencyContainer"].resolve<InstanceType<AHRestControllerClass>>("AHTest");
+    const controllerInstance = app["_dependencyContainer"].resolve<InstanceType<RestControllerClass>>("Test");
 
-    expect(AHObjectHelper.isEquivalentObj(controllerInstance._restHandlerConfig, {
+    expect(ObjectHelper.isEquivalentObj(controllerInstance._restHandlerConfig, {
       middlewares: [],
       cacheConfig: {
         cacheable: true,

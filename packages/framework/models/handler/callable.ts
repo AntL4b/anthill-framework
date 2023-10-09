@@ -1,8 +1,8 @@
-import { AHAwsCallback } from "../aws/aws-callback";
-import { AHAwsContext } from "../aws/aws-context";
+import { AwsCallback } from "../aws/aws-callback";
+import { AwsContext } from "../aws/aws-context";
 
-export type AHCallable<T, U> = (
+export type Callable<T, U> = (
   event: T,
-  context?: AHAwsContext,
-  callback?: AHAwsCallback,
+  context?: AwsContext,
+  callback?: AwsCallback,
 ) => Promise<U> | U;

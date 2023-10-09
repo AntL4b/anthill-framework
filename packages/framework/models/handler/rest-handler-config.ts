@@ -1,12 +1,12 @@
-import { AHMiddleware } from "../../features/middleware/middleware";
-import { AHRestMethodEnum } from "../enums/rest-method-enum";
-import { AHAbstractHandlerConfig } from "../../../core/models/abstract-handler-config";
-import { AHAwsEvent } from "../aws/event/aws-event";
-import { AHHttpResponse } from "../../features/http-response";
-import { AHRestHandlerCacheConfig } from "../rest-handler-cache-config";
+import { Middleware } from "../../features/middleware/middleware";
+import { RestMethodEnum } from "../enums/rest-method-enum";
+import { AbstractHandlerConfig } from "../../../core/models/abstract-handler-config";
+import { AwsEvent } from "../aws/event/aws-event";
+import { HttpResponse } from "../../features/http-response";
+import { RestHandlerCacheConfig } from "../rest-handler-cache-config";
 
-export interface AHRestHandlerConfig extends AHAbstractHandlerConfig<AHAwsEvent, AHHttpResponse> {
-  method: AHRestMethodEnum;
-  middlewares?: Array<AHMiddleware<any>>;
-  cacheConfig?: AHRestHandlerCacheConfig;
+export interface RestHandlerConfig extends AbstractHandlerConfig<AwsEvent, HttpResponse> {
+  method: RestMethodEnum;
+  middlewares?: Array<Middleware<any>>;
+  cacheConfig?: RestHandlerCacheConfig;
 }

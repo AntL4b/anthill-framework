@@ -1,9 +1,9 @@
 import { RunBeforeReturnType } from "../../models/middleware/run-before-return-type";
-import { AHAwsContext } from "../../models/aws/aws-context";
-import { AHAwsEvent } from "../../models/aws/event/aws-event";
-import { AHHttpResponse } from "../http-response";
+import { AwsContext } from "../../models/aws/aws-context";
+import { AwsEvent } from "../../models/aws/event/aws-event";
+import { HttpResponse } from "../http-response";
 
-export class AHMiddleware<T> {
+export class Middleware<T> {
   payload: T;
 
   constructor(payload?: T) {
@@ -16,7 +16,7 @@ export class AHMiddleware<T> {
    * @param context The context received by the handler
    * @returns An event if the middleware can be passed through or an HttpResponse if the handler call must stop due to middleware response
    */
-  runBefore(event: AHAwsEvent, context: AHAwsContext): Promise<RunBeforeReturnType> | RunBeforeReturnType {
+  runBefore(event: AwsEvent, context: AwsContext): Promise<RunBeforeReturnType> | RunBeforeReturnType {
     return event;
   }
 
@@ -27,7 +27,7 @@ export class AHMiddleware<T> {
    * @param context The context received by the handler
    * @returns An http response
    */
-  runAfter(httpResponse: AHHttpResponse, event: AHAwsEvent, context: AHAwsContext): Promise<AHHttpResponse> | AHHttpResponse {
+  runAfter(httpResponse: HttpResponse, event: AwsEvent, context: AwsContext): Promise<HttpResponse> | HttpResponse {
     return httpResponse;
   }
 }

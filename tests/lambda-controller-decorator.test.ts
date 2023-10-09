@@ -1,5 +1,5 @@
-import { AHObjectHelper, Anthill, LambdaController, anthill } from "../packages";
-import { AHLambdaControllerClass } from "../packages/core/models/lambda-controller-class";
+import { ObjectHelper, Anthill, LambdaController, anthill } from "../packages";
+import { LambdaControllerClass } from "../packages/core/models/lambda-controller-class";
 
 describe("LambdaController decorator", () => {
   beforeEach(() => {
@@ -8,14 +8,14 @@ describe("LambdaController decorator", () => {
 
   test("LambdaController decorator without params", async () => {
     @LambdaController()
-    class AHTest {}
+    class Test {}
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest]
+      controllers: [Test]
     });
 
-    expect(Object.keys(app["_dependencyContainer"]["container"]).includes("AHTest")).toEqual(true);
+    expect(Object.keys(app["_dependencyContainer"]["container"]).includes("Test")).toEqual(true);
   });
 
   test("RestController decorator with params", async () => {
@@ -24,17 +24,17 @@ describe("LambdaController decorator", () => {
         displayPerformanceMetrics: true,
       },
     })
-    class AHTest {}
+    class Test {}
 
     const app = anthill();
     app.configure({
-      controllers: [AHTest]
+      controllers: [Test]
     });
 
-    const controllerInstance = app["_dependencyContainer"].resolve<InstanceType<AHLambdaControllerClass>>("AHTest");
+    const controllerInstance = app["_dependencyContainer"].resolve<InstanceType<LambdaControllerClass>>("Test");
 
     expect(
-      AHObjectHelper.isEquivalentObj(controllerInstance._lambdaHandlerConfig, {
+      ObjectHelper.isEquivalentObj(controllerInstance._lambdaHandlerConfig, {
         options: {
           displayPerformanceMetrics: true,
         },
