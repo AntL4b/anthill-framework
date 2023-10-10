@@ -17,3 +17,16 @@
   - dynamodb
   - cors
   - cache
+- New sample idea: restaurant ordering
+  - Register (email / pwd)
+    - cognito
+    - email
+  - See menu
+  - Reserving table (time, number of people) => table number allocation
+  - Paying
+
+  BDD
+  ---
+  users (key, email, activation code, status (pending, active), role (customer, staff))
+  tables (number, capacity)
+  reservations (user, table, time, number of people, status (pending, aproved, cancelled))
