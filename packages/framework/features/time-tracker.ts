@@ -106,35 +106,6 @@ export class TimeTracker {
    */
   logTrackingSession(): void {
     const maxSegmentNameLength = Math.max(...this.timeSegments.map((s) => s.name.length));
-
-    const getXPointsStr = (x: number) => {
-      let res = "";
-      while (res.length < x) {
-        res = res + ".";
-      }
-      return res;
-    };
-
-    const getXSpacesStr = (x: number) => {
-      let res = "";
-      while (res.length < x) {
-        res = res + " ";
-      }
-      return res;
-    };
-
-    const getXXStr = (x: number) => {
-      let res = "";
-      while (res.length < x) {
-        res = res + "x";
-      }
-      return res;
-    };
-
-    const fillStrWithTrailingSpaces = (str: string, length: number) => {
-      return str + getXSpacesStr(length - str.length);
-    };
-
     const now = performance.now();
     const sessionSegment = this.getSegment(this.trackingSessionSegmentName);
 
@@ -149,13 +120,13 @@ export class TimeTracker {
       );
 
       logInfo(
-        fillStrWithTrailingSpaces(segment.name, maxSegmentNameLength) +
+        segment.name.padEnd(maxSegmentNameLength - segment.name.length, " ") +
           ": " +
-          getXPointsStr(segmentBlocStartIndex) +
+          "".padStart(segmentBlocStartIndex, ".") +
           "[" +
-          getXXStr(segmentBlocLength) +
+          "".padStart(segmentBlocLength, "x") +
           "]" +
-          getXPointsStr(LOG_SESSION_LINE_LENGTH - segmentBlocStartIndex - segmentBlocLength) +
+          "".padStart(LOG_SESSION_LINE_LENGTH - segmentBlocStartIndex - segmentBlocLength, ".") +
           `(${Math.round(segmentDuration * 1000) / 1000} ms)`, // 3 digits round
       );
     }
