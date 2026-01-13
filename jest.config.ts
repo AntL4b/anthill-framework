@@ -1,6 +1,8 @@
 module.exports = {
   transform: {
-    ".(ts|tsx)": "ts-jest",
+    ".(ts|tsx)": ["ts-jest", {
+      tsconfig: "tsconfig.jest.json",
+    }],
   },
   testRegex: "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
   moduleFileExtensions: [
@@ -30,3 +32,4 @@ module.exports = {
     },
   },
 }
+

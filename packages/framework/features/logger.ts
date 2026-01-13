@@ -124,7 +124,7 @@ export class Logger {
   }
 
   private performLog(payload: Array<any>, logLevel: LogLevelEnum, context: LoggerContext): void {
-    payload = payload.map((p) => this.formatter(p));
+    payload = payload.map((p: any) => this.formatter(p));
     for (let index = 0; index < this.handlers.length; index++) {
       const handler = this.handlers[index];
       handler(payload, logLevel, context);

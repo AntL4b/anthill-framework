@@ -51,7 +51,7 @@ export class CorsMiddleware extends Middleware<CorsMiddlewareOptions> {
     const existingHeaders = { ...httpResponse.headers };
 
     if (HttpRequestHelper.getHeaderValue("Access-Control-Allow-Credentials", existingHeaders)) {
-      options.credentials = httpResponse["Access-Control-Allow-Credentials"] === "true";
+      options.credentials = httpResponse["Access-Control-Allow-Credentials"] == "true";
     }
 
     if (options.credentials) {
@@ -74,7 +74,7 @@ export class CorsMiddleware extends Middleware<CorsMiddlewareOptions> {
     }
 
     let vary = options.vary;
-    if (httpResponse.headers["Access-Control-Allow-Origin"] !== "*" && !vary) {
+    if (httpResponse.headers["Access-Control-Allow-Origin"] != "*" && !vary) {
       vary = "Origin";
     }
 

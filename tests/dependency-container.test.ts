@@ -11,6 +11,15 @@ describe("DependencyContainer", () => {
     expect(dependencyContainer["container"]["Test"].constructor).toBeTruthy();
   });
 
+  test("register twice", () => {
+    const dependencyContainer = new DependencyContainer();
+    class Test {};
+    dependencyContainer.register("Test", Test);
+		dependencyContainer.register("Test", Test);
+
+    expect(Object.keys(dependencyContainer["container"]).filter((k: string) => k === "Test").length).toEqual(1);
+  });
+
   test("resolve", () => {
     const dependencyContainer = new DependencyContainer();
     class Test {};
@@ -19,13 +28,13 @@ describe("DependencyContainer", () => {
     expect(dependencyContainer["container"]["Test"].instance).toEqual(null);
 
     const instance = dependencyContainer.resolve<Test>("Test");
-    
+
     expect(instance).toBeInstanceOf(Test);
     expect(dependencyContainer["container"]["Test"].instance).toEqual(instance);
   });
 
   test("resolve fails", () => {
-    const dependencyContainer = new DependencyContainer();    
+    const dependencyContainer = new DependencyContainer();
     expect(() => { dependencyContainer.resolve<any>("Test") }).toThrow(AnthillException);
   });
 });

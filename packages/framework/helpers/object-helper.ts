@@ -58,10 +58,8 @@ export class ObjectHelper {
     for (const prop in obj) {
       stringProperties.push(prop);
     }
-    if (Object.getOwnPropertySymbols) {
-      const symbolProperties = Object.getOwnPropertySymbols(obj);
-      Array.prototype.push.apply(stringProperties, symbolProperties);
-    }
+    const symbolProperties = Object.getOwnPropertySymbols(obj);
+    Array.prototype.push.apply(stringProperties, symbolProperties);
     return stringProperties;
   }
 

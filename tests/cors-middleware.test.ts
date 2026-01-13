@@ -124,6 +124,26 @@ describe("CorsMiddleware", () => {
     expect(middlewareResponse.headers["Access-Control-Allow-Origin"]).toEqual("https://test.com");
   });
 
+	  test("Option origin Access-Control-Allow-Origin already set", async () => {
+    const options: CorsMiddlewareOptions = {
+      origin: "https://test.com",
+      credentials: true,
+    };
+
+    const middleware = new CorsMiddleware(options);
+    const response = HttpResponse.success(null, {
+      "Access-Control-Allow-Origin": "https://test2.com",
+    });
+
+    const middlewareResponse = await middleware.runAfter(
+      response,
+      TestResource.getBaseEvent({ headers: { Origin: "https://test.com" } }),
+      TestResource.getBaseContext(),
+    );
+
+    expect(middlewareResponse.headers["Access-Control-Allow-Origin"]).toEqual("https://test2.com");
+  });
+
   test("Option origins", async () => {
     const options: CorsMiddlewareOptions = {
       origins: ["https://test.com", "https://test2.com"],

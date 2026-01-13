@@ -25,7 +25,7 @@ describe("RestHandler decorator", () => {
         return PromiseHelper.promisify(HttpResponse.success(null));
       }
 
-      @RestHandler({ method: RestMethodEnum.Get })
+      @RestHandler({ method: RestMethodEnum.Get, name: "listTest2" })
       static async listTest2(event: AwsEvent, context?: AwsContext): Promise<HttpResponse> {
         return PromiseHelper.promisify(HttpResponse.success(null));
       }

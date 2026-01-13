@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es2021",
     "lib": ["es2021"],
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 		"moduleDetection": "force",
     "resolveJsonModule": false,
     "declaration": true,

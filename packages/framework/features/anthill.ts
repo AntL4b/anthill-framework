@@ -98,7 +98,7 @@ export class Anthill {
    * @param handler The handler to register
    */
   _registerHandler(handler: AbstractRequestHandler<any, any>): void {
-    if (this.handlers.map((h) => h.getName()).includes(handler.getName())) {
+    if (this.handlers.map((h: AbstractRequestHandler<any, any>) => h.getName()).includes(handler.getName())) {
       throw new AnthillException(
         `Duplicate handler with name ${handler.getName()}. Handler names must be unique within the application`,
       );

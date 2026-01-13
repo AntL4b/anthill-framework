@@ -30,10 +30,11 @@
     "build": "npm run clean && tsc -p ./tsconfig-build.json",
     "clean": "rimraf dist/",
     "release": "npm run test && npm run build && dotenv release-it --",
-    "test": "jest"
+    "test": "cross-env TS_NODE_PROJECT=tsconfig.jest.json jest"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
+    "cross-env": "^10.1.0",
     "dotenv-cli": "^11.0.0",
     "husky": "^9.1.7",
     "import-sort-cli": "^6.0.0",

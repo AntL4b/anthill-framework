@@ -1,11 +1,4 @@
-import {
-  AwsContext,
-  AnthillException,
-  Anthill,
-  LambdaController,
-  LambdaHandler,
-  anthill,
-} from "../packages";
+import { AwsContext, AnthillException, Anthill, LambdaController, LambdaHandler, anthill } from "../packages";
 import { TestResource } from "./resources/test-resource";
 
 describe("LambdaHandler decorator", () => {
@@ -25,7 +18,7 @@ describe("LambdaHandler decorator", () => {
         return "OK";
       }
 
-      @LambdaHandler()
+      @LambdaHandler({ name: "listTest2" })
       static async listTest2(event: any, context?: AwsContext): Promise<string> {
         return "OK2";
       }
@@ -64,7 +57,7 @@ describe("LambdaHandler decorator", () => {
     const handlers = app.exposeHandlers();
     expect(Object.keys(handlers).includes("listTest")).toBe(false);
 
-    const handler = Anthill.getInstance()["handlers"].find(h => h.getName() === "listTest");
+    const handler = Anthill.getInstance()["handlers"].find((h) => h.getName() === "listTest");
     const res = handler.handleRequest(null, TestResource.getBaseContext());
 
     expect(res).rejects.toThrow(AnthillException);

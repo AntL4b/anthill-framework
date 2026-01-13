@@ -10,7 +10,7 @@ export class HttpResponse {
 
     if (
       !Object.keys(this.headers)
-        .map((k) => k.toLocaleLowerCase())
+        .map((k: string) => k.toLocaleLowerCase())
         .includes("content-type")
     ) {
       this.headers["Content-Type"] = "application/json";

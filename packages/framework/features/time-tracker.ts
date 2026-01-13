@@ -105,7 +105,7 @@ export class TimeTracker {
    * Log the tracking session
    */
   logTrackingSession(): void {
-    const maxSegmentNameLength = Math.max(...this.timeSegments.map((s) => s.name.length));
+    const maxSegmentNameLength = Math.max(...this.timeSegments.map((s: TimeSegment) => s.name.length));
     const now = performance.now();
     const sessionSegment = this.getSegment(this.trackingSessionSegmentName);
 
