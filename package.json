@@ -29,7 +29,7 @@
   "scripts": {
     "build": "npm run clean && tsc -p ./tsconfig-build.json",
     "clean": "rimraf dist/",
-    "release": "npm run test && npm run build && dotenv release-it --",
+    "release": "npx release-it",
     "test": "cross-env TS_NODE_PROJECT=tsconfig.jest.json jest"
   },
   "devDependencies": {
