@@ -24,16 +24,16 @@
     "@antl4b/anthill-framework": "file:../.."
   },
   "devDependencies": {
-    "husky": "^8.0.3",
+    "husky": "^9.1.7",
     "import-sort-cli": "^6.0.0",
     "import-sort-parser-typescript": "^6.0.0",
     "import-sort-style-module": "^6.0.0",
-    "lint-staged": "^13.2.2",
-    "prettier": "^2.8.8",
-    "serverless-domain-manager": "^6.4.1",
-    "serverless-offline": "^12.0.4",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
+    "serverless-domain-manager": "^8.0.0",
+    "serverless-offline": "^14.4.0",
     "serverless-plugin-typescript": "^2.1.5",
-    "typescript": "5.2.2"
+    "typescript": "5.9.3"
   },
   "husky": {
     "hooks": {

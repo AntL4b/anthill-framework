@@ -22,9 +22,9 @@
     "sourceMap": true,
     "allowJs": true,
     "useDefineForClassFields": true,
-		"forceConsistentCasingInFileNames": true,
-		"skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "removeComments": false,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   }
 }

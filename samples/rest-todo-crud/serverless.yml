@@ -22,6 +22,9 @@ provider:
         - lambda:InvokeAsync
       Resource: "*"
 
+build:
+  esbuild: false
+
 plugins:
   - serverless-plugin-typescript
   - serverless-offline # serverless-offline needs to be last in the list
