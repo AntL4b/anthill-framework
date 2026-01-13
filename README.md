@@ -2,8 +2,10 @@
   <img src="https://github.com/AntL4b/anthill-framework/blob/main/docs/images/logo.png?raw=true" width="120" alt="Anthill Framework logo" />
 </p>
 
+<h1 align="center">Anthill Framework</h1>
+
 <p align="center">
-A lightweight, fast and reliable dependence-less TypeScript framework for building serverless applications on AWS.
+  <strong>A zero-dependency TypeScript framework for building serverless applications on AWS Lambda</strong>
 </p>
 
 <p align="center">
@@ -14,46 +16,66 @@ A lightweight, fast and reliable dependence-less TypeScript framework for buildi
   <a href="https://packagephobia.com/result?p=@antl4b/anthill-framework" target="_blank"><img src="https://badgen.net/packagephobia/install/@antl4b/anthill-framework" alt="NPM Install Size" /></a>
 </p>
 
-## Description
+<p align="center">
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-documentation">Documentation</a> •
+  <a href="#-examples">Examples</a> •
+  <a href="#-contributing">Contributing</a>
+</p>
 
-The project aims to provide an environment and tools for developing REST API using AWS Lambda and API Gateway. Anthill Framework comes with an HTTP request handling system capable of caching, running middlewares, dealing with CORS and much more ! It can handle classic AWS Lambda invocation as well (i.e. No HTTP / AWS API Gateway integration).
+---
 
-Anthill comes with strong typing and structure because readability counts and code benefits from being explicit.
+## 📖 Overview
 
-## Why Anthill Framework ?
+Anthill Framework provides a modern, decorator-based approach to building REST APIs and Lambda functions on AWS. Designed specifically for serverless architectures, it offers built-in support for caching, middleware pipelines, CORS handling, and more — all with zero external dependencies.
 
-There are a lot of existing frameworks to build amazing web backends.
-So, why should you use Anthill ?
+### Why Anthill?
 
-- It has ZERO dependency
-- It's tailor-made for AWS using API Gateway and Lambda
-- It's light and fast even when facing cold starts
-- It's 100% TypeScript and strongly typed
+| Feature | Benefit |
+|---------|---------|
+| 🪶 **Zero Dependencies** | Minimal bundle size, faster cold starts, reduced security vulnerabilities |
+| ⚡ **AWS-Native** | Built specifically for API Gateway + Lambda architecture |
+| 🔷 **100% TypeScript** | Full type safety, excellent IDE support, self-documenting code |
+| 🎯 **Decorator-Based** | Clean, declarative syntax inspired by modern frameworks |
+| 🚀 **Performance-First** | Optimized for serverless cold starts and execution time |
 
-## Table of contents
+---
 
-- [Quick start](#quick-start)
-- [Installation](#installation)
-- [Request lifecycle](#request-lifecycle)
-- [Anthill](#anthill)
-- [Configuration](#configuration)
-- [Routing](#routing)
-- [Controllers & Handlers](#controllers--handlers)
-  - [REST](#rest)
-  - [Lambda](#lambda)
-- [Middlewares](#middlewares)
-  - [Use existing ones](#use-existing-ones)
-  - [Create your own](#create-your-own)
-- [Cache](#cache)
-- [Samples](#samples)
-- [Logger](#logger)
-  - [Changing logs format](#changing-logs-format)
-  - [Adding logs handler](#adding-logs-handler)
-- [Time tracker](#time-tracker)
+## 📋 Table of Contents
 
-## Quick start
+- [Overview](#-overview)
+- [Getting Started](#-getting-started)
+  - [Installation](#installation)
+  - [Quick Example](#quick-example)
+- [Features](#-features)
+- [Documentation](#-documentation)
+  - [Core Concepts](#core-concepts)
+  - [Request Lifecycle](#request-lifecycle)
+  - [Configuration](#configuration)
+  - [Controllers & Handlers](#controllers--handlers)
+  - [Routing](#routing)
+  - [Middlewares](#middlewares)
+  - [Caching](#caching)
+  - [Logging](#logging)
+  - [Performance Tracking](#performance-tracking)
+- [Examples](#-examples)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-Here is the code for an "Hello world" example:
+---
+
+## 🚀 Getting Started
+
+### Installation
+
+```bash
+npm install @antl4b/anthill-framework
+```
+
+### Quick Example
+
+Create your first REST API endpoint in just a few lines:
 
 ```ts
 import {
@@ -68,11 +90,6 @@ import {
 
 @RestController()
 class MyController {
-  /**
-   * Handle the request
-   * @param event AWS event
-   * @returns My handler response
-   */
   @RestHandler({ method: RestMethodEnum.Get })
   myHandler(event: AwsEvent): HttpResponse {
     return HttpResponse.success({
@@ -83,44 +100,60 @@ class MyController {
 }
 
 const app = anthill();
+app.configure({ controllers: [MyController] });
 
-app.configure({
-  controllers: [MyController],
-});
-
-const handlers = app.exposeHandlers();
-exports.myHandler = handlers.myHandler;
+// Export handlers for serverless deployment
+export const { myHandler } = app.exposeHandlers();
 ```
+
+**Test your endpoint:**
 
 ```bash
-$ curl --request GET 'http://localhost:3000/dev/my-handler'
-{"status":"success","payload":"Hello world"}
+curl --request GET 'http://localhost:3000/dev/my-handler'
+# Response: {"status":"success","payload":"Hello World"}
 ```
 
-## Installation
+---
 
-This is a [Node.js](https://nodejs.org/en/) module available through the npm registry. Installation is done using the npm install command:
+## ✨ Features
 
-```bash
-$ npm install @antl4b/anthill-framework --save
-```
+- **🎭 Decorator-Based Architecture** — Clean, intuitive syntax with `@RestController`, `@RestHandler`, `@LambdaHandler`
+- **🔌 Middleware Pipeline** — Extensible request/response processing with built-in CORS, JSON parsing, and more
+- **💾 Built-in Caching** — Configurable response caching with TTL and size limits
+- **📊 Performance Metrics** — Built-in time tracking and performance monitoring
+- **🔧 Flexible Configuration** — Hierarchical configuration inheritance (App → Controller → Handler)
+- **📝 Structured Logging** — Customizable logging with multiple handlers and formatters
 
-## Request lifecycle
+---
 
-![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/request-lifecycle.drawio.png?raw=true)
+## 📚 Documentation
 
-## Anthill
+### Core Concepts
 
-Anthill class is the main entry point of an Anthill project.
-To define an Anthill app, you'll have to declare your app in the root file of your project such as:
+Anthill Framework is built around these core concepts:
+
+| Concept | Description |
+|---------|-------------|
+| **Anthill App** | The main entry point that bootstraps and configures your application |
+| **Controllers** | Classes decorated with `@RestController` or `@LambdaController` that group related handlers |
+| **Handlers** | Methods decorated with `@RestHandler` or `@LambdaHandler` that process requests |
+| **Middlewares** | Reusable components that intercept and process requests before/after handlers |
+
+### Request Lifecycle
+
+Understanding how requests flow through Anthill helps you build better applications:
+
+![Request Lifecycle](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/request-lifecycle.drawio.png?raw=true)
+
+### Configuration
+
+#### Application Setup
+
+The `anthill()` function creates your application instance:
 
 ```ts
 const app = anthill();
-```
 
-Anthill app can then be configured using `configure()` method to register controllers and to set up common configuration within your project.
-
-```ts
 app.configure({
   controllers: [MyController],
   options: {
@@ -128,22 +161,17 @@ app.configure({
     displayPerformanceMetrics: true,
   },
 });
+
+// Export handlers for serverless deployment
+export const { myHandler } = app.exposeHandlers();
 ```
 
-Finally, all registered controllers can have their handlers exposed inside an object using `exposeHandlers()` method to export and link them with the serverless configuration file.
+#### Configuration Inheritance
+
+Anthill uses a hierarchical configuration system. Settings cascade from **App → Controller → Handler**, with more specific levels overriding general ones:
 
 ```ts
-const handlers = app.exposeHandlers();
-exports.myHandler = handlers.myHandler;
-```
-
-## Configuration
-
-Anthill Framework uses a configuration inheritance system allowing to apply common logics within your app, controller or handler scope.
-
-Ex: For dealing with cors for all the REST handlers of the application, set it on Anthill app scope:
-
-```ts
+// App-level: Apply CORS to ALL handlers
 const app = anthill();
 app.configure({
   controllers: [MyController],
@@ -153,483 +181,356 @@ app.configure({
 });
 ```
 
-Ex: The following code will enable caching and require that an `Authorization` header is provided for each of the controller handlers.
-The second handler configuration will override the caching configuration to apply a shorter TTL.
-
 ```ts
+// Controller-level: Apply caching and auth to all handlers in this controller
 @RestController({
-  cacheConfig: {
-    cacheable: true,
-    ttl: 120,
-  },
+  cacheConfig: { cacheable: true, ttl: 120 },
   middlewares: [new HeaderFieldMiddleware(["Authorization"])],
 })
 class MyController {
-  /**
-   * My First handler
-   */
+  // Inherits controller config (120s TTL)
   @RestHandler({ method: RestMethodEnum.Get })
   myHandler1(event: AwsEvent): HttpResponse {
-    return HttpResponse.success({
-      status: HttpResponseBodyStatusEnum.Success,
-    });
+    return HttpResponse.success({ status: HttpResponseBodyStatusEnum.Success });
   }
 
-  /**
-   * My second handler
-   */
-  @RestHandler({
-    method: RestMethodEnum.Get,
-    cacheConfig: { ttl: 60 },
-  })
+  // Handler-level override: Uses 60s TTL instead of 120s
+  @RestHandler({ method: RestMethodEnum.Get, cacheConfig: { ttl: 60 } })
   myHandler2(event: AwsEvent): HttpResponse {
-    return HttpResponse.success({
-      status: HttpResponseBodyStatusEnum.Success,
-    });
+    return HttpResponse.success({ status: HttpResponseBodyStatusEnum.Success });
   }
 }
 ```
 
 > [!NOTE]
-> Middleware inheritance is cumulative so the 3 layers of middleware will be applied successively.
-> Through Anthill, Controller and Handler during runBefore and in reversed order during runAfter.
-> See more in [Middlewares](#middlewares) section.
+> Middleware inheritance is **cumulative** — middlewares from all three levels execute in order:
+> `App → Controller → Handler` (before) and `Handler → Controller → App` (after).
 
-## Routing
+### Routing
 
-Anthill Framework doesn't provide a proper way of routing requests to a given handler according to some path related rules.
-Traditional frameworks used to do it this way but, being in a serverless context, routing of requests to handlers benefits more from being carried out by API Gateway.
+Anthill delegates routing to **AWS API Gateway** — the optimal approach for serverless architectures. This provides:
 
-Here is an example of how requests can be routed to handlers using Serverless YML configuration file:
+- ✅ Native AWS integration with no overhead
+- ✅ Per-handler monitoring and metrics
+- ✅ Cost-effective (no routing logic execution time)
+
+**Example `serverless.yml` configuration:**
 
 ```yml
-create-resource:
-  handler: src/index.createResource
-  events:
-    - http:
-        path: /resources
-        method: post
-list-resources:
-  handler: src/index.listResources
-  events:
-    - http:
-        path: /resources
-        method: get
-get-resource:
-  handler: src/index.getResource
-  events:
-    - http:
-        path: /resources/{id}
-        method: get
-delete-resource:
-  handler: src/index.deleteResource
-  events:
-    - http:
-        path: /resources/{id}
-        method: delete
+functions:
+  create-resource:
+    handler: src/index.createResource
+    events:
+      - http:
+          path: /resources
+          method: post
+
+  list-resources:
+    handler: src/index.listResources
+    events:
+      - http:
+          path: /resources
+          method: get
+
+  get-resource:
+    handler: src/index.getResource
+    events:
+      - http:
+          path: /resources/{id}
+          method: get
 ```
 
-For more information on routing to handler, see [Serverless official documentation](https://www.serverless.com/).
+> [!TIP]
+> Single-handler Lambdas provide better monitoring and troubleshooting in AWS CloudWatch.
 
-Ensuring that each service is hosted by a single Lambda also helps a lot in terms of monitoring and troubleshooting.
-Plus, it doesn't cost anything extra.
+![Lambda Monitoring](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/lambda-monitoring.png?raw=true)
 
-![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/lambda-monitoring.png?raw=true)
+For more information, see the [Serverless Framework documentation](https://www.serverless.com/).
 
-If you're still not convinced and want to map an ANY method event to a single handler, then feel free to [create your own middleware](#create-your-own) to manage routing rules the way you prefer !
+### Controllers & Handlers
 
-## Controllers & Handlers
+Controllers group related handlers and define shared configuration. Handlers are the methods that process incoming requests.
 
-Controllers are groups of handlers defining a scope in which some common configuration is applied.
-Registering a controller to Anthill with `configure()` (see [Anthill](#anthill)), makes its handlers exposeable by the Anthill `exposeHandlers()` method.
+![Controllers & Handlers](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/controllers-handlers.drawio.png?raw=true)
 
-Handlers are methods that can be either instance or static methods. They are the main entry points for the code implementation
+#### REST Handlers
 
-![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/controllers-handlers.drawio.png?raw=true)
+For HTTP/REST APIs using API Gateway:
 
-To create controllers and handlers, Anthill Framework uses classes and decorators.
-Two types of controllers and handlers are available: `@RestController` and `@LambdaController` going in pair with `@RestHandler` and `@LambdaHandler`
+```ts
+@RestController()
+class UserController {
+  @RestHandler({ method: RestMethodEnum.Get })
+  getUser(event: AwsEvent): HttpResponse {
+    return HttpResponse.success({
+      status: HttpResponseBodyStatusEnum.Success,
+      payload: { id: 1, name: "John" },
+    });
+  }
+}
+```
+
+**Handler Signature:**
+
+```ts
+(event: AwsEvent, context?: AwsContext, callback?: AwsCallback) => Promise<HttpResponse> | HttpResponse
+```
+
+**Handler Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `method` | `RestMethodEnum` | HTTP method (GET, POST, PUT, DELETE, etc.) |
+| `name` | `string` | Override handler name (useful for naming conflicts) |
+| `middlewares` | `Middleware[]` | Handler-specific middlewares |
+| `cacheConfig` | `RestHandlerCacheConfig` | Caching configuration |
 
 > [!WARNING]
-> All handlers within the app MUST have different names.
-> By default, the handler registration system will use the handler method name but there's a possibility this name won't be unique.
-> Ex: MyController1.list() and MyController2.list() won't work.
+> Handler names must be unique across your application. Use the `name` option to resolve conflicts:
+> ```ts
+> @RestHandler({ method: RestMethodEnum.Get, name: "listUsers" })
+> list(event: AwsEvent): HttpResponse { ... }
+> ```
 
-If two handlers located in two controllers have the same name, you will have to declare an alternative name for at least one handler.
-The `name` property of the configuration object of `@RestHandler` and `@LambdaHandler` decorators is made for that purpose.
+#### Lambda Handlers
 
-### REST
-
-To create a REST controller containing a handler, decorate the controller class with `@RestController` and decorate the handler with `@RestHandler`
-
-```ts
-@RestController()
-class MyController {
-  @RestHandler({ method: RestMethodEnum.Get })
-  myHandler(event: AwsEvent): HttpResponse {
-    return HttpResponse.success({
-      status: HttpResponseBodyStatusEnum.Success,
-    });
-  }
-}
-```
-
-`@RestController` decorator takes an optional argument to apply common configuration to all handlers inside it. See [configuration](#configuration) for more details on how it works.
-
-REST handlers have to respect this signature:
-
-```ts
-restHandlerMethod(
-  event: AwsEvent,
-  context?: AwsContext,
-  callback?: AwsCallback,
-): Promise<HttpResponse> | HttpResponse;
-```
-
-As for the `@RestController` decorator, `@RestHandler` decorator takes an argument to apply configuration to the handler scope.
-
-```ts
-@RestController()
-class MyController {
-  @RestHandler({
-    method: RestMethodEnum.Get,
-    name: "myHandlerAlternativeName",
-    middlewares: [new JsonBodyParserMiddleware()],
-  })
-  myHandler(event: AwsEvent): HttpResponse {
-    return HttpResponse.success({
-      status: HttpResponseBodyStatusEnum.Success,
-    });
-  }
-}
-```
-
-### Lambda
-
-To create a Lambda controller containing a handler, decorate the controller class with `@LambdaController` and decorate the handler with `@LambdaHandler`
+For non-HTTP Lambda invocations (SQS, SNS, EventBridge, direct invocation, etc.):
 
 ```ts
 @LambdaController()
-class MyController {
+class ProcessorController {
   @LambdaHandler()
-  myHandler(event: AwsEvent): any {
-    return null;
+  processEvent(event: any): any {
+    // Process the event
+    return { processed: true };
   }
 }
 ```
 
-Lambda controllers and handlers follow the same rules as the REST ones.
-However, the way in which requests are processed is much simpler since there is way less possible configuration and no middleware execution system
-
-Lambda handlers have to respect this signature:
+**Handler Signature:**
 
 ```ts
-lambdaHandlerMethod(
-  event: AwsEvent,
-  context?: AwsContext,
-  callback?: AwsCallback,
-): Promise<any> | any;
+(event: any, context?: AwsContext, callback?: AwsCallback) => Promise<any> | any
 ```
 
-## Middlewares
+> [!NOTE]
+> Lambda handlers don't support middlewares — they're designed for simple, direct event processing.
 
-Middlewares are classes that extend `Middleware` containing methods executed before and after the handler is called (or the cache is retrieved).
+### Middlewares
 
-The `runBefore()` method executed before calling the handler has the capability of:
+Middlewares intercept requests before and after handler execution, enabling cross-cutting concerns like authentication, logging, and validation.
 
-- Executing any code
-- Making changes to the incoming request event
-- End the request lifecycle by returning an `HttpResponse`
+#### Middleware Lifecycle
 
-Its signature is as follow:
+| Method | When | Purpose |
+|--------|------|---------|
+| `runBefore()` | Before handler | Modify request, validate, short-circuit with response |
+| `runAfter()` | After handler | Modify response, cleanup, logging |
 
-```ts
-type RunBeforeReturnType = AwsEvent | HttpResponse;
-runBefore(event: AwsEvent, context: AwsContext): Promise<RunBeforeReturnType> | RunBeforeReturnType;
-```
+**Execution Flow:**
 
-It must return the event even if not altering it or an `HttpReponse` to end the request lifecycle.
+![Middleware Flow](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-1.drawio.png?raw=true)
 
-The `runAfter()` method executed after a response has been emitted (either by the handler, the cache or a middleware `runBefore()`) has the capability of:
+> [!IMPORTANT]
+> If `runBefore()` returns an `HttpResponse`, the handler is skipped and only previously-executed middlewares run their `runAfter()`:
 
-- Executing any code
-- Making changes to the request response
+![Short-circuit Flow](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-2.drawio.png?raw=true)
 
-Its signature is as follow:
+#### Built-in Middlewares
 
-```ts
-runAfter(httpResponse: HttpResponse, event: AwsEvent, context: AwsContext): Promise<HttpResponse> | HttpResponse
-```
+| Middleware | Description |
+|------------|-------------|
+| `CorsMiddleware` | Handles CORS headers and preflight requests |
+| `JsonBodyParserMiddleware` | Parses JSON request bodies |
+| `HeaderFieldMiddleware` | Validates required headers |
 
-It must return the httpResponse even if not altering it.
+Browse the [middleware directory](https://github.com/AntL4b/anthill-framework/tree/main/packages/framework/features/middleware/impl) for all available middlewares.
 
-Both `runBefore()` and the `runAfter()` methods can be overridden when extending `Middleware`.
+#### Creating Custom Middlewares
 
-> [!IMPORTANT]  
-> Middleware execution order is something to take into consideration.
-
-Let's take the example of 3 middlewares m1, m2 and m3 having all a `runBefore()` and a `runAfter()` implementation.
-The nominal scenario is this one:
-
-![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-1.drawio.png?raw=true)
-
-`runBefore()` and `runAfter()` are called as a mirror around the handler.
-
-> [!WARNING]
-> In case a middleware `runBefore()` returns an `HttpResponse`, all following middlewares `runBefore()` won't be called and only those
-> that have already been called will see their `runAfter()` method called.
-
-In the previous example of m1, m2 and m3, if m2 `runBefore()` returns an `HttpReponse`
-
-The scenario will be this one:
-
-![image](https://github.com/AntL4b/anthill-framework/blob/main/docs/images/middleware-scenario-2.drawio.png?raw=true)
-
-### Use existing ones
-
-Some middlewares have already been developed and are included in Anthill Framework to cover most frequent needs such as dealing with CORS or parsing JSON body.
-Browse [middleware](https://github.com/AntL4b/anthill-framework/tree/main/packages/framework/features/middleware/impl) folder for more details.
-
-The middleware list is likely to grow over time. Don't hesitate to request or to create a pull request if you want to contribute.
-
-### Create your own
-
-As told at the beginning of the [middlewares](#middlewares) section, middlewares are classes that extend `Middleware` class.
-
-Let's imagine a ticketing service that opens on October 10, 2023 at 8 p.m. the and which rejects all incoming requests before this time.
+Extend the `Middleware` class to create your own:
 
 ```ts
 import {
-  AwsContext,
-  AwsEvent,
-  HttpResponse,
-  HttpResponseBodyStatusEnum,
-  Middleware,
-  RunBeforeReturnType,
+  AwsContext, AwsEvent, HttpResponse,
+  HttpResponseBodyStatusEnum, Middleware, RunBeforeReturnType,
 } from "@antl4b/anthill-framework";
 
 export class BlockBeforeDateMiddleware extends Middleware<Date> {
-  // Declare payload as a date, it will store the time before which we block the request
-  constructor(payload: Date) {
-    super(payload);
+  constructor(openingDate: Date) {
+    super(openingDate);
   }
 
   override runBefore(event: AwsEvent, context?: AwsContext): RunBeforeReturnType {
-    // If current date is less than the middleware payload (the time before which we block the request)
     if (new Date() < this.payload) {
-      // Return an HttpResponse with an error
       return HttpResponse.error({
         status: HttpResponseBodyStatusEnum.Error,
-        message: "Not opened yet, retry later",
+        message: "Service not available yet",
       });
     }
-
-    // Otherwise, forward the event
     return event;
   }
 }
 ```
 
-Now to use it in a handler, instantiate the middleware inside the `@RestHandler` decorator:
+**Usage:**
 
 ```ts
-@RestController()
-export class TicketingController {
-  @RestHandler({
-    method: RestMethodEnum.Post,
-    middlewares: [
-      new BlockBeforeTimeMiddleware(
-        new Date("2023-10-10 20:00:00"), // Init the middleware with the time before which we block incoming requests
-      ),
-    ],
-  })
-  buyTicket(event: AwsEvent): HttpResponse {
-    // Do stuff to buy a ticket
-
-    return HttpResponse.success({
-      status: HttpResponseBodyStatusEnum.Success,
-      payload: {
-        /* the ticket */
-      },
-    });
-  }
-}
+@RestHandler({
+  method: RestMethodEnum.Post,
+  middlewares: [new BlockBeforeDateMiddleware(new Date("2024-01-01"))],
+})
+buyTicket(event: AwsEvent): HttpResponse { ... }
 ```
 
-## Cache
+### Caching
 
-Cache can be activated for HTTP requests.
-It avoids calling the handler if a similar request has already been returned within a given time (TTL).
+Built-in response caching reduces latency and Lambda execution costs.
 
-Caching greatly improves the latency of requests to your API in addition to reducing (if not almost eliminating) the costs linked to the execution time of your Lambdas.
-
-> [!NOTE]
-> Caching is natively supported by API Gateway and you may prefer using it directly.
-> However activating it via the Anthill cache feature ensures that your middleware will be executed.
-> In case there are some side effect to apply to the incoming requests than can't be handled by API Gateway, Anthill cache is a good alternative.
-
-When caching is enabled, Anthill Framework caches responses from your handler for the specified time-to-live (TTL) period, in seconds.
-Anthill Framework then responds to the request by looking for the handler's response in the cache instead of sending a request to your handler.
-Check [request lifecycle](#request-lifecycle) diagram.
-
-Cache items are identified with:
-
-- The request path
-- The request path parameters
-- The request query string parameters
-- [Optionally if set] Some of the request headers
-
-Cache option for HTTP requests is an object looking like this:
+**Configuration Options:**
 
 ```ts
 const cacheConfig: RestHandlerCacheConfig = {
   cacheable: true,
-  ttl: 120, // 2 minutes cache
-  maxCacheSize: 1000000, // 1MB cache
-  headersToInclude: ["Origin"], // Add Origin header to cache item identifier
+  ttl: 120,              // Cache duration in seconds
+  maxCacheSize: 1000000, // Max cache size in bytes (1MB)
+  headersToInclude: ["Origin"], // Headers that affect cache key
 };
 ```
 
-This Cache configuration object will allow caching with a time-to-live of two minutes.
-The overall cache size won't be able to exceed 1MB.
-Cache items will be identified by the `Origin` header. This means that two similar requests from two different origins will result in two distinct cache items.
+**Cache Key Components:**
+- Request path
+- Path parameters
+- Query string parameters
+- Specified headers (via `headersToInclude`)
 
-> [!IMPORTANT]  
-> If maxCacheSize is reached, the cache will remove oldest items to free up space even if their TTL is still valid.
+> [!NOTE]
+> While API Gateway offers native caching, Anthill's cache ensures middlewares still execute — useful for logging, analytics, or other side effects.
 
-## Samples
+> [!IMPORTANT]
+> When `maxCacheSize` is reached, oldest items are evicted regardless of remaining TTL.
 
-Sample projects have been developed to serve as a source of working examples.
-Browse [samples](https://github.com/AntL4b/anthill-framework/tree/main/samples) to see dummy project's anatomy.
+### Logging
 
-## Logger
+Anthill includes a flexible logging system with configurable levels, formatters, and handlers.
 
-Anthill Framework comes with some common logging features:
-
-- Set the application log level from `TRACE` to `ERROR`
-- Override the default log formatter to customize the way your logs look like
-- Add logging handlers to emit logs elsewhere than inside the console (API, Message Queuing, write inside files...)
-- Logging multiple values
-
-Default log level is `INFO` but can be changed configuring Anthill app (See [Anthill](#anthill)) or manually using `Logger.getInstance().setLogLevel(LogLevelEnum.Error);` for example.
-
-Here is an example of how to use it:
+**Log Levels:** `TRACE` | `DEBUG` | `INFO` | `WARN` | `ERROR`
 
 ```ts
-Logger.getInstance().setLogLevel(LogLevelEnum.Trace);
+import { Logger, LogLevelEnum, logInfo, logError } from "@antl4b/anthill-framework";
 
-logTrace("My object", { isTrue: true });
-logDebug("Connected to DB with host and user", dbHost, dbUser);
-logInfo("Initializing application");
-logWarn("Negative index might leads to errors");
-logError("Err: something went wrong :/", e.message);
+// Set log level
+Logger.getInstance().setLogLevel(LogLevelEnum.Debug);
+
+// Use convenience functions
+logInfo("Application started");
+logError("Failed to connect", error.message);
 ```
 
-### Changing logs format
-
-Setting a new formatter allows you to change logs format.
-A formatter is a function with the following signature:
-
-```ts
-type LoggerFormatter = (payload: any) => string;
-```
-
-It takes one argument that could be absolutely anything and returns a string which is the stringified version of the `payload` argument.
-The resulting string will then be transmitted forward to the log handler list.
-
-Let's make a new formatter to stringify the log payload using `JSON.stringify()`:
+**Custom Formatter:**
 
 ```ts
 Logger.getInstance().setformatter((payload: any) => {
-  return JSON.stringify(payload, null, 2);
+  return JSON.stringify({ timestamp: new Date().toISOString(), data: payload });
 });
 ```
 
-This formatter will now be replacing the default one.
-
-### Adding logs handler
-
-Log handlers are functions that will be called each time something is logged.
-Anthill Framework provide a default handler that will forward the logs to the console logging using console.(trace | debug | info | warn | error).
-
-A log handler must respect this signature:
+**Custom Handler:**
 
 ```ts
-type LoggerHandler = (messages: Array<string>, logLevel: LogLevelEnum, context: LoggerContext) => void;
+Logger.getInstance().addHandler((messages, logLevel, context) => {
+  // Send to external service, file, etc.
+  externalLogger.log(logLevel, messages.join(" "));
+});
 ```
 
-It receives an array of messages to process. Messages have been formatted beforehand and are, at this point, strings.
-Here is how to add a handler to the log handler list:
+### Performance Tracking
+
+Monitor execution time with built-in performance tracking utilities.
 
 ```ts
-Logger.getInstance().addHandler(
-  (messages: Array<string>, logLevel: LogLevelEnum, context: LoggerContext) => {
-    for (let message of messages) {
-      console[logLevel](`[${logLevel}][${new Date().toISOString()}] - ${message}`);
-    }
-  }
-);
-```
+import { TimeTracker } from "@antl4b/anthill-framework";
 
-Creating a new log handler will push it at the end of the log handler list.
-To empty the list, call `Logger.getInstance().removeAllHandlers()`.
-
-## Time tracker
-
-Anthill Framework provides utility classes to measure execution time of some blocks of code.
-It can be used to measure different segments of code regrouped in a time tracking session.
-
-It basically uses two classes: `TimeSegment` and `TimeTracker`.
-
-`TimeSegment` is a time measurement tool allowing to start measuring, stop measuring and retrieve the time elapsed between start and stop.
-
-```ts
-const timeSegment = new TimeSegment("my-segment");
-timeSegment.start();
-
-// Do some stuff ...
-
-timeSegment.stop(true); // set verbose option to true to for auto logging segment duration
-
-logInfo(`Time segment ${timeSegment.name} started at ${timeSegment.startTime}, ended at ${timeSegment.endTime}. Total duration: ${timeSegment..getDuration()}`);
-```
-
-`TimeTracker` is a more advanced tool that regroups and manages time segments to display the detailed log tracking session afterwards.
-Let's create our own time tracking session:
-
-```ts
 const tracker = new TimeTracker();
-
-// Start recording time
 tracker.startTrackingSession();
 
-tracker.startSegment("my-segment1"); // +1
-// Do some stuff 1
-tracker.startSegment("my-segment-2"); // +2
-// Do some stuff 2
-tracker.stopSegment("my-segment-2"); // -2
-tracker.startSegment("my-segment-3"); // +3
-// Do some stuff 3
-tracker.stopSegment("my-segment-3"); // -3
-// Finish doing some stuff 1
-tracker.stopSegment("my-segment1"); // -1
+tracker.startSegment("database-query");
+// ... database operations
+tracker.stopSegment("database-query");
 
-// Stop recording
-tracker.stopTrackingSession(); // Will auto stop unstopped segments
+tracker.startSegment("processing");
+// ... data processing
+tracker.stopSegment("processing");
 
-// Display the result
+tracker.stopTrackingSession();
 tracker.logTrackingSession();
 ```
 
-Adding some code between segment start and stop will permit a precise measurement of the time it takes to perform each segment.
+**Automatic Tracking:**
 
-> [!NOTE]  
-> During the REST handling process, a time tracking session is automatically launched.
-> If the `displayPerformanceMetrics` option is set to true, the session will be logged at the end.
+Enable `displayPerformanceMetrics` to automatically log handler performance:
+
+```ts
+app.configure({
+  controllers: [MyController],
+  options: { displayPerformanceMetrics: true },
+});
+```
+
+**Output:**
 
 ```text
-2023-10-06T16:38:09.332Z :: info :: "myHandler-tracking-session: [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx](1.882 ms)"
-2023-10-06T16:38:09.332Z :: info :: "middleware-runBefore      : .....[xxxx].........................................(0.148 ms)"
-2023-10-06T16:38:09.332Z :: info :: "callable-run              : ..........[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx].(1.486 ms)"
-2023-10-06T16:38:09.332Z :: info :: "middleware-runAfter       : ..................................................[](0.002 ms)"
+myHandler-tracking-session: [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx](1.882 ms)
+middleware-runBefore      : .....[xxxx].........................................(0.148 ms)
+callable-run              : ..........[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx].(1.486 ms)
+middleware-runAfter       : ..................................................[](0.002 ms)
 ```
+
+---
+
+## 📁 Examples
+
+Explore working examples in the [samples directory](https://github.com/AntL4b/anthill-framework/tree/main/samples):
+
+| Sample | Description |
+|--------|-------------|
+| `rest-todo-crud` | Complete REST API with CRUD operations |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. **Report bugs** — Open an issue describing the problem
+2. **Request features** — Suggest new functionality via issues
+3. **Submit PRs** — Fork the repo and submit pull requests
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/AntL4b/anthill-framework.git
+cd anthill-framework
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build
+npm run build
+```
+
+---
+
+## 📄 License
+
+Anthill Framework is [MIT licensed](https://github.com/AntL4b/anthill-framework/blob/main/LICENSE).
+
+---
+
+<p align="center">
+  Made with ❤️ for the serverless community
+</p>
