@@ -13,7 +13,7 @@ jobs:
           node-version: 'lts/*'
       - name: npm install, run test & build
         run: | 
-          npm ci
+          npm install
           npm run test
           npm run build
 
